@@ -89,6 +89,7 @@ See [FRONTEND_HOSTING_SETUP.md](../FRONTEND_HOSTING_SETUP.md) for deployment ins
 
 Required environment variables (see `.env.example`):
 
+- `NEXT_PUBLIC_LEGACY_URL` - URL of the old website
 - `NEXT_PUBLIC_API_URL` - Backend API URL
 - `NEXT_PUBLIC_IMAGE_URL` - Image service URL
 - `NEXT_PUBLIC_SITE_NAME` - Site name
