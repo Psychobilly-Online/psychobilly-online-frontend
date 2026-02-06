@@ -2,24 +2,21 @@
 export interface Event {
   id: number;
   headline: string;
-  date: string; // ISO date string
-  time?: string;
+  date_start: string; // ISO date string
+  date_end?: string;
+  bands?: string;
+  text?: string; // Description
   venue_id?: number;
-  venue_name?: string;
   city?: string;
-  state?: string;
-  country?: string;
-  country_iso?: string;
-  description?: string;
-  ticket_link?: string;
-  event_link?: string;
-  flyer_link?: string;
+  state_id?: string;
+  country_id?: string;
+  link?: string; // Event link
   image?: string; // Image ID for image service
   category_id?: number;
-  category_name?: string;
-  created_at?: string;
-  updated_at?: string;
-  created_by?: number;
+  user_id?: number;
+  contact_id?: number;
+  create_date?: string;
+  edit_date?: string;
   approved?: boolean;
 }
 
@@ -66,5 +63,5 @@ export interface EventFilters {
   from?: string; // ISO date
   to?: string; // ISO date
   search?: string;
-  approved?: boolean;
+  status?: string; // 'approved', 'pending', 'rejected'
 }

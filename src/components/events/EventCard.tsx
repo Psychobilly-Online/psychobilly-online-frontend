@@ -20,7 +20,7 @@ export function EventCard({ event }: EventCardProps) {
     return isNaN(date.getTime()) ? null : date;
   };
 
-  const eventDate = parseDate(event.date);
+  const eventDate = parseDate(event.date_start);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('de-DE', {
@@ -39,75 +39,56 @@ export function EventCard({ event }: EventCardProps) {
 
   // If date is invalid, don't render the card
   if (!eventDate) {
-    console.warn(`Invalid date for event ${event.id}:`, event.date);
+    console.warn(`Invalid date for event ${event.id}:`, event.date_start);
     return null;
   }
 
   return (
     <div className={styles.eventCard}>
+      {/* Date Badge */}
+      <div className={styles.dateBadge}>
+        <div className={styles.dateDay}>{getDay(eventDate)}</div>
+        <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
+      </div>
+      
       <div className={styles.cardContent}>
-        {/* Date Badge */}
-        <div className={styles.dateBadge}>
-          <div className={styles.dateDay}>{getDay(eventDate)}</div>
-          <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
-        </div>
-
         {/* Event Details */}
         <div className={styles.details}>
           <h3 className={styles.headline}>{event.headline}</h3>
           
           <div className={styles.meta}>
-            {event.venue_name && (
-              <div className={styles.metaItem}>
-                📍 {event.venue_name}
-              </div>
-            )}
-            
             {event.city && (
               <div className={styles.metaItem}>
-                {event.city}
-                {event.country && `, ${event.country}`}
+                📍 {event.city}
               </div>
             )}
             
-            {event.time && (
+            {event.bands && (
               <div className={styles.metaItem}>
-                🕒 {event.time}
+                🎸 {event.bands}
               </div>
             )}
           </div>
 
-          {event.description && (
+          {event.text && (
             <p className={styles.description}>
-              {event.description.length > 150
-                ? `${event.description.substring(0, 150)}...`
-                : event.description}
+              {event.text.length > 150
+                ? `${event.text.substring(0, 150)}...`
+                : event.text}
             </p>
           )}
 
           {/* Links */}
-          {(event.ticket_link || event.event_link) && (
+          {event.link && (
             <div className={styles.links}>
-              {event.ticket_link && (
-                <a
-                  href={event.ticket_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${styles.link} ${styles.linkTickets}`}
-                >
-                  🎫 Tickets
-                </a>
-              )}
-              {event.event_link && (
-                <a
-                  href={event.event_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.link}
-                >
-                  ℹ️ Info
-                </a>
-              )}
+              <a
+                href={event.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                ℹ️ More Info
+              </a>
             </div>
           )}
         </div>

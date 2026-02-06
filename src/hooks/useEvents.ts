@@ -38,6 +38,13 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
       const response = await fetch(`/api/events?${params.toString()}`);
       const data = await response.json();
 
+      console.log('useEvents fetch:', { 
+        url: `/api/events?${params.toString()}`, 
+        status: response.status,
+        data,
+        firstEvent: data.data?.[0]
+      });
+
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch events');
       }
