@@ -1,0 +1,133 @@
+.eventCard {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.eventCard:hover {
+  border-color: #666;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cardContent {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+}
+
+.dateBadge {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: #d32f2f;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.dateDay {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.dateMonth {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.details {
+  flex: 1;
+  min-width: 0;
+}
+
+.headline {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #999;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.description {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+.links {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: #333;
+  border-radius: 4px;
+  font-size: 13px;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.link:hover {
+  background: #444;
+}
+
+.linkTickets {
+  background: #d32f2f;
+}
+
+.linkTickets:hover {
+  background: #b71c1c;
+}
+
+.image {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .cardContent {
+    flex-direction: column;
+  }
+
+  .image {
+    width: 100%;
+    height: 200px;
+  }
+}
