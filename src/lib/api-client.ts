@@ -30,10 +30,18 @@ async function fetchApi<T>(
 ): Promise<T> {
   const { token, ...fetchOptions } = options;
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...fetchOptions.headers,
   };
+
+  // Merge with any existing headers
+  if (fetchOptions.headers) {
+    Object.entries(fetchOptions.headers).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        headers[key] = value;
+      }
+    });
+  }
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
