@@ -16,7 +16,7 @@ export default function Home() {
               <br/><br/>
               Over the next weeks and months i will work on migrating the old forums, topics and posts to the new forum. This will most likely take quite some time, as the differences in the data structure are complex, and as we talk about more than 1.5 million posts.
               <br/><br/>
-              Anyway, <a href={`${process.env.NEXT_PUBLIC_LEGACY_URL}/community`} target="_blank" rel="noopener noreferrer">here&apos;s the new board</a>!
+              Anyway, <a href={`${process.env.NEXT_PUBLIC_LEGACY_URL}/community`}>here&apos;s the new board</a>!
             </div>
           </div>
         </div>
