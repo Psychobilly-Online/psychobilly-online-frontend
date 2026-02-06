@@ -86,9 +86,9 @@ export function EventCard({ event, categoryName }: EventCardProps) {
               </div>
             )}
             
-            {event.city && (
+            {event.venue && (event.venue.city || event.venue.name) && (
               <div className={styles.metaItem}>
-                📍 {event.city}
+                📍 {[event.venue.city, event.venue.name].filter(Boolean).join(', ')}
               </div>
             )}
             

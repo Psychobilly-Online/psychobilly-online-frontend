@@ -7,6 +7,13 @@ export interface Event {
   bands?: string;
   text?: string; // Description
   venue_id?: number;
+  venue?: {
+    name?: string;
+    url?: string;
+    street?: string;
+    zip?: string;
+    city?: string;
+  };
   city?: string;
   state_id?: string;
   country_id?: string;
