@@ -117,6 +117,24 @@ export const apiClient = {
       }),
   },
 
+  // Cities
+  cities: {
+    list: (params?: Record<string, any>) => {
+      const query = params ? `?${new URLSearchParams(params).toString()}` : '';
+      return fetchApi(`${API_URL}/cities${query}`);
+    },
+  },
+
+  // Countries
+  countries: {
+    list: () => fetchApi(`${API_URL}/countries`),
+  },
+
+  // Categories
+  categories: {
+    list: () => fetchApi(`${API_URL}/categories`),
+  },
+
   // Images
   images: {
     upload: async (file: File, source: string, token: string) => {

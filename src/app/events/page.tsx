@@ -7,7 +7,13 @@ import { useState, useEffect } from 'react';
 
 export default function EventsPage() {
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<FilterValues>({ limit: 20 });
+  
+  // Default to showing upcoming events (from today onwards)
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+  const [filters, setFilters] = useState<FilterValues>({ 
+    limit: 20,
+    from_date: today // Default: show only upcoming events
+  });
   const [categories, setCategories] = useState<Record<number, string>>({});
   
   useEffect(() => {

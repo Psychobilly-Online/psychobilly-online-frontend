@@ -57,17 +57,13 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
       .catch(err => console.error('Failed to load categories:', err));
   }, []);
 
-  // TODO: Fetch cities when country changes
-  // Need API endpoint: GET /api/cities?country_id={id}
-  // Should query venues table for unique cities in selected country
+  // Fetch cities when country changes
   useEffect(() => {
     if (filters.country_id) {
-      // TODO: Implement city fetching
-      // fetch(`/api/cities?country_id=${filters.country_id}`)
-      //   .then(res => res.json())
-      //   .then(data => setCities(data.data || []))
-      //   .catch(err => console.error('Failed to load cities:', err));
-      setCities([]); // Clear cities for now
+      fetch(`/api/cities?country_id=${filters.country_id}`)
+        .then(res => res.json())
+        .then(data => setCities(data.data || []))
+        .catch(err => console.error('Failed to load cities:', err));
     } else {
       setCities([]);
     }
@@ -142,7 +138,7 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
             </select>
           </div>
 
-          {/* City - TODO: Make this a select populated from venues */}
+          {/* City */}
           <div className={styles.formGroup}>
             <label htmlFor="city">City</label>
             {cities.length > 0 ? (
@@ -168,7 +164,6 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
                 disabled={!filters.country_id}
               />
             )}
-            <small>TODO: Populate from venues table after country selection</small>
           </div>
 
           {/* Date Range - Using native date inputs for now */}
