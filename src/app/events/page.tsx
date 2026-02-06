@@ -2,21 +2,37 @@
 
 import { useEvents } from '@/hooks/useEvents';
 import { EventCard } from '@/components/events/EventCard';
-import { useState } from 'react';
+import { EventFilters, FilterValues } from '@/components/events/EventFilters';
+import { useState, useEffect } from 'react';
 
 export default function EventsPage() {
   const [page, setPage] = useState(1);
-  const [limit] = useState(20);
+  const [filters, setFilters] = useState<FilterValues>({ limit: 20 });
+  const [categories, setCategories] = useState<Record<number, string>>({});
+  
+  useEffect(() => {
+    // Fetch categories for display
+    fetch('/api/categories')
+      .then(res => res.json())
+      .then(data => {
+        const categoryMap: Record<number, string> = {};
+        data.data?.forEach((cat: any) => {
+          categoryMap[cat.id] = cat.name;
+        });
+        setCategories(categoryMap);
+      })
+      .catch(err => console.error('Failed to fetch categories:', err));
+  }, []);
   
   const { events, loading, error, pagination } = useEvents({
     page,
-    limit,
-    // Temporarily showing all events during development (including past ones)
-    // status: 'approved',
+    ...filters,
   });
 
-  // Debug logging
-  console.log('Events Page Debug:', { events, loading, error, pagination });
+  const handleFilterChange = (newFilters: FilterValues) => {
+    setFilters(newFilters);
+    setPage(1); // Reset to first page when filters change
+  };
 
   return (
     <div id="container" className="container">
@@ -41,7 +57,11 @@ export default function EventsPage() {
               {!loading && !error && events.length > 0 && (
                 <>
                   {events.map((event) => (
-                    <EventCard key={event.id} event={event} />
+                    <EventCard 
+                      key={event.id} 
+                      event={event} 
+                      categoryName={event.category_id ? categories[event.category_id] : undefined} 
+                    />
                   ))}
                   
                   {pagination && pagination.pages > 1 && (
@@ -96,7 +116,10 @@ export default function EventsPage() {
           </div>
         </div>
         <div className="col2 col-lg-4 col-md-4 col-xs-12" id="col2">
-          
+          <EventFilters 
+            onFilterChange={handleFilterChange}
+            initialFilters={filters}
+          />
         </div>
       </div>
       

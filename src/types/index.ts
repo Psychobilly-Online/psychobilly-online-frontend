@@ -58,10 +58,11 @@ export interface ApiResponse<T> {
 export interface EventFilters {
   page?: number;
   limit?: number;
-  country?: string;
-  category?: number;
-  from?: string; // ISO date
-  to?: string; // ISO date
   search?: string;
+  country_id?: string;
+  city?: string;
+  category_id?: string;
+  from_date?: string; // YYYY-MM-DD
+  to_date?: string; // YYYY-MM-DD
   status?: string; // 'approved', 'pending', 'rejected'
 }

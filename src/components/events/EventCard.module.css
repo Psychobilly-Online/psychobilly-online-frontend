@@ -22,15 +22,15 @@
 
 .dateBadge {
   flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  background: #d32f2f;
+  width: 70px;
+  height: 70px;
+  background: #7d2923;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #fff;
   font-weight: bold;
 }
 
@@ -42,6 +42,12 @@
 .dateMonth {
   font-size: 12px;
   text-transform: uppercase;
+}
+
+.dateYear {
+  font-size: 10px;
+  color: #fff;
+  margin-top: 2px;
 }
 
 .details {

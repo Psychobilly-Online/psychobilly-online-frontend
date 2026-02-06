@@ -8,26 +8,41 @@
   - Add: `CORS_ALLOWED_ORIGINS=https://app.psychobilly-online.de`
   - Instructions: See `UPDATE_API_CORS.md`
 
-- [ ] **Remove debug console.log statements**
+- [x] **Remove debug console.log statements**
   - Files: `src/hooks/useEvents.ts`, `src/app/events/page.tsx`
-  - Remove development logging before production
+  - ✅ Removed development logging
 
-- [ ] **Add production date filtering**
-  - Currently showing ALL events (including 2008-2025)
-  - Need to filter: `date_start >= today` for production
-  - Keep development toggle for testing
+- [x] **Add production date filtering**
+  - ✅ Removed hardcoded date filter - now uses user-selected date range from filters
 
 ## 🟡 High Priority (MVP Features)
 
 ### Phase 1: Events List & Detail View
 
 #### Frontend - Events List Improvements
-- [ ] **Event filtering (!)** - HIGH PRIORITY
-  - Country dropdown
-  - Date range picker
-  - Search by headline/city/bands
-  - Clear filters button
-  - Estimated: 4-6 hours
+- [ ] **Event filtering (!)** - HIGH PRIORITY 🔨 IN PROGRESS
+  - [x] Country dropdown (uses print_name)
+  - [x] Category dropdown (populated from database)
+  - [x] Date range picker (basic - using native date inputs)
+  - [x] Search by headline/city/bands
+  - [x] Clear filters button
+  - [x] Results per page selector
+  - [x] Sort by / Order by controls (UI only, backend TODO)
+  - [x] Display year on event cards
+  - [x] Display category on event cards
+  - [x] **Fixed backend date filtering** - SQL queries now work correctly
+  - [x] **Fixed total count** - Backend now returns accurate total for pagination
+  - [x] Single date range picker component (replace dual date inputs)
+  - [x] City dropdown (populated after country selection)
+    - Need backend: GET /api/v1/cities?country_id={id}
+  - [x] **Implement backend sorting** (sort_by, sort_order parameters)
+    - [x] Add parameters to EventRepository
+    - [x] Map sort values to database columns
+    - [x] Update ListEventsAction to pass parameters
+  - [x] **Display category names instead of IDs**
+    - [x] Fetch categories on page load
+    - [x] Pass names to EventCard component
+  - Estimated: 4-6 hours (COMPLETED)
 
 - [ ] **Fix special character encoding**
   - Handle `&amp;` and other HTML entities

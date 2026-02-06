@@ -6,13 +6,14 @@ import styles from './EventCard.module.css';
 
 interface EventCardProps {
   event: Event;
+  categoryName?: string;
 }
 
 /**
  * Reusable Event Card Component
  * Displays event information in a card layout
  */
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({ event, categoryName }: EventCardProps) {
   // Validate and parse date
   const parseDate = (dateString: string) => {
     if (!dateString) return null;
@@ -37,6 +38,8 @@ export function EventCard({ event }: EventCardProps) {
     return new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(date);
   };
 
+  const getYear = (date: Date) => date.getFullYear();
+
   // If date is invalid, don't render the card
   if (!eventDate) {
     console.warn(`Invalid date for event ${event.id}:`, event.date_start);
@@ -49,6 +52,7 @@ export function EventCard({ event }: EventCardProps) {
       <div className={styles.dateBadge}>
         <div className={styles.dateDay}>{getDay(eventDate)}</div>
         <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
+        <div className={styles.dateYear}>{getYear(eventDate)}</div>
       </div>
       
       <div className={styles.cardContent}>
@@ -57,6 +61,12 @@ export function EventCard({ event }: EventCardProps) {
           <h3 className={styles.headline}>{event.headline}</h3>
           
           <div className={styles.meta}>
+            {(categoryName || event.category_id) && (
+              <div className={styles.metaItem}>
+                🏷️ {categoryName || `Category ${event.category_id}`}
+              </div>
+            )}
+            
             {event.city && (
               <div className={styles.metaItem}>
                 📍 {event.city}
