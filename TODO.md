@@ -8,46 +8,51 @@
   - Add: `CORS_ALLOWED_ORIGINS=https://app.psychobilly-online.de`
   - Instructions: See `UPDATE_API_CORS.md`
 
-- [x] **Remove debug console.log statements**
+- [x] **Remove debug console.log statements** ✅ DONE
   - Files: `src/hooks/useEvents.ts`, `src/app/events/page.tsx`
-  - ✅ Removed development logging
 
-- [x] **Add production date filtering**
-  - ✅ Removed hardcoded date filter - now uses user-selected date range from filters
+- [x] **Add production date filtering** ✅ DONE
+  - Now shows upcoming events by default (from today)
+
+- [ ] **Database Migration - Image Field Cleanup** 🚨 URGENT
+  - See detailed plan: `docs/DATABASE_MIGRATION_PLAN.md`
+  - **Problem**: Dual image fields (6_image with dead refs, 19_image with correct refs)
+  - **Current State**: API now uses 19_image directly
+  - **Next Steps**: 
+    - Option A: Migrate 19_image → 6_image, drop 19_image (Quick fix, 2 hours)
+    - Option B: Full table cleanup with proper column names (Better, 2 days)
+  - **Decision needed**: Choose Option A or B tomorrow
 
 ## 🟡 High Priority (MVP Features)
 
 ### Phase 1: Events List & Detail View
 
-#### Frontend - Events List Improvements
-- [ ] **Event filtering (!)** - HIGH PRIORITY 🔨 IN PROGRESS
-  - [x] Country dropdown (uses print_name)
-  - [x] Category dropdown (populated from database)
-  - [x] Date range picker (basic - using native date inputs)
-  - [x] Search by headline/city/bands
-  - [x] Clear filters button
+#### Completed Today ✅
+- [x] **Event filtering system** - COMPLETED
+  - [x] Country dropdown (ordered by event count, active countries only)
+  - [x] City dropdown (populated from venue table after country selection)
+  - [x] Category dropdown (from database)
+  - [x] Date range filters (from_date, to_date)
+  - [x] Search (headline/bands/city/description)
   - [x] Results per page selector
-  - [x] Sort by / Order by controls (UI only, backend TODO)
-  - [x] Display year on event cards
-  - [x] Display category on event cards
-  - [x] **Fixed backend date filtering** - SQL queries now work correctly
-  - [x] **Fixed total count** - Backend now returns accurate total for pagination
-  - [x] Single date range picker component (replace dual date inputs)
-  - [x] City dropdown (populated after country selection)
-    - Need backend: GET /api/v1/cities?country_id={id}
-  - [x] **Implement backend sorting** (sort_by, sort_order parameters)
-    - [x] Add parameters to EventRepository
-    - [x] Map sort values to database columns
-    - [x] Update ListEventsAction to pass parameters
-  - [x] **Display category names instead of IDs**
-    - [x] Fetch categories on page load
-    - [x] Pass names to EventCard component
-  - Estimated: 4-6 hours (COMPLETED)
+  - [x] Backend sorting (date, headline, city, category)
+  - [x] Clear filters with count badge
+  
+- [x] **Event display improvements** - COMPLETED
+  - [x] Display year and category name on cards
+  - [x] Show venue location (city, venue name) instead of old city field
+  - [x] Decode HTML entities (&amp; → &)
+  - [x] Auto-add https:// to links
+  
+- [x] **Backend enhancements** - COMPLETED
+  - [x] GET /v1/cities endpoint (with country filter)
+  - [x] GET /v1/countries/active endpoint (ordered by event count)
+  - [x] Include venue data in events response
+  - [x] Remove redundant city field from events (use venue.city)
+  - [x] Fixed image field to use 19_image
 
-- [ ] **Fix special character encoding**
-  - Handle `&amp;` and other HTML entities
-  - Example: "Rock &amp; Roll" should display as "Rock & Roll"
-  - Use `dangerouslySetInnerHTML` or decode function
+#### Frontend - Events List Improvements
+- [x] **Fix special character encoding** ✅ DONE
   - Estimated: 30 minutes
 
 - [ ] **Auto-add protocol to links**
