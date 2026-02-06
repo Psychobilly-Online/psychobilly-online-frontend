@@ -2,6 +2,7 @@
 
 import { Event } from '@/types';
 import { apiClient } from '@/lib/api-client';
+import styles from './EventCard.module.css';
 
 interface EventCardProps {
   event: Event;
@@ -12,8 +13,16 @@ interface EventCardProps {
  * Displays event information in a card layout
  */
 export function EventCard({ event }: EventCardProps) {
-  const formatDate = (dateString: string) => {
+  // Validate and parse date
+  const parseDate = (dateString: string) => {
+    if (!dateString) return null;
     const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
+  const eventDate = parseDate(event.date);
+
+  const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('de-DE', {
       weekday: 'short',
       day: '2-digit',
@@ -22,48 +31,54 @@ export function EventCard({ event }: EventCardProps) {
     }).format(date);
   };
 
+  const getDay = (date: Date) => date.getDate();
+  
+  const getMonth = (date: Date) => {
+    return new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(date);
+  };
+
+  // If date is invalid, don't render the card
+  if (!eventDate) {
+    console.warn(`Invalid date for event ${event.id}:`, event.date);
+    return null;
+  }
+
   return (
-    <div className="event-card">
-      <div className="event-card-content">
+    <div className={styles.eventCard}>
+      <div className={styles.cardContent}>
         {/* Date Badge */}
-        <div className="event-date-badge">
-          <div className="event-date-day">
-            {new Date(event.date).getDate()}
-          </div>
-          <div className="event-date-month">
-            {new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(
-              new Date(event.date)
-            )}
-          </div>
+        <div className={styles.dateBadge}>
+          <div className={styles.dateDay}>{getDay(eventDate)}</div>
+          <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
         </div>
 
         {/* Event Details */}
-        <div className="event-details">
-          <h3 className="event-headline">{event.headline}</h3>
+        <div className={styles.details}>
+          <h3 className={styles.headline}>{event.headline}</h3>
           
-          <div className="event-meta">
+          <div className={styles.meta}>
             {event.venue_name && (
-              <div className="event-venue">
+              <div className={styles.metaItem}>
                 📍 {event.venue_name}
               </div>
             )}
             
             {event.city && (
-              <div className="event-location">
+              <div className={styles.metaItem}>
                 {event.city}
                 {event.country && `, ${event.country}`}
               </div>
             )}
             
             {event.time && (
-              <div className="event-time">
+              <div className={styles.metaItem}>
                 🕒 {event.time}
               </div>
             )}
           </div>
 
           {event.description && (
-            <p className="event-description">
+            <p className={styles.description}>
               {event.description.length > 150
                 ? `${event.description.substring(0, 150)}...`
                 : event.description}
@@ -71,33 +86,35 @@ export function EventCard({ event }: EventCardProps) {
           )}
 
           {/* Links */}
-          <div className="event-links">
-            {event.ticket_link && (
-              <a
-                href={event.ticket_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="event-link event-link-tickets"
-              >
-                🎫 Tickets
-              </a>
-            )}
-            {event.event_link && (
-              <a
-                href={event.event_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="event-link event-link-info"
-              >
-                ℹ️ Info
-              </a>
-            )}
-          </div>
+          {(event.ticket_link || event.event_link) && (
+            <div className={styles.links}>
+              {event.ticket_link && (
+                <a
+                  href={event.ticket_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${styles.link} ${styles.linkTickets}`}
+                >
+                  🎫 Tickets
+                </a>
+              )}
+              {event.event_link && (
+                <a
+                  href={event.event_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                >
+                  ℹ️ Info
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Event Image */}
         {event.image && (
-          <div className="event-image">
+          <div className={styles.image}>
             <img
               src={apiClient.images.getUrl(event.image, 'thumb')}
               alt={event.headline}
@@ -106,144 +123,6 @@ export function EventCard({ event }: EventCardProps) {
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        .event-card {
-          background: #1a1a1a;
-          border: 1px solid #333;
-          border-radius: 8px;
-          overflow: hidden;
-          transition: all 0.2s ease;
-          margin-bottom: 16px;
-        }
-
-        .event-card:hover {
-          border-color: #666;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .event-card-content {
-          display: flex;
-          gap: 16px;
-          padding: 16px;
-        }
-
-        .event-date-badge {
-          flex-shrink: 0;
-          width: 60px;
-          height: 60px;
-          background: #d32f2f;
-          border-radius: 8px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-weight: bold;
-        }
-
-        .event-date-day {
-          font-size: 24px;
-          line-height: 1;
-        }
-
-        .event-date-month {
-          font-size: 12px;
-          text-transform: uppercase;
-        }
-
-        .event-details {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .event-headline {
-          margin: 0 0 8px 0;
-          font-size: 18px;
-          font-weight: 600;
-          color: #fff;
-        }
-
-        .event-meta {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          margin-bottom: 8px;
-          font-size: 14px;
-          color: #999;
-        }
-
-        .event-venue,
-        .event-location,
-        .event-time {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .event-description {
-          margin: 8px 0;
-          font-size: 14px;
-          color: #ccc;
-          line-height: 1.4;
-        }
-
-        .event-links {
-          display: flex;
-          gap: 8px;
-          margin-top: 12px;
-        }
-
-        .event-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding: 6px 12px;
-          background: #333;
-          border-radius: 4px;
-          font-size: 13px;
-          text-decoration: none;
-          color: #fff;
-          transition: background 0.2s;
-        }
-
-        .event-link:hover {
-          background: #444;
-        }
-
-        .event-link-tickets {
-          background: #d32f2f;
-        }
-
-        .event-link-tickets:hover {
-          background: #b71c1c;
-        }
-
-        .event-image {
-          flex-shrink: 0;
-          width: 120px;
-          height: 120px;
-          border-radius: 8px;
-          overflow: hidden;
-        }
-
-        .event-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        @media (max-width: 768px) {
-          .event-card-content {
-            flex-direction: column;
-          }
-
-          .event-image {
-            width: 100%;
-            height: 200px;
-          }
-        }
-      `}</style>
     </div>
   );
 }
