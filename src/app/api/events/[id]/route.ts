@@ -7,10 +7,11 @@ import { apiClient } from '@/lib/api-client';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
 
     if (isNaN(id)) {
       return NextResponse.json(
@@ -23,7 +24,7 @@ export async function GET(
 
     return NextResponse.json(data);
   } catch (error: any) {
-    console.error(`Event ${params.id} API error:`, error);
+    console.error(`Event API error:`, error);
     
     return NextResponse.json(
       { error: error.message || 'Failed to fetch event' },
