@@ -4,12 +4,12 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://psychobilly-onl
 
 export async function GET() {
   try {
-    const response = await fetch(`${API_BASE_URL}/countries`, {
+    const response = await fetch(`${API_BASE_URL}/countries/active`, {
       headers: {
         'Content-Type': 'application/json',
       },
-      // Cache for 24 hours - countries don't change often
-      next: { revalidate: 86400 }
+      // Cache for 1 hour - active countries can change with new events
+      next: { revalidate: 3600 }
     });
 
     if (!response.ok) {

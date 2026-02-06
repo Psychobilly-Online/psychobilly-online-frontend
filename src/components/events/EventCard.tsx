@@ -14,6 +14,25 @@ interface EventCardProps {
  * Displays event information in a card layout
  */
 export function EventCard({ event, categoryName }: EventCardProps) {
+  // Helper to decode HTML entities
+  const decodeHtml = (html: string | null | undefined): string => {
+    if (!html) return '';
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  };
+  
+  // Helper to ensure link has protocol
+  const ensureProtocol = (url: string | null | undefined): string | null => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    return `https://${trimmed}`;
+  };
+
   // Validate and parse date
   const parseDate = (dateString: string) => {
     if (!dateString) return null;
@@ -58,7 +77,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
       <div className={styles.cardContent}>
         {/* Event Details */}
         <div className={styles.details}>
-          <h3 className={styles.headline}>{event.headline}</h3>
+          <h3 className={styles.headline}>{decodeHtml(event.headline)}</h3>
           
           <div className={styles.meta}>
             {(categoryName || event.category_id) && (
@@ -75,24 +94,27 @@ export function EventCard({ event, categoryName }: EventCardProps) {
             
             {event.bands && (
               <div className={styles.metaItem}>
-                🎸 {event.bands}
+                🎸 {decodeHtml(event.bands)}
               </div>
             )}
           </div>
 
           {event.text && (
             <p className={styles.description}>
-              {event.text.length > 150
-                ? `${event.text.substring(0, 150)}...`
-                : event.text}
+              {(() => {
+                const decoded = decodeHtml(event.text);
+                return decoded.length > 150
+                  ? `${decoded.substring(0, 150)}...`
+                  : decoded;
+              })()}
             </p>
           )}
 
           {/* Links */}
-          {event.link && (
+          {ensureProtocol(event.link) && (
             <div className={styles.links}>
               <a
-                href={event.link}
+                href={ensureProtocol(event.link)!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.link}
