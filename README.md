@@ -7,6 +7,10 @@ Modern Next.js 15 frontend for Psychobilly Online community.
 ### Local Development
 
 ```bash
+# Clone repository
+git clone https://github.com/christianmautz/psychobilly-online-frontend.git
+cd psychobilly-online-frontend
+
 # Install dependencies
 npm install
 
@@ -103,6 +107,7 @@ Required environment variables (see `.env.example`):
 
 ## 📚 Documentation
 
-- [Frontend Hosting Setup](../FRONTEND_HOSTING_SETUP.md)
+- [Frontend Hosting Setup](FRONTEND_HOSTING_SETUP.md)
+- [Deployment Checklist](DEPLOYMENT_CHECKLIST.md)
 - [API Documentation](https://github.com/christianmautz/psychobilly-online-api)
 - [Image Service Documentation](https://github.com/christianmautz/psychobilly-online-images)
