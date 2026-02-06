@@ -2,7 +2,7 @@
 
 ## 🔴 Critical (Must Fix Before Production)
 
-- [ ] **Update server `.env` files with CORS configuration**
+- [x] **Update server `.env` files with CORS configuration** ✅ DONE
   - Location: HostEurope server
   - Files: `psychobilly-online-api/.env` and `psychobilly-online-images/.env`
   - Add: `CORS_ALLOWED_ORIGINS=https://app.psychobilly-online.de`
