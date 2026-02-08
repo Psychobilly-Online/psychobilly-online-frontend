@@ -12,7 +12,7 @@ Modern Next.js 15 frontend for Psychobilly Online community.
 
 ```bash
 # Clone repository
-git clone https://github.com/christianmautz/psychobilly-online-frontend.git
+git clone https://github.com/Psychobilly-Online/psychobilly-online-frontend.git
 cd psychobilly-online-frontend
 
 # Install dependencies
@@ -88,8 +88,6 @@ npm run lint     # Run ESLint
 
 Deployed on Vercel at `https://app.psychobilly-online.de`
 
-See [FRONTEND_HOSTING_SETUP.md](../FRONTEND_HOSTING_SETUP.md) for deployment instructions.
-
 ## 📝 Environment Variables
 
 Required environment variables (see `.env.example`):
@@ -110,10 +108,3 @@ Required environment variables (see `.env.example`):
 - [ ] Add/edit venues
 - [ ] Image upload integration
 - [ ] User authentication
-
-## 📚 Documentation
-
-- [Frontend Hosting Setup](FRONTEND_HOSTING_SETUP.md)
-- [Deployment Checklist](DEPLOYMENT_CHECKLIST.md)
-- [API Documentation](https://github.com/christianmautz/psychobilly-online-api)
-- [Image Service Documentation](https://github.com/christianmautz/psychobilly-online-images)
