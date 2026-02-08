@@ -1,45 +1,67 @@
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 .eventsPage {
   min-height: 60vh;
 }
 
+.eventsLayout {
+  margin: 0;
+}
+
+.mainColumn {
+  width: 100%;
+}
+
 .header {
-  margin-bottom: 32px;
+  margin-bottom: 18px;
   text-align: center;
 }
 
-.header h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
+.title {
+  font-size: 26px;
+  margin-bottom: 6px;
   color: #fff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.header p {
-  font-size: 16px;
-  color: #999;
+.subtitle {
+  font-size: 14px;
+  color: #a0a0a0;
 }
 
 .eventsList {
   display: flex;
   flex-direction: column;
+  gap: 16px;
 }
 
-.loading,
-.error,
-.noEvents {
+.filterBar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: 0 0 20px 0;
+}
+
+.status {
   text-align: center;
-  padding: 60px 20px;
-  font-size: 18px;
-  color: #999;
+  padding: 36px 20px;
+  font-size: 16px;
+  color: #b5b5b5;
 }
 
-.error {
+.statusError {
   color: #d32f2f;
+}
+
+.paginationBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: 24px;
+  background: #1b1b1d;
+  border: 1px solid #2d2d30;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  padding: 10px 14px;
 }
 
 .pagination {
@@ -47,23 +69,21 @@
   justify-content: center;
   align-items: center;
   gap: 16px;
-  margin-top: 32px;
-  padding: 20px 0;
 }
 
 .paginationButton {
   padding: 8px 16px;
-  background: #333;
-  border: 1px solid #555;
-  border-radius: 4px;
+  background: #2a2a2d;
+  border: 1px solid #343437;
+  border-radius: 8px;
   color: #fff;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .paginationButton:hover:not(:disabled) {
-  background: #444;
-  border-color: #666;
+  background: #35353a;
+  border-color: #4a4a50;
 }
 
 .paginationButton:disabled {
@@ -76,12 +96,18 @@
   font-size: 14px;
 }
 
+@media (max-width: 1024px) {
+  .filterBar {
+    top: 0;
+  }
+}
+
 @media (max-width: 768px) {
-  .container {
-    padding: 16px;
+  .title {
+    font-size: 22px;
   }
 
-  .header h1 {
-    font-size: 24px;
+  .paginationBar {
+    border-radius: 0;
   }
 }

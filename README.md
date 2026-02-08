@@ -67,6 +67,7 @@ src/
 ## 🌐 API Integration
 
 The frontend communicates with:
+
 - **API:** `https://psychobilly-online.de/api/v1/`
 - **Images:** `https://psychobilly-online.de/images/`
 

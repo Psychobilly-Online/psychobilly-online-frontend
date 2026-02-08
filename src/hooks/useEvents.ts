@@ -34,7 +34,7 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
       const params = new URLSearchParams();
       params.append('limit', String(limit));
       params.append('offset', String(offset));
-      
+
       Object.entries(otherFilters).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {
           params.append(key, String(value));
@@ -43,7 +43,7 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
 
       // Call BFF API route (internal Next.js API)
       const url = `/api/events?${params.toString()}`;
-      
+
       const response = await fetch(url);
       const data = await response.json();
 
@@ -52,19 +52,19 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
       }
 
       setEvents(data.data || []);
-      
+
       // Backend returns 'meta', transform to expected 'pagination' structure
       if (data.meta) {
         const limit = data.meta.limit || 20;
         const total = data.meta.total || 0;
         const offset = data.meta.offset || 0;
         const currentPage = Math.floor(offset / limit) + 1;
-        
+
         setPagination({
           total: total,
           page: currentPage,
           limit: limit,
-          pages: Math.ceil(total / limit)
+          pages: Math.ceil(total / limit),
         });
       } else {
         setPagination(null);

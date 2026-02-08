@@ -6,18 +6,16 @@ import styles from './EventFilters.module.css';
 export interface FilterValues {
   search?: string;
   country_id?: string;
-  city?: string;
   from_date?: string;
   to_date?: string;
   category_id?: string;
   limit?: number;
-  sort_by?: string;
-  sort_order?: string;
 }
 
 interface EventFiltersProps {
   onFilterChange: (filters: FilterValues) => void;
   initialFilters?: FilterValues;
+  totalCount?: number;
 }
 
 interface Country {
@@ -32,42 +30,33 @@ interface Category {
   name: string;
 }
 
-export function EventFilters({ onFilterChange, initialFilters = {} }: EventFiltersProps) {
+export function EventFilters({
+  onFilterChange,
+  initialFilters = {},
+  totalCount,
+}: EventFiltersProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [countries, setCountries] = useState<Country[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
   const [filters, setFilters] = useState<FilterValues>({
     limit: 20,
-    ...initialFilters
+    ...initialFilters,
   });
 
   // Fetch countries and categories on mount
   useEffect(() => {
     // Fetch countries
     fetch('/api/countries')
-      .then(res => res.json())
-      .then(data => setCountries(data.data || []))
-      .catch(err => console.error('Failed to load countries:', err));
+      .then((res) => res.json())
+      .then((data) => setCountries(data.data || []))
+      .catch((err) => console.error('Failed to load countries:', err));
 
     // Fetch categories
     fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data.data || []))
-      .catch(err => console.error('Failed to load categories:', err));
+      .then((res) => res.json())
+      .then((data) => setCategories(data.data || []))
+      .catch((err) => console.error('Failed to load categories:', err));
   }, []);
-
-  // Fetch cities when country changes
-  useEffect(() => {
-    if (filters.country_id) {
-      fetch(`/api/cities?country_id=${filters.country_id}`)
-        .then(res => res.json())
-        .then(data => setCities(data.data || []))
-        .catch(err => console.error('Failed to load cities:', err));
-    } else {
-      setCities([]);
-    }
-  }, [filters.country_id]);
 
   const handleInputChange = (field: keyof FilterValues, value: string | number) => {
     const newFilters = {
@@ -85,20 +74,23 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
   };
 
   const activeFilterCount = Object.keys(filters).filter(
-    key => key !== 'limit' && filters[key as keyof FilterValues]
+    (key) => key !== 'limit' && filters[key as keyof FilterValues],
   ).length;
 
   return (
-    <div className={styles.filterContainer}>
+    <div className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''}`}>
       <div className={styles.filterHeader} onClick={() => setIsExpanded(!isExpanded)}>
         <h3>
           Filter Events
           {activeFilterCount > 0 && (
             <span className={styles.filterCount}>({activeFilterCount})</span>
           )}
+          {typeof totalCount === 'number' && (
+            <span className={styles.resultCount}>{totalCount} found</span>
+          )}
         </h3>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className={styles.toggleButton}
           aria-label={isExpanded ? 'Collapse filters' : 'Expand filters'}
         >
@@ -130,40 +122,12 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
               onChange={(e) => handleInputChange('country_id', e.target.value)}
             >
               <option value="">All Countries</option>
-              {countries.map(country => (
+              {countries.map((country) => (
                 <option key={country.id} value={country.id}>
                   {country.print_name}
                 </option>
               ))}
             </select>
-          </div>
-
-          {/* City */}
-          <div className={styles.formGroup}>
-            <label htmlFor="city">City</label>
-            {cities.length > 0 ? (
-              <select
-                id="city"
-                value={filters.city || ''}
-                onChange={(e) => handleInputChange('city', e.target.value)}
-              >
-                <option value="">All Cities</option>
-                {cities.map(city => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type="text"
-                id="city"
-                placeholder="Select country first (or type city name)"
-                value={filters.city || ''}
-                onChange={(e) => handleInputChange('city', e.target.value)}
-                disabled={!filters.country_id}
-              />
-            )}
           </div>
 
           {/* Date Range - Using native date inputs for now */}
@@ -187,7 +151,6 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
               onChange={(e) => handleInputChange('to_date', e.target.value)}
               min={filters.from_date || undefined}
             />
-            <small>TODO: Replace with single date range picker component</small>
           </div>
 
           {/* Category */}
@@ -199,7 +162,7 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
               onChange={(e) => handleInputChange('category_id', e.target.value)}
             >
               <option value="">All Categories</option>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
@@ -222,42 +185,9 @@ export function EventFilters({ onFilterChange, initialFilters = {} }: EventFilte
             </select>
           </div>
 
-          {/* Sort By - TODO: Implement backend sorting */}
-          <div className={styles.formGroup}>
-            <label htmlFor="sort_by">Sort By</label>
-            <select
-              id="sort_by"
-              value={filters.sort_by || 'date'}
-              onChange={(e) => handleInputChange('sort_by', e.target.value)}
-            >
-              <option value="date">Date</option>
-              <option value="title">Title</option>
-              <option value="city">City</option>
-              <option value="category">Category</option>
-            </select>
-            <small>TODO: Implement backend sorting</small>
-          </div>
-
-          {/* Sort Order */}
-          <div className={styles.formGroup}>
-            <label htmlFor="sort_order">Order</label>
-            <select
-              id="sort_order"
-              value={filters.sort_order || 'asc'}
-              onChange={(e) => handleInputChange('sort_order', e.target.value)}
-            >
-              <option value="asc">Ascending</option>
-              <option value="desc">Descending</option>
-            </select>
-          </div>
-
           {/* Reset button */}
           {activeFilterCount > 0 && (
-            <button
-              type="button"
-              onClick={handleReset}
-              className={styles.resetButton}
-            >
+            <button type="button" onClick={handleReset} className={styles.resetButton}>
               Clear Filters
             </button>
           )}

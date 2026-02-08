@@ -9,7 +9,7 @@ export async function GET() {
         'Content-Type': 'application/json',
       },
       // Cache for 24 hours - categories don't change often
-      next: { revalidate: 86400 }
+      next: { revalidate: 86400 },
     });
 
     if (!response.ok) {
@@ -18,12 +18,11 @@ export async function GET() {
 
     const data = await response.json();
     return NextResponse.json(data);
-
   } catch (error: any) {
     console.error('Categories API Error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch categories' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

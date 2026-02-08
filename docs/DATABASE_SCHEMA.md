@@ -9,6 +9,7 @@
 The database uses **unconventional naming** with numeric prefixes (e.g., `0_id`, `1_date_start`). This is **legacy** from the 2008 PHP application.
 
 **Why this matters:**
+
 - API may return fields with or without prefixes
 - Always check actual API response
 - Document your findings in BACKEND_INTEGRATION.md
@@ -22,15 +23,15 @@ The database uses **unconventional naming** with numeric prefixes (e.g., `0_id`,
 
 ### Tables Summary
 
-| Table | Database | Records | Purpose |
-|-------|----------|---------|---------|
-| `phpbb_users` | phpBB | ~8,000 | User authentication |
-| `psycho_events` | Production | ~19,000 | Event listings |
-| `psycho_events_venues` | Production | ~3,300 | Venue directory |
-| `psycho_events_country` | Production | ~250 | Country lookup |
-| `psycho_events_states` | Production | ~100 | State/province lookup |
-| `psycho_events_cat` | Production | ~20 | Event categories |
-| `psycho_news` | Production | Unknown | News articles |
+| Table                   | Database   | Records | Purpose               |
+| ----------------------- | ---------- | ------- | --------------------- |
+| `phpbb_users`           | phpBB      | ~8,000  | User authentication   |
+| `psycho_events`         | Production | ~19,000 | Event listings        |
+| `psycho_events_venues`  | Production | ~3,300  | Venue directory       |
+| `psycho_events_country` | Production | ~250    | Country lookup        |
+| `psycho_events_states`  | Production | ~100    | State/province lookup |
+| `psycho_events_cat`     | Production | ~20     | Event categories      |
+| `psycho_news`           | Production | Unknown | News articles         |
 
 ## psycho_events Table (Main Events Table)
 
@@ -38,28 +39,28 @@ The database uses **unconventional naming** with numeric prefixes (e.g., `0_id`,
 
 **Note**: Column names have **numeric prefixes** in the database but API may normalize them.
 
-| DB Column | API Field | Type | Null | Description |
-|-----------|-----------|------|------|-------------|
-| `0_id` | `id` | INT | NO | Primary key, auto-increment |
-| `1_date_start` | `date_start` | DATE | NO | Event start date (YYYY-MM-DD) |
-| `2_date_end` | `date_end` | DATE | YES | Event end date (optional, for multi-day) |
-| `3_headline` | `headline` | VARCHAR(255) | NO | Event title/headline |
-| `4_bands` | `bands` | TEXT | YES | Performing bands (comma-separated) |
-| `5_text` | `text` | TEXT | YES | Event description |
-| `6_image` | ~~LEGACY~~ | VARCHAR(100) | YES | ❌ OLD image field - DO NOT USE |
-| `7_link` | `link` | VARCHAR(255) | YES | Event website/info link |
-| `8_country_id` | `country_id` | VARCHAR(10) | YES | FK to countries (e.g., "102") |
-| `9_state_id` | `state_id` | VARCHAR(10) | YES | FK to states (e.g., "0" = none) |
-| `10_venue_id` | `venue_id` | INT | YES | FK to venues table |
-| `11_contact_id` | `contact_id` | INT | YES | FK to contacts table |
-| `12_category_id` | `category_id` | INT | YES | FK to categories table |
-| `13_user_id` | `user_id` | INT | NO | Creator user (phpBB user_id) |
-| `14_city` | `city` | VARCHAR(100) | YES | City name (denormalized) |
-| `15_edit_date` | `edit_date` | DATETIME | YES | Last edit timestamp |
-| `16_create_date` | `create_date` | DATETIME | NO | Creation timestamp |
-| `17_approved` | `approved` | TINYINT(1) | NO | 0 = pending, 1 = approved |
-| `18_approved` | `approved` | TINYINT(1) | NO | Approval status (migration) |
-| `19_image` | `image` | VARCHAR(100) | YES | ✅ CURRENT image field - USE THIS |
+| DB Column        | API Field     | Type         | Null | Description                              |
+| ---------------- | ------------- | ------------ | ---- | ---------------------------------------- |
+| `0_id`           | `id`          | INT          | NO   | Primary key, auto-increment              |
+| `1_date_start`   | `date_start`  | DATE         | NO   | Event start date (YYYY-MM-DD)            |
+| `2_date_end`     | `date_end`    | DATE         | YES  | Event end date (optional, for multi-day) |
+| `3_headline`     | `headline`    | VARCHAR(255) | NO   | Event title/headline                     |
+| `4_bands`        | `bands`       | TEXT         | YES  | Performing bands (comma-separated)       |
+| `5_text`         | `text`        | TEXT         | YES  | Event description                        |
+| `6_image`        | ~~LEGACY~~    | VARCHAR(100) | YES  | ❌ OLD image field - DO NOT USE          |
+| `7_link`         | `link`        | VARCHAR(255) | YES  | Event website/info link                  |
+| `8_country_id`   | `country_id`  | VARCHAR(10)  | YES  | FK to countries (e.g., "102")            |
+| `9_state_id`     | `state_id`    | VARCHAR(10)  | YES  | FK to states (e.g., "0" = none)          |
+| `10_venue_id`    | `venue_id`    | INT          | YES  | FK to venues table                       |
+| `11_contact_id`  | `contact_id`  | INT          | YES  | FK to contacts table                     |
+| `12_category_id` | `category_id` | INT          | YES  | FK to categories table                   |
+| `13_user_id`     | `user_id`     | INT          | NO   | Creator user (phpBB user_id)             |
+| `14_city`        | `city`        | VARCHAR(100) | YES  | City name (denormalized)                 |
+| `15_edit_date`   | `edit_date`   | DATETIME     | YES  | Last edit timestamp                      |
+| `16_create_date` | `create_date` | DATETIME     | NO   | Creation timestamp                       |
+| `17_approved`    | `approved`    | TINYINT(1)   | NO   | 0 = pending, 1 = approved                |
+| `18_approved`    | `approved`    | TINYINT(1)   | NO   | Approval status (migration)              |
+| `19_image`       | `image`       | VARCHAR(100) | YES  | ✅ CURRENT image field - USE THIS        |
 
 ### ⚠️ Image Field Issue
 
@@ -68,6 +69,7 @@ The database uses **unconventional naming** with numeric prefixes (e.g., `0_id`,
 **Backend TODO**: Update `/api/v1/events` endpoint to use `19_image` field.
 
 **Frontend Workaround**: Handle both fields until backend is fixed:
+
 ```typescript
 const imageId = event.image || event['19_image'] || event['6_image'];
 ```
@@ -94,20 +96,20 @@ FOREIGN KEY (`13_user_id`) REFERENCES `phpbb_users`(`user_id`)
 
 ### Schema
 
-| Column | Type | Null | Description |
-|--------|------|------|-------------|
-| `id` | INT | NO | Primary key |
-| `name` | VARCHAR(200) | NO | Venue name |
-| `street` | VARCHAR(200) | YES | Street address |
-| `zip` | VARCHAR(20) | YES | Postal code |
-| `city` | VARCHAR(100) | YES | City name |
-| `state` | VARCHAR(100) | YES | State/province name |
-| `country` | VARCHAR(100) | YES | Country name |
-| `website` | VARCHAR(255) | YES | Venue website URL |
-| `latitude` | DECIMAL(10,7) | YES | GPS coordinate |
-| `longitude` | DECIMAL(10,7) | YES | GPS coordinate |
-| `created_at` | DATETIME | YES | Creation timestamp |
-| `updated_at` | DATETIME | YES | Last update timestamp |
+| Column       | Type          | Null | Description           |
+| ------------ | ------------- | ---- | --------------------- |
+| `id`         | INT           | NO   | Primary key           |
+| `name`       | VARCHAR(200)  | NO   | Venue name            |
+| `street`     | VARCHAR(200)  | YES  | Street address        |
+| `zip`        | VARCHAR(20)   | YES  | Postal code           |
+| `city`       | VARCHAR(100)  | YES  | City name             |
+| `state`      | VARCHAR(100)  | YES  | State/province name   |
+| `country`    | VARCHAR(100)  | YES  | Country name          |
+| `website`    | VARCHAR(255)  | YES  | Venue website URL     |
+| `latitude`   | DECIMAL(10,7) | YES  | GPS coordinate        |
+| `longitude`  | DECIMAL(10,7) | YES  | GPS coordinate        |
+| `created_at` | DATETIME      | YES  | Creation timestamp    |
+| `updated_at` | DATETIME      | YES  | Last update timestamp |
 
 ### Notes
 
@@ -119,12 +121,12 @@ FOREIGN KEY (`13_user_id`) REFERENCES `phpbb_users`(`user_id`)
 
 ### Schema
 
-| Column | Type | Null | Description |
-|--------|------|------|-------------|
-| `id` | VARCHAR(10) | NO | Primary key (e.g., "102") |
-| `name` | VARCHAR(100) | NO | Country name |
-| `name_en` | VARCHAR(100) | YES | English name |
-| `iso_code` | VARCHAR(2) | YES | ISO 3166-1 alpha-2 code |
+| Column     | Type         | Null | Description               |
+| ---------- | ------------ | ---- | ------------------------- |
+| `id`       | VARCHAR(10)  | NO   | Primary key (e.g., "102") |
+| `name`     | VARCHAR(100) | NO   | Country name              |
+| `name_en`  | VARCHAR(100) | YES  | English name              |
+| `iso_code` | VARCHAR(2)   | YES  | ISO 3166-1 alpha-2 code   |
 
 ### Common Country IDs
 
@@ -140,11 +142,11 @@ FOREIGN KEY (`13_user_id`) REFERENCES `phpbb_users`(`user_id`)
 
 ### Schema
 
-| Column | Type | Null | Description |
-|--------|------|------|-------------|
-| `id` | VARCHAR(10) | NO | Primary key |
-| `name` | VARCHAR(100) | NO | State/province name |
-| `country_id` | VARCHAR(10) | YES | FK to countries |
+| Column       | Type         | Null | Description         |
+| ------------ | ------------ | ---- | ------------------- |
+| `id`         | VARCHAR(10)  | NO   | Primary key         |
+| `name`       | VARCHAR(100) | NO   | State/province name |
+| `country_id` | VARCHAR(10)  | YES  | FK to countries     |
 
 ### Notes
 
@@ -155,11 +157,11 @@ FOREIGN KEY (`13_user_id`) REFERENCES `phpbb_users`(`user_id`)
 
 ### Schema
 
-| Column | Type | Null | Description |
-|--------|------|------|-------------|
-| `id` | INT | NO | Primary key |
-| `name` | VARCHAR(100) | NO | Category name |
-| `description` | TEXT | YES | Category description |
+| Column        | Type         | Null | Description          |
+| ------------- | ------------ | ---- | -------------------- |
+| `id`          | INT          | NO   | Primary key          |
+| `name`        | VARCHAR(100) | NO   | Category name        |
+| `description` | TEXT         | YES  | Category description |
 
 ### Common Categories
 
@@ -176,53 +178,54 @@ FOREIGN KEY (`13_user_id`) REFERENCES `phpbb_users`(`user_id`)
 
 ### Schema
 
-| Column | Type | Null | Description |
-|--------|------|------|-------------|
-| `id` | INT | NO | Primary key |
-| `name` | VARCHAR(200) | NO | Contact name |
-| `email` | VARCHAR(100) | YES | Contact email |
-| `phone` | VARCHAR(50) | YES | Contact phone |
-| `user_id` | INT | YES | Associated phpBB user |
+| Column    | Type         | Null | Description           |
+| --------- | ------------ | ---- | --------------------- |
+| `id`      | INT          | NO   | Primary key           |
+| `name`    | VARCHAR(200) | NO   | Contact name          |
+| `email`   | VARCHAR(100) | YES  | Contact email         |
+| `phone`   | VARCHAR(50)  | YES  | Contact phone         |
+| `user_id` | INT          | YES  | Associated phpBB user |
 
 ## phpbb_users Table (Authentication)
 
 ### Relevant Columns
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `user_id` | INT | Primary key |
-| `username` | VARCHAR(255) | Login username |
-| `user_email` | VARCHAR(100) | Email address |
-| `user_password` | VARCHAR(255) | Hashed password (phpBB format) |
-| `group_id` | INT | Primary user group |
-| `user_type` | TINYINT | User type (0=normal, 3=founder) |
+| Column          | Type         | Description                     |
+| --------------- | ------------ | ------------------------------- |
+| `user_id`       | INT          | Primary key                     |
+| `username`      | VARCHAR(255) | Login username                  |
+| `user_email`    | VARCHAR(100) | Email address                   |
+| `user_password` | VARCHAR(255) | Hashed password (phpBB format)  |
+| `group_id`      | INT          | Primary user group              |
+| `user_type`     | TINYINT      | User type (0=normal, 3=founder) |
 
 ### User Groups
 
-| group_id | Name | Permissions |
-|----------|------|-------------|
-| 1 | Guests | Read-only |
-| 2 | Registered | Create events |
-| 4 | Global Moderators | Approve events |
-| 5 | Administrators | Full access |
+| group_id | Name              | Permissions    |
+| -------- | ----------------- | -------------- |
+| 1        | Guests            | Read-only      |
+| 2        | Registered        | Create events  |
+| 4        | Global Moderators | Approve events |
+| 5        | Administrators    | Full access    |
 
 ## psycho_news Table
 
 ### Schema (TBD - Not Yet Documented)
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | INT | Primary key |
-| `headline` | VARCHAR(255) | News headline |
-| `text` | TEXT | News content |
-| `user_id` | INT | Author user_id |
-| `category_id` | INT | FK to news categories |
-| `create_date` | DATETIME | Publication date |
-| `approved` | TINYINT(1) | Approval status |
+| Column        | Type         | Description           |
+| ------------- | ------------ | --------------------- |
+| `id`          | INT          | Primary key           |
+| `headline`    | VARCHAR(255) | News headline         |
+| `text`        | TEXT         | News content          |
+| `user_id`     | INT          | Author user_id        |
+| `category_id` | INT          | FK to news categories |
+| `create_date` | DATETIME     | Publication date      |
+| `approved`    | TINYINT(1)   | Approval status       |
 
 ## Data Relationships
 
 ### Event → Venue
+
 ```sql
 SELECT e.*, v.name as venue_name
 FROM psycho_events e
@@ -230,6 +233,7 @@ LEFT JOIN psycho_events_venues v ON e.10_venue_id = v.id
 ```
 
 ### Event → Country
+
 ```sql
 SELECT e.*, c.name as country_name
 FROM psycho_events e
@@ -237,6 +241,7 @@ LEFT JOIN psycho_events_country c ON e.8_country_id = c.id
 ```
 
 ### Event → User
+
 ```sql
 SELECT e.*, u.username
 FROM psycho_events e
@@ -244,6 +249,7 @@ LEFT JOIN phpbb_users u ON e.13_user_id = u.user_id
 ```
 
 ### Event → Category
+
 ```sql
 SELECT e.*, cat.name as category_name
 FROM psycho_events e
@@ -264,6 +270,7 @@ LEFT JOIN psycho_events_cat cat ON e.12_category_id = cat.id
 ### Validation Rules
 
 **Before inserting events:**
+
 - `date_start` is required and must be valid date
 - `headline` is required and max 255 chars
 - `venue_id` must exist in venues table (or NULL)
@@ -274,16 +281,18 @@ LEFT JOIN psycho_events_cat cat ON e.12_category_id = cat.id
 ## Database Queries Examples
 
 ### Get All Approved Events
+
 ```sql
-SELECT * FROM psycho_events 
-WHERE 18_approved = 1 
-ORDER BY 1_date_start DESC 
+SELECT * FROM psycho_events
+WHERE 18_approved = 1
+ORDER BY 1_date_start DESC
 LIMIT 10;
 ```
 
 ### Get Events with Venue Names
+
 ```sql
-SELECT 
+SELECT
   e.0_id as id,
   e.1_date_start as date_start,
   e.3_headline as headline,
@@ -296,16 +305,18 @@ ORDER BY e.1_date_start DESC;
 ```
 
 ### Get Future Events Only
+
 ```sql
-SELECT * FROM psycho_events 
-WHERE 18_approved = 1 
+SELECT * FROM psycho_events
+WHERE 18_approved = 1
   AND 1_date_start >= CURDATE()
 ORDER BY 1_date_start ASC;
 ```
 
 ### Count Events by Country
+
 ```sql
-SELECT 
+SELECT
   c.name as country,
   COUNT(*) as event_count
 FROM psycho_events e
@@ -358,6 +369,7 @@ If migrating from the old structure:
 ### Building Forms
 
 Use this schema to know:
+
 - Required fields: `headline`, `date_start`, `user_id`
 - Optional fields: Everything else
 - Max lengths: Check VARCHAR sizes

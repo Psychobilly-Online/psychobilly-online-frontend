@@ -35,46 +35,46 @@ This document maps the **actual backend data structure** to our frontend types a
 
 ### Frontend Type Mapping
 
-| Backend Field | Frontend Type | Notes |
-|--------------|---------------|-------|
-| `id` | `number` | Event ID |
-| `date_start` | `string` | ⚠️ NOT `date` - ISO date format |
-| `date_end` | `string?` | Optional end date |
-| `headline` | `string` | Event title |
-| `bands` | `string?` | ⚠️ Band names (comma-separated) |
-| `text` | `string?` | ⚠️ NOT `description` - Event description |
-| `link` | `string?` | ⚠️ NOT `event_link` - Single link only |
-| `image` | `string?` | Image ID (not URL) |
-| `city` | `string?` | City name |
-| `venue_id` | `number?` | Foreign key to venues table |
-| `country_id` | `string?` | ⚠️ ID not name - needs lookup |
-| `state_id` | `string?` | ⚠️ ID not name - needs lookup |
-| `category_id` | `number?` | Event category FK |
-| `user_id` | `number?` | Creator user ID |
-| `contact_id` | `number?` | Contact person ID |
-| `create_date` | `string?` | Creation timestamp |
-| `edit_date` | `string?` | Last edit timestamp |
-| `approved` | `boolean?` | Approval status |
+| Backend Field | Frontend Type | Notes                                    |
+| ------------- | ------------- | ---------------------------------------- |
+| `id`          | `number`      | Event ID                                 |
+| `date_start`  | `string`      | ⚠️ NOT `date` - ISO date format          |
+| `date_end`    | `string?`     | Optional end date                        |
+| `headline`    | `string`      | Event title                              |
+| `bands`       | `string?`     | ⚠️ Band names (comma-separated)          |
+| `text`        | `string?`     | ⚠️ NOT `description` - Event description |
+| `link`        | `string?`     | ⚠️ NOT `event_link` - Single link only   |
+| `image`       | `string?`     | Image ID (not URL)                       |
+| `city`        | `string?`     | City name                                |
+| `venue_id`    | `number?`     | Foreign key to venues table              |
+| `country_id`  | `string?`     | ⚠️ ID not name - needs lookup            |
+| `state_id`    | `string?`     | ⚠️ ID not name - needs lookup            |
+| `category_id` | `number?`     | Event category FK                        |
+| `user_id`     | `number?`     | Creator user ID                          |
+| `contact_id`  | `number?`     | Contact person ID                        |
+| `create_date` | `string?`     | Creation timestamp                       |
+| `edit_date`   | `string?`     | Last edit timestamp                      |
+| `approved`    | `boolean?`    | Approval status                          |
 
 ### Common Mistakes ❌
 
 ```typescript
 // ❌ WRONG - These fields don't exist in backend
-event.date          // Use event.date_start
-event.description   // Use event.text
-event.event_link    // Use event.link
-event.ticket_link   // Doesn't exist
-event.venue_name    // Use event.venue_id (requires lookup)
-event.country       // Use event.country_id (requires lookup)
-event.time          // Doesn't exist (extract from date_start if needed)
+event.date; // Use event.date_start
+event.description; // Use event.text
+event.event_link; // Use event.link
+event.ticket_link; // Doesn't exist
+event.venue_name; // Use event.venue_id (requires lookup)
+event.country; // Use event.country_id (requires lookup)
+event.time; // Doesn't exist (extract from date_start if needed)
 
 // ✅ CORRECT
-event.date_start
-event.text
-event.link
-event.venue_id
-event.country_id
-event.bands
+event.date_start;
+event.text;
+event.link;
+event.venue_id;
+event.country_id;
+event.bands;
 ```
 
 ## Venue Data Structure
@@ -116,15 +116,17 @@ event.bands
 ### Possible Solutions
 
 1. **Frontend lookup table** (fast, but needs maintenance)
+
    ```typescript
    const COUNTRIES = {
-     "102": "Germany",
-     "103": "United Kingdom",
+     '102': 'Germany',
+     '103': 'United Kingdom',
      // ...
    };
    ```
 
 2. **Backend endpoint** (dynamic, but extra API call)
+
    ```
    GET /api/v1/countries
    GET /api/v1/states
@@ -135,7 +137,7 @@ event.bands
    {
      "country_id": "102",
      "country_name": "Germany",
-     "state_id": "0", 
+     "state_id": "0",
      "state_name": "NRW"
    }
    ```
@@ -152,7 +154,7 @@ event.bands
 
 ```typescript
 // Already implemented in api-client.ts
-apiClient.images.getUrl(event.image, 'thumb')
+apiClient.images.getUrl(event.image, 'thumb');
 // Returns: https://psychobilly-online.de/images/thumb/12345.jpg
 ```
 
@@ -208,14 +210,14 @@ DELETE /api/v1/events/{id}
 
 ### Query Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `page` | number | Page number (default: 1) |
-| `limit` | number | Items per page (default: 10) |
-| `status` | string | Filter by status: `approved`, `pending`, `rejected` |
-| `country` | string | Filter by country ID |
-| `dateFrom` | string | Filter events from date (ISO format) |
-| `dateTo` | string | Filter events to date (ISO format) |
+| Parameter  | Type   | Description                                         |
+| ---------- | ------ | --------------------------------------------------- |
+| `page`     | number | Page number (default: 1)                            |
+| `limit`    | number | Items per page (default: 10)                        |
+| `status`   | string | Filter by status: `approved`, `pending`, `rejected` |
+| `country`  | string | Filter by country ID                                |
+| `dateFrom` | string | Filter events from date (ISO format)                |
+| `dateTo`   | string | Filter events to date (ISO format)                  |
 
 ### Response Format
 
@@ -248,6 +250,7 @@ Browser → Next.js API Route → Backend API
 ```
 
 **Files**:
+
 - `src/app/api/events/route.ts` - BFF route
 - `src/lib/api-client.ts` - Backend API client
 - `src/hooks/useEvents.ts` - React hook (calls BFF)
@@ -291,6 +294,7 @@ try {
 ## Authentication Flow (TODO)
 
 ### Current Status
+
 - Backend supports JWT authentication
 - Frontend not yet integrated
 - Forum uses separate phpBB session
@@ -318,6 +322,7 @@ localStorage.removeItem('token');
 **Issue**: Events have `venue_id` but no `venue_name`
 
 **Workaround**: Display city instead
+
 ```typescript
 {event.city && (
   <div>📍 {event.city}</div>
@@ -331,6 +336,7 @@ localStorage.removeItem('token');
 **Issue**: Only IDs, no human-readable names
 
 **Workaround**: Don't display until lookup implemented
+
 ```typescript
 // Skip country display for now
 ```
@@ -342,6 +348,7 @@ localStorage.removeItem('token');
 **Issue**: `image: ""` passes truthy check
 
 **Fix**: Check for empty string
+
 ```typescript
 {event.image && event.image !== '' && (
   <img src={apiClient.images.getUrl(event.image, 'thumb')} />
@@ -353,6 +360,7 @@ localStorage.removeItem('token');
 **Issue**: MySQL `0000-00-00` dates
 
 **Fix**: Validate before parsing (already implemented)
+
 ```typescript
 const date = new Date(dateString);
 if (isNaN(date.getTime())) return null;
@@ -373,6 +381,7 @@ When integrating new backend endpoints:
 ## Contact
 
 For backend changes or questions about data structure:
+
 - Check backend repository: `psychobilly-online-api`
 - Review database schema
 - Test endpoints with Postman/curl

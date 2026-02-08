@@ -8,7 +8,7 @@ import { apiClient } from '@/lib/api-client';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    
+
     // Build query params from request
     const params: Record<string, string> = {};
     searchParams.forEach((value, key) => {
@@ -21,10 +21,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
   } catch (error: any) {
     console.error('Events API error:', error);
-    
+
     return NextResponse.json(
       { error: error.message || 'Failed to fetch events' },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }

@@ -1,0 +1,9 @@
+.next
+node_modules
+public
+frontend
+backups
+_docs
+_docs/**
+_sessions
+_sessions/**

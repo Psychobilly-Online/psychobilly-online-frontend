@@ -9,6 +9,10 @@
   padding-left: 2rem;
 }
 
+.container {
+  width: 100%;
+}
+
 .row {
   box-sizing: border-box;
   display: -webkit-box;
@@ -71,8 +75,8 @@
   -webkit-box-flex: 0;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .col-xs {
@@ -268,7 +272,7 @@
 
 @media only screen and (min-width: 48em) {
   .container {
-    width: 49rem;
+    max-width: 49rem;
   }
 
   .col-sm,
@@ -301,8 +305,8 @@
     -webkit-box-flex: 0;
     -ms-flex: 0 0 auto;
     flex: 0 0 auto;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
+    padding-right: 0;
+    padding-left: 0;
   }
 
   .col-sm {
@@ -499,7 +503,7 @@
 
 @media only screen and (min-width: 64em) {
   .container {
-    width: 65rem;
+    max-width: 1200px;
   }
 
   .col-md,
@@ -532,8 +536,8 @@
     -webkit-box-flex: 0;
     -ms-flex: 0 0 auto;
     flex: 0 0 auto;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
+    padding-right: 0;
+    padding-left: 0;
   }
 
   .col-md {
@@ -730,7 +734,7 @@
 
 @media only screen and (min-width: 75em) {
   .container {
-    width: 76rem;
+    max-width: 1200px;
   }
 
   .col-lg,
@@ -763,8 +767,8 @@
     -webkit-box-flex: 0;
     -ms-flex: 0 0 auto;
     flex: 0 0 auto;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
+    padding-right: 0;
+    padding-left: 0;
   }
 
   .col-lg {

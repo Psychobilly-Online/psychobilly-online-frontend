@@ -14,7 +14,7 @@ class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
-    public response?: any
+    public response?: any,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -24,10 +24,7 @@ class ApiError extends Error {
 /**
  * Generic fetch wrapper with error handling
  */
-async function fetchApi<T>(
-  url: string,
-  options: FetchOptions = {}
-): Promise<T> {
+async function fetchApi<T>(url: string, options: FetchOptions = {}): Promise<T> {
   const { token, ...fetchOptions } = options;
 
   const headers: Record<string, string> = {
@@ -56,11 +53,7 @@ async function fetchApi<T>(
     const data = await response.json();
 
     if (!response.ok) {
-      throw new ApiError(
-        data.message || data.error || 'API request failed',
-        response.status,
-        data
-      );
+      throw new ApiError(data.message || data.error || 'API request failed', response.status, data);
     }
 
     return data;
@@ -152,11 +145,7 @@ export const apiClient = {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new ApiError(
-          error.message || 'Image upload failed',
-          response.status,
-          error
-        );
+        throw new ApiError(error.message || 'Image upload failed', response.status, error);
       }
 
       return response.json();

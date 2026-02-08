@@ -16,6 +16,7 @@
 **Go to:** https://github.com/new
 
 **Settings:**
+
 - Repository name: `psychobilly-online-frontend`
 - Description: `Next.js 15 frontend for Psychobilly Online community`
 - Visibility: **Private** (or Public if you prefer)
@@ -44,16 +45,19 @@ git push -u origin main
 **Go to:** https://vercel.com
 
 **Step 1: Sign Up/Login**
+
 - Click "Sign Up" or "Login"
 - Choose "Continue with GitHub"
 - Authorize Vercel to access your GitHub account
 
 **Step 2: Import Project**
+
 - Click "Add New..." → "Project"
 - Find and select `psychobilly-online-frontend` repository
 - Click "Import"
 
 **Step 3: Configure Project**
+
 - Framework Preset: **Next.js** (auto-detected)
 - Root Directory: **./ (default)** - Keep as is
 - Build Command: `npm run build` (default)
@@ -72,6 +76,7 @@ NEXT_PUBLIC_SITE_URL = https://app.psychobilly-online.de
 ```
 
 **Step 5: Deploy**
+
 - Click "Deploy"
 - Wait ~2 minutes for build to complete
 - You'll get a URL like: `psychobilly-online-frontend.vercel.app`
@@ -99,6 +104,7 @@ Login to your HostEurope account and add a DNS record:
 **Wait 5-10 minutes** for DNS propagation.
 
 **Verify:**
+
 - Visit: https://app.psychobilly-online.de
 - Vercel automatically provisions SSL certificate (Let's Encrypt)
 - Should see your Next.js homepage!

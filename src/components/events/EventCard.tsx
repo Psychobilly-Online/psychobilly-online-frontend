@@ -21,7 +21,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
     txt.innerHTML = html;
     return txt.value;
   };
-  
+
   // Helper to ensure link has protocol
   const ensureProtocol = (url: string | null | undefined): string | null => {
     if (!url) return null;
@@ -52,7 +52,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
   };
 
   const getDay = (date: Date) => date.getDate();
-  
+
   const getMonth = (date: Date) => {
     return new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(date);
   };
@@ -73,39 +73,33 @@ export function EventCard({ event, categoryName }: EventCardProps) {
         <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
         <div className={styles.dateYear}>{getYear(eventDate)}</div>
       </div>
-      
+
       <div className={styles.cardContent}>
         {/* Event Details */}
         <div className={styles.details}>
           <h3 className={styles.headline}>{decodeHtml(event.headline)}</h3>
-          
+
           <div className={styles.meta}>
             {(categoryName || event.category_id) && (
               <div className={styles.metaItem}>
                 🏷️ {categoryName || `Category ${event.category_id}`}
               </div>
             )}
-            
+
             {event.venue && (event.venue.city || event.venue.name) && (
               <div className={styles.metaItem}>
                 📍 {[event.venue.city, event.venue.name].filter(Boolean).join(', ')}
               </div>
             )}
-            
-            {event.bands && (
-              <div className={styles.metaItem}>
-                🎸 {decodeHtml(event.bands)}
-              </div>
-            )}
+
+            {event.bands && <div className={styles.metaItem}>🎸 {decodeHtml(event.bands)}</div>}
           </div>
 
           {event.text && (
             <p className={styles.description}>
               {(() => {
                 const decoded = decodeHtml(event.text);
-                return decoded.length > 150
-                  ? `${decoded.substring(0, 150)}...`
-                  : decoded;
+                return decoded.length > 150 ? `${decoded.substring(0, 150)}...` : decoded;
               })()}
             </p>
           )}

@@ -120,6 +120,7 @@ git push origin main
 ### Preview Deployments
 
 Every branch and PR gets a unique preview URL:
+
 ```bash
 git checkout -b feature/new-dashboard
 git push origin feature/new-dashboard
@@ -130,6 +131,7 @@ git push origin feature/new-dashboard
 ## 💰 Cost Breakdown
 
 ### Free Tier Limits (Hobby Plan)
+
 - ✅ 100GB bandwidth/month
 - ✅ Unlimited requests
 - ✅ Unlimited deployments
@@ -139,10 +141,12 @@ git push origin feature/new-dashboard
 - ✅ Edge Network (CDN)
 
 **Expected Usage:**
+
 - Small community site: ~5-10GB/month
 - **Cost: $0/month** ✅
 
 ### When to Upgrade (Pro Plan - $20/month)
+
 - Need >100GB bandwidth
 - Need team collaboration
 - Need password protection for previews
@@ -153,6 +157,7 @@ git push origin feature/new-dashboard
 ## 🔧 Development Workflow
 
 ### Local Development
+
 ```bash
 cd d:\webdev\psychobilly-online-v2\frontend
 
@@ -168,13 +173,16 @@ npm run dev
 ```
 
 ### Environment Variables (Local)
+
 Create `.env.local`:
+
 ```env
 NEXT_PUBLIC_API_URL=https://psychobilly-online.de/api/v1
 NEXT_PUBLIC_IMAGE_URL=https://psychobilly-online.de/images
 ```
 
 ### Build & Test
+
 ```bash
 # Build production bundle
 npm run build
@@ -184,6 +192,7 @@ npm start
 ```
 
 ### Deploy
+
 ```bash
 git add .
 git commit -m "Your changes"
@@ -256,19 +265,19 @@ export async function login(email: string, password: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  
+
   const data = await res.json();
   return data; // { token, user }
 }
 
 export async function apiRequest(endpoint: string, options = {}) {
   const token = localStorage.getItem('token'); // or from session
-  
+
   return fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : '',
+      Authorization: token ? `Bearer ${token}` : '',
       ...options.headers,
     },
   });
@@ -283,9 +292,9 @@ async function handleImageUpload(file: File) {
   const formData = new FormData();
   formData.append('image', file);
   formData.append('source', 'events');
-  
+
   const token = localStorage.getItem('token');
-  
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_IMAGE_URL}/upload`, {
     method: 'POST',
     headers: {
@@ -293,13 +302,13 @@ async function handleImageUpload(file: File) {
     },
     body: formData,
   });
-  
+
   const data = await res.json();
   return data.id; // Store this ID with event
 }
 
 // Display image
-<img 
+<img
   src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${imageId}-medium.jpg`}
   alt="Event"
 />
@@ -308,6 +317,7 @@ async function handleImageUpload(file: File) {
 ## 🎯 MVP Features Checklist
 
 ### Phase 1: Core Structure (Week 1)
+
 - [ ] Homepage with hero section
 - [ ] Navigation (public + admin)
 - [ ] Basic layout components
@@ -315,6 +325,7 @@ async function handleImageUpload(file: File) {
 - [ ] API client setup
 
 ### Phase 2: Events (Week 2)
+
 - [ ] Events list page (public)
 - [ ] Event detail page
 - [ ] Admin: Add event form
@@ -322,18 +333,21 @@ async function handleImageUpload(file: File) {
 - [ ] Image upload integration
 
 ### Phase 3: Venues (Week 3)
+
 - [ ] Venues list page
 - [ ] Venue detail page
 - [ ] Admin: Add/edit venue
 - [ ] Link venues to events
 
 ### Phase 4: Admin Dashboard (Week 4)
+
 - [ ] Dashboard overview
 - [ ] Statistics (event count, etc.)
 - [ ] Recent events list
 - [ ] Quick actions
 
 ### Phase 5: Authentication (Week 5)
+
 - [ ] Login page
 - [ ] JWT token management
 - [ ] Protected routes

@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="/styles/helpers.css" />
-        <link rel="stylesheet" href="/styles/style.css" />
+        <link rel="stylesheet" href="/styles/site.css" />
         <link rel="stylesheet" href="/styles/flexboxgrid.css" />
       </head>
       <body id="pageBody">

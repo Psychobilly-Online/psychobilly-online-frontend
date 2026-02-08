@@ -18,7 +18,7 @@
   - See detailed plan: `docs/DATABASE_MIGRATION_PLAN.md`
   - **Problem**: Dual image fields (6_image with dead refs, 19_image with correct refs)
   - **Current State**: API now uses 19_image directly
-  - **Next Steps**: 
+  - **Next Steps**:
     - Option A: Migrate 19_image → 6_image, drop 19_image (Quick fix, 2 hours)
     - Option B: Full table cleanup with proper column names (Better, 2 days)
   - **Decision needed**: Choose Option A or B tomorrow
@@ -28,6 +28,7 @@
 ### Phase 1: Events List & Detail View
 
 #### Completed Today ✅
+
 - [x] **Event filtering system** - COMPLETED
   - [x] Country dropdown (ordered by event count, active countries only)
   - [x] City dropdown (populated from venue table after country selection)
@@ -37,13 +38,11 @@
   - [x] Results per page selector
   - [x] Backend sorting (date, headline, city, category)
   - [x] Clear filters with count badge
-  
 - [x] **Event display improvements** - COMPLETED
   - [x] Display year and category name on cards
   - [x] Show venue location (city, venue name) instead of old city field
   - [x] Decode HTML entities (&amp; → &)
   - [x] Auto-add https:// to links
-  
 - [x] **Backend enhancements** - COMPLETED
   - [x] GET /v1/cities endpoint (with country filter)
   - [x] GET /v1/countries/active endpoint (ordered by event count)
@@ -52,6 +51,7 @@
   - [x] Fixed image field to use 19_image
 
 #### Frontend - Events List Improvements
+
 - [x] **Fix special character encoding** ✅ DONE
   - Estimated: 30 minutes
 
@@ -78,6 +78,7 @@
   - Estimated: 2-3 hours
 
 #### Frontend - Event Detail Page
+
 - [ ] **Event detail page** (`/events/[id]`)
   - Full event information (all fields)
   - Larger image display (medium or full variant)
@@ -154,6 +155,7 @@
 ## 🟢 Medium Priority (Nice to Have)
 
 ### Admin Features
+
 - [ ] **Event approval system**
   - Approve/Reject events
   - Bulk actions
@@ -167,6 +169,7 @@
   - Estimated: 1 day
 
 ### UX Improvements
+
 - [ ] **Loading states**
   - Skeleton screens for EventCard
   - Better loading animations
@@ -186,6 +189,7 @@
   - Estimated: 1 day
 
 ### API Enhancements
+
 - [ ] **Optimize event queries**
   - Add indexes on date_start, country_id, approved
   - Implement caching (Redis)
@@ -200,6 +204,7 @@
 ## 🔵 Low Priority (Future)
 
 ### Advanced Features
+
 - [ ] **Map view**
   - Google Maps / Mapbox integration
   - Cluster markers
@@ -232,6 +237,7 @@
   - Estimated: 1-2 days
 
 ### Performance & Optimization
+
 - [ ] **Image optimization**
   - Lazy loading
   - WebP format support
@@ -257,6 +263,7 @@
 ### psychobilly-online-api
 
 #### Critical Backend Changes
+
 - [ ] **Update `.env` with CORS origins** (server)
   - Add `https://app.psychobilly-online.de`
   - Location: HostEurope server
@@ -281,6 +288,7 @@
   - Update validation rules for these fields
 
 #### Backend Enhancements
+
 - [ ] **Add venue data to events endpoint**
   - Include venue name, address, website in event response
   - Use JOIN query on venue_id
@@ -306,6 +314,7 @@
   - Field descriptions and types
 
 ### psychobilly-online-images
+
 - [ ] Update `.env` with CORS origins (server)
 - [ ] Test image upload from frontend
 - [ ] Add image optimization pipeline
@@ -318,6 +327,7 @@
 **CRITICAL**: Do not assume API field names, structures, or behaviors.
 
 **Before implementing any API integration:**
+
 1. ✅ Check the API README in `psychobilly-online-api` repo
 2. ✅ Test the actual endpoint with curl or Postman
 3. ✅ Log the response in console to see actual structure
@@ -325,12 +335,14 @@
 5. ✅ If making an assumption, clearly communicate it
 
 **Example of what went wrong today:**
+
 - ❌ Assumed field was named `date` → Actually `date_start`
 - ❌ Assumed field was named `description` → Actually `text`
 - ❌ Assumed field was named `event_link` → Actually `link`
 - ❌ Cost us 30+ minutes of debugging
 
 **How to avoid this:**
+
 ```bash
 # Always test the endpoint first
 cd d:/webdev/psychobilly-online-api
@@ -347,6 +359,7 @@ console.log('Actual API response:', data);
 
 All database table structures are documented in `docs/DATABASE_SCHEMA.md`.
 Refer to this file when:
+
 - Building forms (to know available fields)
 - Writing API queries (to know table relationships)
 - Understanding data types and constraints
@@ -354,6 +367,7 @@ Refer to this file when:
 ### Field Name Conventions
 
 **Legacy naming** from 2008 PHP application:
+
 - Dates: `date_start`, `date_end`, `create_date`, `edit_date`
 - Text: `text` not `description`
 - Links: `link` (singular) not `event_link` or `ticket_link`
@@ -365,7 +379,9 @@ Refer to this file when:
 ## 🗄️ Database Tasks
 
 ### Migrations Needed
+
 - [ ] **Add indexes**
+
   ```sql
   CREATE INDEX idx_date_start ON events(date_start);
   CREATE INDEX idx_approved ON events(approved);
@@ -373,13 +389,14 @@ Refer to this file when:
   ```
 
 - [ ] **Add tags and genre fields to events table**
+
   ```sql
   -- Add tags field for comma-separated tags (keywords, style descriptors, etc.)
   ALTER TABLE psycho_events ADD COLUMN tags TEXT NULL COMMENT 'Comma-separated tags';
-  
+
   -- Add genre field
   ALTER TABLE psycho_events ADD COLUMN genre VARCHAR(100) NULL;
-  
+
   -- Alternative: Create proper genres lookup table for better normalization
   -- CREATE TABLE psycho_events_genres (
   --   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -388,6 +405,7 @@ Refer to this file when:
   -- ALTER TABLE psycho_events ADD COLUMN genre_id INT;
   -- ADD FOREIGN KEY (genre_id) REFERENCES psycho_events_genres(id);
   ```
+
   - **Note**: `bands`, `tags`, and `genre` are three separate fields
   - `bands`: Performing bands/artists (comma-separated)
   - `tags`: Additional keywords/tags (comma-separated)
@@ -399,6 +417,7 @@ Refer to this file when:
   - Reduce API calls
 
 ### Data Cleanup
+
 - [ ] **Archive old events**
   - Move events older than 2 years to archive table
   - Keep database performant
@@ -481,6 +500,7 @@ Refer to this file when:
 **CRITICAL**: Do not assume API field names, structures, or behaviors.
 
 **Before implementing any API integration:**
+
 1. ✅ Check the API README in `psychobilly-online-api` repo
 2. ✅ Test the actual endpoint with curl or Postman
 3. ✅ Log the response in console to see actual structure
@@ -488,12 +508,14 @@ Refer to this file when:
 5. ✅ If making an assumption, clearly communicate it
 
 **Example of what went wrong today:**
+
 - ❌ Assumed field was named `date` → Actually `date_start`
 - ❌ Assumed field was named `description` → Actually `text`
 - ❌ Assumed field was named `event_link` → Actually `link`
 - ❌ Cost us 30+ minutes of debugging
 
 **How to avoid this:**
+
 ```bash
 # Always test the endpoint first
 cd d:/webdev/psychobilly-online-api
@@ -510,6 +532,7 @@ console.log('Actual API response:', data);
 
 All database table structures are documented in `docs/DATABASE_SCHEMA.md`.
 Refer to this file when:
+
 - Building forms (to know available fields)
 - Writing API queries (to know table relationships)
 - Understanding data types and constraints
@@ -517,6 +540,7 @@ Refer to this file when:
 ### Field Name Conventions
 
 **Legacy naming** from 2008 PHP application:
+
 - Dates: `date_start`, `date_end`, `create_date`, `edit_date`
 - Text: `text` not `description`
 - Links: `link` (singular) not `event_link` or `ticket_link`
@@ -528,12 +552,14 @@ Refer to this file when:
 ## 📝 Notes
 
 ### Dependencies Between Tasks
+
 - Event detail page requires venue/country lookups
 - Event creation requires authentication
 - Admin dashboard requires authentication
 - Search requires backend endpoint
 
 ### Prioritization Strategy
+
 1. Fix critical CORS issue first
 2. Complete MVP features (detail page, filtering, auth)
 3. Add admin features
@@ -541,6 +567,7 @@ Refer to this file when:
 5. Add advanced features
 
 ### Time Estimates
+
 - **Critical tasks**: 2-4 hours
 - **High priority**: 1-2 weeks
 - **Medium priority**: 2-3 weeks
