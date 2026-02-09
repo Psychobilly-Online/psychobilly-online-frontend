@@ -163,137 +163,136 @@ export function EventFilters({
       {isExpanded && (
         <form className={styles.filterForm} onSubmit={(e) => e.preventDefault()}>
           <div className={styles.filterFields}>
-          {/* Search */}
-          <div className={styles.formGroup}>
-            <label htmlFor="search">Search</label>
-            <input
-              type="text"
-              id="search"
-              placeholder="Event title, bands, city..."
-              value={filters.search || ''}
-              onChange={(e) => handleInputChange('search', e.target.value)}
-            />
-            <small>Searches in title, bands, city, and description</small>
-          </div>
+            {/* Search */}
+            <div className={styles.formGroup}>
+              <label htmlFor="search">Search</label>
+              <input
+                type="text"
+                id="search"
+                placeholder="Event title, bands, city..."
+                value={filters.search || ''}
+                onChange={(e) => handleInputChange('search', e.target.value)}
+              />
+              <small>Searches in title, bands, city, and description</small>
+            </div>
 
-          {/* Country */}
-          <div className={styles.formGroup}>
-            <label htmlFor="country">Country</label>
-            <select
-              id="country"
-              value={filters.country_id || ''}
-              onChange={(e) => handleInputChange('country_id', e.target.value)}
-            >
-              <option value="">All Countries</option>
-              {countries.map((country) => (
-                <option key={country.id} value={country.id}>
-                  {country.print_name}
-                </option>
-              ))}
-            </select>
-          </div>
+            {/* Country */}
+            <div className={styles.formGroup}>
+              <label htmlFor="country">Country</label>
+              <select
+                id="country"
+                value={filters.country_id || ''}
+                onChange={(e) => handleInputChange('country_id', e.target.value)}
+              >
+                <option value="">All Countries</option>
+                {countries.map((country) => (
+                  <option key={country.id} value={country.id}>
+                    {country.print_name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Date Range */}
-          <div className={`${styles.formGroup} ${styles.dateRangeGroup}`}>
-            <label htmlFor="date_range">Date Range</label>
-            <DatePicker
-              id="date_range"
-              selected={startDate}
-              onChange={handleDateChange}
-              startDate={startDate}
-              endDate={endDate}
-              selectsRange
-              minDate={new Date(2009, 0, 1)}
-              maxDate={new Date(new Date().getFullYear() + 5, 11, 31)}
-              dateFormat="dd MMM yyyy"
-              customInput={<DateRangeInput />}
-              popperClassName={styles.datePickerPopper}
-              calendarClassName={styles.datePickerCalendar}
-              renderCustomHeader={({
-                date,
-                changeYear,
-                changeMonth,
-                decreaseMonth,
-                increaseMonth,
-                prevMonthButtonDisabled,
-                nextMonthButtonDisabled,
-              }) => (
-                <div className={styles.datePickerHeader}>
-                  <button
-                    type="button"
-                    className={styles.datePickerNavButton}
-                    onClick={decreaseMonth}
-                    disabled={prevMonthButtonDisabled}
-                  >
-                    ‹
-                  </button>
-                  <select
-                    className={styles.datePickerMonthSelect}
-                    value={date.getMonth()}
-                    onChange={(event) => changeMonth(parseInt(event.target.value))}
-                  >
-                    {monthLabels.map((label, index) => (
-                      <option key={label} value={index}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    className={styles.datePickerYearSelect}
-                    value={date.getFullYear()}
-                    onChange={(event) => changeYear(parseInt(event.target.value))}
-                  >
-                    {yearOptions.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="button"
-                    className={styles.datePickerNavButton}
-                    onClick={increaseMonth}
-                    disabled={nextMonthButtonDisabled}
-                  >
-                    ›
-                  </button>
-                </div>
-              )}
-            />
-          </div>
+            {/* Date Range */}
+            <div className={`${styles.formGroup} ${styles.dateRangeGroup}`}>
+              <label htmlFor="date_range">Date Range</label>
+              <DatePicker
+                id="date_range"
+                selected={startDate}
+                onChange={handleDateChange}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                minDate={new Date(2009, 0, 1)}
+                maxDate={new Date(new Date().getFullYear() + 5, 11, 31)}
+                dateFormat="dd MMM yyyy"
+                customInput={<DateRangeInput />}
+                popperClassName={styles.datePickerPopper}
+                calendarClassName={styles.datePickerCalendar}
+                renderCustomHeader={({
+                  date,
+                  changeYear,
+                  changeMonth,
+                  decreaseMonth,
+                  increaseMonth,
+                  prevMonthButtonDisabled,
+                  nextMonthButtonDisabled,
+                }) => (
+                  <div className={styles.datePickerHeader}>
+                    <button
+                      type="button"
+                      className={styles.datePickerNavButton}
+                      onClick={decreaseMonth}
+                      disabled={prevMonthButtonDisabled}
+                    >
+                      ‹
+                    </button>
+                    <select
+                      className={styles.datePickerMonthSelect}
+                      value={date.getMonth()}
+                      onChange={(event) => changeMonth(parseInt(event.target.value))}
+                    >
+                      {monthLabels.map((label, index) => (
+                        <option key={label} value={index}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      className={styles.datePickerYearSelect}
+                      value={date.getFullYear()}
+                      onChange={(event) => changeYear(parseInt(event.target.value))}
+                    >
+                      {yearOptions.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      className={styles.datePickerNavButton}
+                      onClick={increaseMonth}
+                      disabled={nextMonthButtonDisabled}
+                    >
+                      ›
+                    </button>
+                  </div>
+                )}
+              />
+            </div>
 
-          {/* Category */}
-          <div className={styles.formGroup}>
-            <label htmlFor="category">Category</label>
-            <select
-              id="category"
-              value={filters.category_id || ''}
-              onChange={(e) => handleInputChange('category_id', e.target.value)}
-            >
-              <option value="">All Categories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
+            {/* Category */}
+            <div className={styles.formGroup}>
+              <label htmlFor="category">Category</label>
+              <select
+                id="category"
+                value={filters.category_id || ''}
+                onChange={(e) => handleInputChange('category_id', e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          {/* Results per page */}
-          <div className={styles.formGroup}>
-            <label htmlFor="limit">Results per page</label>
-            <select
-              id="limit"
-              value={filters.limit || 20}
-              onChange={(e) => handleInputChange('limit', parseInt(e.target.value))}
-            >
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </div>
-
+            {/* Results per page */}
+            <div className={styles.formGroup}>
+              <label htmlFor="limit">Results per page</label>
+              <select
+                id="limit"
+                value={filters.limit || 20}
+                onChange={(e) => handleInputChange('limit', parseInt(e.target.value))}
+              >
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
           </div>
 
           {/* Reset button */}

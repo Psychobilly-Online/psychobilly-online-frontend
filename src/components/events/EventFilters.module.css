@@ -227,18 +227,15 @@
   color: #7d2923;
 }
 
-.datePickerCalendar
-  :global(.react-datepicker__day--today.react-datepicker__day--range-start) {
+.datePickerCalendar :global(.react-datepicker__day--today.react-datepicker__day--range-start) {
   color: #fff;
 }
 
-.datePickerCalendar
-  :global(.react-datepicker__day--today.react-datepicker__day--range-end) {
+.datePickerCalendar :global(.react-datepicker__day--today.react-datepicker__day--range-end) {
   color: #fff;
 }
 
-.datePickerCalendar
-  :global(.react-datepicker__day--today.react-datepicker__day--selected) {
+.datePickerCalendar :global(.react-datepicker__day--today.react-datepicker__day--selected) {
   color: #fff;
 }
 
