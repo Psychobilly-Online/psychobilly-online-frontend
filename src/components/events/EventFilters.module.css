@@ -80,10 +80,21 @@
 
 .filterForm {
   padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filterFields {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px 16px;
   align-items: start;
+}
+
+.filterActions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .formGroup {
@@ -126,6 +137,165 @@
   cursor: not-allowed;
 }
 
+:global(.react-datepicker-wrapper) {
+  width: 100%;
+}
+
+.dateRangeButton {
+  width: 100%;
+  min-width: 200px;
+  min-height: 38px;
+  text-align: left;
+  padding: 6px 12px;
+  border: 1px solid #3a3a3d;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #262629;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.dateRangeButton:hover {
+  border-color: #4a4a50;
+}
+
+.dateRangeButton:focus {
+  outline: none;
+  border-color: #7d2923;
+  box-shadow: 0 0 0 2px rgba(125, 41, 35, 0.25);
+}
+
+.datePickerPopper {
+  z-index: 20 !important;
+  margin-top: 8px;
+}
+
+.datePickerCalendar {
+  background: #1b1b1d;
+  border: 1px solid #2d2d30;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 14px;
+}
+
+.datePickerCalendar :global(.react-datepicker__header) {
+  background: #202022;
+  border-bottom: 1px solid #2d2d30;
+  padding: 10px 12px;
+}
+
+.datePickerCalendar :global(.react-datepicker__current-month),
+.datePickerCalendar :global(.react-datepicker__day-name) {
+  color: #fff;
+  font-size: 13px;
+}
+
+.datePickerCalendar :global(.react-datepicker__day) {
+  color: #fff;
+  border-radius: 6px;
+  width: 36px;
+  line-height: 36px;
+  margin: 2px;
+}
+
+.datePickerCalendar :global(.react-datepicker__day:hover) {
+  background: #2a2a2d;
+}
+
+.datePickerCalendar :global(.react-datepicker__day--in-range),
+.datePickerCalendar :global(.react-datepicker__day--in-selecting-range) {
+  background: #262629;
+  color: #fff;
+}
+
+.datePickerCalendar :global(.react-datepicker__day--range-start),
+.datePickerCalendar :global(.react-datepicker__day--range-end),
+.datePickerCalendar :global(.react-datepicker__day--selected) {
+  background: #7d2923;
+  color: #fff;
+  border-radius: 999px;
+}
+
+.datePickerCalendar :global(.react-datepicker__day--today) {
+  color: #7d2923;
+}
+
+.datePickerCalendar
+  :global(.react-datepicker__day--today.react-datepicker__day--range-start) {
+  color: #fff;
+}
+
+.datePickerCalendar
+  :global(.react-datepicker__day--today.react-datepicker__day--range-end) {
+  color: #fff;
+}
+
+.datePickerCalendar
+  :global(.react-datepicker__day--today.react-datepicker__day--selected) {
+  color: #fff;
+}
+
+.datePickerCalendar :global(.react-datepicker__navigation-icon::before) {
+  border-color: #7d2923;
+}
+
+.datePickerHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.datePickerNavButton {
+  background: transparent;
+  border: 1px solid #343437;
+  color: #fff;
+  border-radius: 6px;
+  height: 34px;
+  width: 50px;
+  font-size: 30px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.datePickerNavButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.datePickerMonthSelect,
+.datePickerYearSelect {
+  background: #262629;
+  border: 1px solid #3a3a3d;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-family: inherit;
+  min-width: 120px;
+  height: 34px;
+  line-height: 20px;
+  box-sizing: border-box;
+}
+
+.datePickerMonthSelect {
+  flex: 1;
+}
+
+.datePickerYearSelect {
+  width: 80px;
+  text-align: center;
+}
+
 .formGroup small {
   display: block;
   margin-top: 4px;
@@ -134,7 +304,8 @@
 }
 
 .resetButton {
-  width: 100%;
+  width: auto;
+  min-width: 160px;
   padding: 10px;
   background: #7d2923;
   color: white;
@@ -155,6 +326,11 @@
   border-color: #a24b43;
 }
 
+.resetButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .filterContainer {
@@ -169,7 +345,14 @@
 
   .filterForm {
     padding: 14px;
+  }
+
+  .filterFields {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .dateRangeGroup {
+    grid-column: span 2;
   }
 
   .formGroup {
