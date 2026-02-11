@@ -54,27 +54,32 @@ export function EventFiltersCountries({
         aria-expanded={countryOpen}
         aria-haspopup="dialog"
       >
-        <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
-          {selectedCountryIds.length === 0 && <Chip label="All countries" variant="outlined" />}
-          {selectedCountryIds.length > 0 && selectedRegion && (
-            <Chip label={selectedRegion} onDelete={() => onApplyCountries([])} variant="outlined" />
-          )}
-          {selectedCountryIds.length > 0 &&
-            !selectedRegion &&
-            selectedCountryIds.map((id) => {
-              const country = countryLookup.get(id);
-              if (!country) return null;
-              return (
-                <Chip
-                  key={id}
-                  label={renderCountryLabel(country)}
-                  onDelete={() => onToggleCountry(id)}
-                  variant="outlined"
-                />
-              );
-            })}
-        </Stack>
+        <span>
+          {selectedCountryIds.length === 0 && 'All countries'}
+          {selectedCountryIds.length > 0 && selectedRegion && selectedRegion}
+          {selectedCountryIds.length > 0 && !selectedRegion && `${selectedCountryIds.length} selected`}
+        </span>
       </button>
+      <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
+        {selectedCountryIds.length === 0 && <Chip label="All countries" variant="outlined" />}
+        {selectedCountryIds.length > 0 && selectedRegion && (
+          <Chip label={selectedRegion} onDelete={() => onApplyCountries([])} variant="outlined" />
+        )}
+        {selectedCountryIds.length > 0 &&
+          !selectedRegion &&
+          selectedCountryIds.map((id) => {
+            const country = countryLookup.get(id);
+            if (!country) return null;
+            return (
+              <Chip
+                key={id}
+                label={renderCountryLabel(country)}
+                onDelete={() => onToggleCountry(id)}
+                variant="outlined"
+              />
+            );
+          })}
+      </Stack>
       <Popover
         open={countryOpen}
         anchorEl={countryAnchor}
