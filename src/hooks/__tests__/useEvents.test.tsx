@@ -1,11 +1,17 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { useEvents } from '../useEvents';
 import type { Event } from '@/types';
 
 describe('useEvents', () => {
+  const originalFetch = global.fetch;
+
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
   });
 
   it('builds query params for arrays and pagination', async () => {

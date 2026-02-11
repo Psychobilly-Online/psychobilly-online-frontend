@@ -63,7 +63,6 @@ export function EventFilters({
   totalCount,
   categoryCounts,
 }: EventFiltersProps) {
-  useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
     category_id: Array.isArray(initialFilters.category_id)
@@ -103,17 +102,17 @@ export function EventFilters({
   };
   const handleCloseSettings = () => setSettingsAnchor(null);
   const dateOpen = Boolean(dateAnchor);
-  const handleOpenDateRange = (event: MouseEvent<HTMLDivElement>) => {
+  const handleOpenDateRange = (event: MouseEvent<HTMLButtonElement>) => {
     setDateAnchor(event.currentTarget);
   };
   const handleCloseDateRange = () => setDateAnchor(null);
   const countryOpen = Boolean(countryAnchor);
-  const handleOpenCountries = (event: MouseEvent<HTMLDivElement>) => {
+  const handleOpenCountries = (event: MouseEvent<HTMLButtonElement>) => {
     setCountryAnchor(event.currentTarget);
   };
   const handleCloseCountries = () => setCountryAnchor(null);
   const categoryOpen = Boolean(categoryAnchor);
-  const handleOpenCategories = (event: MouseEvent<HTMLDivElement>) => {
+  const handleOpenCategories = (event: MouseEvent<HTMLButtonElement>) => {
     setCategoryAnchor(event.currentTarget);
   };
   const handleCloseCategories = () => setCategoryAnchor(null);
@@ -192,8 +191,21 @@ export function EventFilters({
     try {
       setLoadingRegion(region);
       const response = await fetch(`/api/countries/region/${region}`);
+
+      if (!response.ok) {
+        console.error(
+          `Failed to load region countries for "${region}": HTTP ${response.status} ${response.statusText}`,
+        );
+        return;
+      }
+
       const data = await response.json();
-      const ids = (data.data || []).map((country: Country) => String(country.id));
+      if (!data || !Array.isArray(data.data)) {
+        console.error('Failed to load region countries: unexpected response format', data);
+        return;
+      }
+
+      const ids = data.data.map((country: Country) => String(country.id));
       applyCountries(ids);
       handleCloseCountries();
     } catch (error) {
@@ -223,19 +235,18 @@ export function EventFilters({
   const handleCalendarChange = (date: Date | null) => {
     if (!date) return;
     if (calendarView !== 'day') return;
-    if (!startDate || (startDate && endDate)) {
+    if (!startDate || endDate) {
       updateDateRange(date, null);
       setHoveredDate(null);
       return;
     }
-    if (startDate && !endDate) {
-      if (date >= startDate) {
-        updateDateRange(startDate, date);
-        setHoveredDate(null);
-      } else {
-        updateDateRange(date, null);
-        setHoveredDate(null);
-      }
+    // At this point, startDate is set and endDate is not set
+    if (date >= startDate) {
+      updateDateRange(startDate, date);
+      setHoveredDate(null);
+    } else {
+      updateDateRange(date, null);
+      setHoveredDate(null);
     }
   };
 
