@@ -191,7 +191,7 @@ export function EventFilters({
     try {
       setLoadingRegion(region);
       const response = await fetch(`/api/countries/region/${region}`);
-      
+
       if (!response.ok) {
         console.error(
           `Failed to load region countries for "${region}": HTTP ${response.status} ${response.statusText}`,

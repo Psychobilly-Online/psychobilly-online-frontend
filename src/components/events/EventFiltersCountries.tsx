@@ -47,9 +47,9 @@ export function EventFiltersCountries({
 }: EventFiltersCountriesProps) {
   return (
     <div className={`${styles.formGroup} ${styles.countryGroup}`}>
-      <button 
+      <button
         type="button"
-        className={styles.countryTrigger} 
+        className={styles.countryTrigger}
         onClick={onOpen}
         aria-expanded={countryOpen}
         aria-haspopup="dialog"

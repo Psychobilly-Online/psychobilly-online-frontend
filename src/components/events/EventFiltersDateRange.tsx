@@ -44,9 +44,9 @@ export function EventFiltersDateRange({
 }: EventFiltersDateRangeProps) {
   return (
     <div className={`${styles.formGroup} ${styles.dateRangeGroup}`}>
-      <button 
+      <button
         type="button"
-        onClick={onOpen} 
+        onClick={onOpen}
         className={styles.dateRangeTrigger}
         aria-expanded={dateOpen}
         aria-haspopup="dialog"

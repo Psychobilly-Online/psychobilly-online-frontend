@@ -36,9 +36,9 @@ export function EventFiltersCategories({
   return (
     <div className={styles.chipSection}>
       <div className={`${styles.formGroup} ${styles.categoryGroup}`}>
-        <button 
+        <button
           type="button"
-          className={styles.categoryTrigger} 
+          className={styles.categoryTrigger}
           onClick={onOpen}
           aria-expanded={categoryOpen}
           aria-haspopup="dialog"
