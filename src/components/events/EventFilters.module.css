@@ -337,10 +337,6 @@
     padding: 14px;
   }
 
-  .filterFields {
-    flex-direction: column;
-  }
-
   .formGroup,
   .countryGroup,
   .categoryGroup,
