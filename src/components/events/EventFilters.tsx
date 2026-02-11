@@ -168,7 +168,7 @@ export function EventFilters({
 
   const renderCountryLabel = (country: Country) => {
     const iso = getCountryIso(country);
-    const flagUrl = iso ? `https://flagcdn.com/16x12/${iso.toLowerCase()}.png` : null;
+    const flagUrl = iso ? `/images/flags/16x12/${iso.toLowerCase()}.png` : null;
     return (
       <span className={styles.countryChipLabel}>
         {flagUrl && <img src={flagUrl} alt="" aria-hidden="true" className={styles.flagIcon} />}
