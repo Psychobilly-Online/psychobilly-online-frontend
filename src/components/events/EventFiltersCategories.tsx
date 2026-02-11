@@ -1,7 +1,7 @@
 'use client';
 
-import { Chip, Popover, Stack, Typography } from '@mui/material';
-import { IconButton } from '@mui/material';
+import type { MouseEvent } from 'react';
+import { Chip, Popover, Stack, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './EventFilters.module.css';
 import type { Category } from './EventFilters.types';
@@ -12,7 +12,7 @@ interface EventFiltersCategoriesProps {
   categoryCounts?: Record<number, number>;
   categoryOpen: boolean;
   categoryAnchor: HTMLElement | null;
-  onOpen: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onOpen: (event: MouseEvent<HTMLButtonElement>) => void;
   onClose: () => void;
   onToggleCategory: (categoryId: string) => void;
   onClearCategories: () => void;
@@ -36,7 +36,13 @@ export function EventFiltersCategories({
   return (
     <div className={styles.chipSection}>
       <div className={`${styles.formGroup} ${styles.categoryGroup}`}>
-        <div className={styles.categoryTrigger} onClick={onOpen}>
+        <button 
+          type="button"
+          className={styles.categoryTrigger} 
+          onClick={onOpen}
+          aria-expanded={categoryOpen}
+          aria-haspopup="dialog"
+        >
           <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
             {selectedCategoryIds.length === 0 && <Chip label="All categories" variant="outlined" />}
             {selectedCategoryIds.length > 0 &&
@@ -53,7 +59,7 @@ export function EventFiltersCategories({
                 );
               })}
           </Stack>
-        </div>
+        </button>
         <Popover
           open={categoryOpen}
           anchorEl={categoryAnchor}

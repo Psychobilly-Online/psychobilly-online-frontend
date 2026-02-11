@@ -1,5 +1,6 @@
 'use client';
 
+import type { RefObject } from 'react';
 import { IconButton, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styles from './EventFilters.module.css';
@@ -7,7 +8,7 @@ import styles from './EventFilters.module.css';
 interface EventFiltersSearchProps {
   value: string;
   onChange: (value: string) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
+  inputRef: RefObject<HTMLInputElement | null>;
   inputSx: object;
 }
 

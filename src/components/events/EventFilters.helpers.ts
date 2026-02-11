@@ -17,7 +17,7 @@ export const formatDate = (date: Date) => {
 export const formatDateLabel = (date: Date) =>
   date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-export const normalizeFilterValue = (value: string | number | string[] | undefined) => {
+export const normalizeFilterValue = (value: string | number | string[] | undefined | null) => {
   if (Array.isArray(value)) {
     return value.length > 0 ? value : undefined;
   }

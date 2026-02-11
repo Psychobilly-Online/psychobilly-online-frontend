@@ -1,5 +1,6 @@
 'use client';
 
+import type { MouseEvent, ReactNode } from 'react';
 import { Chip, IconButton, Popover, Stack, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './EventFilters.module.css';
@@ -12,7 +13,7 @@ interface EventFiltersCountriesProps {
   countryLookup: Map<string, Country>;
   countryOpen: boolean;
   countryAnchor: HTMLElement | null;
-  onOpen: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onOpen: (event: MouseEvent<HTMLButtonElement>) => void;
   onClose: () => void;
   onToggleCountry: (id: string) => void;
   onApplyCountries: (ids: string[]) => void;
@@ -20,7 +21,7 @@ interface EventFiltersCountriesProps {
   loadingRegion: string | null;
   showAllCountries: boolean;
   onShowAll: () => void;
-  renderCountryLabel: (country: Country) => React.ReactNode;
+  renderCountryLabel: (country: Country) => ReactNode;
   popoverPaperSx: object;
   popoverContainer?: HTMLElement | null;
 }
@@ -46,7 +47,13 @@ export function EventFiltersCountries({
 }: EventFiltersCountriesProps) {
   return (
     <div className={`${styles.formGroup} ${styles.countryGroup}`}>
-      <div className={styles.countryTrigger} onClick={onOpen}>
+      <button 
+        type="button"
+        className={styles.countryTrigger} 
+        onClick={onOpen}
+        aria-expanded={countryOpen}
+        aria-haspopup="dialog"
+      >
         <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
           {selectedCountryIds.length === 0 && <Chip label="All countries" variant="outlined" />}
           {selectedCountryIds.length > 0 && selectedRegion && (
@@ -67,7 +74,7 @@ export function EventFiltersCountries({
               );
             })}
         </Stack>
-      </div>
+      </button>
       <Popover
         open={countryOpen}
         anchorEl={countryAnchor}

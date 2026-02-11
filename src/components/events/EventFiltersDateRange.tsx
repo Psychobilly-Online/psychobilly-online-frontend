@@ -1,5 +1,6 @@
 'use client';
 
+import type { MouseEvent, JSX } from 'react';
 import { Chip, IconButton, Popover, Stack, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
@@ -13,13 +14,13 @@ interface EventFiltersDateRangeProps {
   endDate: Date | null;
   dateOpen: boolean;
   dateAnchor: HTMLElement | null;
-  onOpen: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onOpen: (event: MouseEvent<HTMLButtonElement>) => void;
   onClose: () => void;
   onUpdateDateRange: (start: Date | null, end: Date | null) => void;
   onCalendarChange: (date: Date | null) => void;
   calendarView: 'day' | 'month' | 'year';
   onViewChange: (view: 'day' | 'month' | 'year') => void;
-  rangeDay: (props: PickersDayProps) => React.JSX.Element;
+  rangeDay: (props: PickersDayProps) => JSX.Element;
   formatDateLabel: (date: Date) => string;
   popoverPaperSx: object;
   popoverContainer?: HTMLElement | null;
@@ -43,7 +44,13 @@ export function EventFiltersDateRange({
 }: EventFiltersDateRangeProps) {
   return (
     <div className={`${styles.formGroup} ${styles.dateRangeGroup}`}>
-      <div onClick={onOpen} className={styles.dateRangeTrigger}>
+      <button 
+        type="button"
+        onClick={onOpen} 
+        className={styles.dateRangeTrigger}
+        aria-expanded={dateOpen}
+        aria-haspopup="dialog"
+      >
         <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
           {startDate ? (
             <Chip
@@ -66,7 +73,7 @@ export function EventFiltersDateRange({
             />
           )}
         </Stack>
-      </div>
+      </button>
       <Popover
         open={dateOpen}
         anchorEl={dateAnchor}
