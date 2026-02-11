@@ -55,6 +55,7 @@ interface EventFiltersProps {
   initialFilters?: FilterValues;
   totalCount?: number;
   categoryCounts?: Record<number, number>;
+  eventDates?: Set<number>;
 }
 
 export function EventFilters({
@@ -62,7 +63,9 @@ export function EventFilters({
   initialFilters = {},
   totalCount,
   categoryCounts,
+  eventDates,
 }: EventFiltersProps) {
+  useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
     category_id: Array.isArray(initialFilters.category_id)
@@ -83,6 +86,7 @@ export function EventFilters({
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [calendarView, setCalendarView] = useState<'day' | 'month' | 'year'>('day');
+  const [datePreset, setDatePreset] = useState<'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range' | null>(null);
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [loadingRegion, setLoadingRegion] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -102,17 +106,58 @@ export function EventFilters({
   };
   const handleCloseSettings = () => setSettingsAnchor(null);
   const dateOpen = Boolean(dateAnchor);
-  const handleOpenDateRange = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleOpenDateRange = (event: MouseEvent<any>) => {
     setDateAnchor(event.currentTarget);
   };
-  const handleCloseDateRange = () => setDateAnchor(null);
+  const handleCloseDateRange = () => {
+    setDateAnchor(null);
+  };
+
+  const handleDatePresetChange = (preset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range') => {
+    setDatePreset(preset);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    switch (preset) {
+      case 'any':
+        // Any date - from 1950 to eternity
+        updateDateRange(new Date(1950, 0, 1), null);
+        handleCloseDateRange();
+        break;
+      case 'today':
+        // From today (no dates sent, backend handles default)
+        updateDateRange(null, null);
+        handleCloseDateRange();
+        break;
+      case 'next-month': {
+        const nextMonth = new Date(today);
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        updateDateRange(today, nextMonth);
+        handleCloseDateRange();
+        break;
+      }
+      case 'next-3-months': {
+        const next3Months = new Date(today);
+        next3Months.setMonth(next3Months.getMonth() + 3);
+        updateDateRange(today, next3Months);
+        handleCloseDateRange();
+        break;
+      }
+      case 'specific':
+      case 'range':
+        // Show calendar for custom date selection
+        setDateRange([null, null]);
+        break;
+    }
+  };
+
   const countryOpen = Boolean(countryAnchor);
-  const handleOpenCountries = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleOpenCountries = (event: MouseEvent<any>) => {
     setCountryAnchor(event.currentTarget);
   };
   const handleCloseCountries = () => setCountryAnchor(null);
   const categoryOpen = Boolean(categoryAnchor);
-  const handleOpenCategories = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleOpenCategories = (event: MouseEvent<any>) => {
     setCategoryAnchor(event.currentTarget);
   };
   const handleCloseCategories = () => setCategoryAnchor(null);
@@ -191,21 +236,8 @@ export function EventFilters({
     try {
       setLoadingRegion(region);
       const response = await fetch(`/api/countries/region/${region}`);
-
-      if (!response.ok) {
-        console.error(
-          `Failed to load region countries for "${region}": HTTP ${response.status} ${response.statusText}`,
-        );
-        return;
-      }
-
       const data = await response.json();
-      if (!data || !Array.isArray(data.data)) {
-        console.error('Failed to load region countries: unexpected response format', data);
-        return;
-      }
-
-      const ids = data.data.map((country: Country) => String(country.id));
+      const ids = (data.data || []).map((country: Country) => String(country.id));
       applyCountries(ids);
       handleCloseCountries();
     } catch (error) {
@@ -227,27 +259,37 @@ export function EventFilters({
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
-    if (start && normalizedEnd) {
-      handleCloseDateRange();
-    }
   };
 
   const handleCalendarChange = (date: Date | null) => {
     if (!date) return;
     if (calendarView !== 'day') return;
-    if (!startDate || endDate) {
+
+    const [currentStart, currentEnd] = dateRange;
+
+    if (datePreset === 'specific') {
+      // Specific date: set both start and end to the same date
+      updateDateRange(date, date);
+      handleCloseDateRange();
+      return;
+    }
+
+    // Date range mode
+    if (!currentStart || (currentStart && currentEnd)) {
+      // First click or resetting range
       updateDateRange(date, null);
       setHoveredDate(null);
       return;
     }
-    // At this point, startDate is set and endDate is not set
-    if (date >= startDate) {
-      updateDateRange(startDate, date);
-      setHoveredDate(null);
+
+    // Second click - complete the range
+    if (date >= currentStart) {
+      updateDateRange(currentStart, date);
+      handleCloseDateRange();
     } else {
       updateDateRange(date, null);
-      setHoveredDate(null);
     }
+    setHoveredDate(null);
   };
 
   const RangeDay = (props: PickersDayProps) => {
@@ -256,12 +298,18 @@ export function EventFilters({
     const isEnd = !!endDate && isSameDay(day, endDate);
     const isInRange =
       !!startDate && !!endDate && isWithinInterval(day, { start: startDate, end: endDate });
+    // Only show preview range when in range selection mode
     const isPreviewRange =
+      datePreset === 'range' &&
       !!startDate &&
       !endDate &&
       !!hoveredDate &&
       hoveredDate >= startDate &&
       isWithinInterval(day, { start: startDate, end: hoveredDate });
+
+    // Check if this day has events
+    const dayTime = new Date(day).setHours(0, 0, 0, 0);
+    const hasEvents = eventDates?.has(dayTime) ?? false;
 
     const classNames = [
       styles.rangeDay,
@@ -269,6 +317,7 @@ export function EventFilters({
       isPreviewRange ? styles.rangeDayPreview : '',
       isStart ? styles.rangeDayStart : '',
       isEnd ? styles.rangeDayEnd : '',
+      hasEvents ? styles.rangeDayHasEvents : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -279,8 +328,8 @@ export function EventFilters({
         day={day}
         outsideCurrentMonth={outsideCurrentMonth}
         className={classNames}
-        onPointerEnter={() => setHoveredDate(day)}
-        onPointerLeave={() => setHoveredDate(null)}
+        onPointerEnter={() => datePreset === 'range' && setHoveredDate(day)}
+        onPointerLeave={() => datePreset === 'range' && setHoveredDate(null)}
       />
     );
   };
@@ -450,12 +499,15 @@ export function EventFilters({
                     onClose={handleCloseDateRange}
                     onUpdateDateRange={updateDateRange}
                     onCalendarChange={handleCalendarChange}
+                    onPresetChange={handleDatePresetChange}
+                    selectedPreset={datePreset}
                     calendarView={calendarView}
                     onViewChange={setCalendarView}
                     rangeDay={RangeDay}
                     formatDateLabel={formatDateLabel}
                     popoverPaperSx={datePopoverSx}
                     popoverContainer={filterContainerRef.current}
+                    eventDates={eventDates}
                   />
                   {activeFilterCount > 0 && (
                     <button type="button" className={styles.clearLink} onClick={handleReset}>

@@ -12,7 +12,7 @@ interface EventFiltersCategoriesProps {
   categoryCounts?: Record<number, number>;
   categoryOpen: boolean;
   categoryAnchor: HTMLElement | null;
-  onOpen: (event: MouseEvent<HTMLButtonElement>) => void;
+  onOpen: (event: MouseEvent<any>) => void;
   onClose: () => void;
   onToggleCategory: (categoryId: string) => void;
   onClearCategories: () => void;
@@ -36,15 +36,11 @@ export function EventFiltersCategories({
   return (
     <div className={styles.chipSection}>
       <div className={`${styles.formGroup} ${styles.categoryGroup}`}>
-        <button
-          type="button"
-          className={styles.categoryTrigger}
-          onClick={onOpen}
-          aria-expanded={categoryOpen}
-          aria-haspopup="dialog"
-        >
-          <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
-            {selectedCategoryIds.length === 0 && <Chip label="All categories" variant="outlined" />}
+        <div className={styles.chipTriggerWrapper}>
+          <Stack className={styles.chipGroup} direction="row" flexWrap="wrap" onClick={onOpen}>
+            {selectedCategoryIds.length === 0 && (
+              <Chip label="All categories" variant="outlined" onClick={onOpen} />
+            )}
             {selectedCategoryIds.length > 0 &&
               selectedCategoryIds.map((id) => {
                 const category = categories.find((item) => String(item.id) === id);
@@ -53,13 +49,17 @@ export function EventFiltersCategories({
                   <Chip
                     key={id}
                     label={category.name}
-                    onDelete={() => onToggleCategory(id)}
+                    onDelete={(e) => {
+                      e.stopPropagation();
+                      onToggleCategory(id);
+                    }}
+                    onClick={onOpen}
                     variant="outlined"
                   />
                 );
               })}
           </Stack>
-        </button>
+        </div>
         <Popover
           open={categoryOpen}
           anchorEl={categoryAnchor}

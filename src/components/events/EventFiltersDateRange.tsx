@@ -14,16 +14,19 @@ interface EventFiltersDateRangeProps {
   endDate: Date | null;
   dateOpen: boolean;
   dateAnchor: HTMLElement | null;
-  onOpen: (event: MouseEvent<HTMLButtonElement>) => void;
+  onOpen: (event: MouseEvent<any>) => void;
   onClose: () => void;
   onUpdateDateRange: (start: Date | null, end: Date | null) => void;
   onCalendarChange: (date: Date | null) => void;
+  onPresetChange: (preset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range') => void;
+  selectedPreset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range' | null;
   calendarView: 'day' | 'month' | 'year';
   onViewChange: (view: 'day' | 'month' | 'year') => void;
   rangeDay: (props: PickersDayProps) => JSX.Element;
   formatDateLabel: (date: Date) => string;
   popoverPaperSx: object;
   popoverContainer?: HTMLElement | null;
+  eventDates?: Set<number>;
 }
 
 export function EventFiltersDateRange({
@@ -35,6 +38,8 @@ export function EventFiltersDateRange({
   onClose,
   onUpdateDateRange,
   onCalendarChange,
+  onPresetChange,
+  selectedPreset,
   calendarView,
   onViewChange,
   rangeDay,
@@ -42,38 +47,36 @@ export function EventFiltersDateRange({
   popoverPaperSx,
   popoverContainer,
 }: EventFiltersDateRangeProps) {
+  // Determine display label
+  const getDateLabel = () => {
+    if (!startDate && !endDate) return 'From today';
+    if (startDate && !endDate) {
+      if (isSameDay(startDate, new Date(1950, 0, 1))) return 'Any date';
+      if (isSameDay(startDate, new Date())) return 'From today';
+      return `From ${formatDateLabel(startDate)}`;
+    }
+    if (startDate && endDate && isSameDay(startDate, endDate)) {
+      return formatDateLabel(startDate);
+    }
+    return `${formatDateLabel(startDate!)} - ${formatDateLabel(endDate!)}`;
+  };
   return (
     <div className={`${styles.formGroup} ${styles.dateRangeGroup}`}>
-      <button
-        type="button"
-        onClick={onOpen}
-        className={styles.dateRangeTrigger}
-        aria-expanded={dateOpen}
-        aria-haspopup="dialog"
-      >
-        <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
-          {startDate ? (
-            <Chip
-              label={
-                endDate || !isSameDay(startDate, new Date())
-                  ? `From ${formatDateLabel(startDate)}`
-                  : 'From today'
-              }
-              onDelete={() => onUpdateDateRange(null, null)}
-              variant="outlined"
-            />
-          ) : (
-            <Chip label="Any date" variant="outlined" />
-          )}
-          {endDate && (
-            <Chip
-              label={`To ${formatDateLabel(endDate)}`}
-              onDelete={() => onUpdateDateRange(startDate, null)}
-              variant="outlined"
-            />
-          )}
-        </Stack>
-      </button>
+      <div className={styles.chipTriggerWrapper}>
+        <Chip
+          label={getDateLabel()}
+          onClick={onOpen}
+          onDelete={
+            startDate || endDate
+              ? (e) => {
+                  e.stopPropagation();
+                  onUpdateDateRange(null, null);
+                }
+              : undefined
+          }
+          variant="outlined"
+        />
+      </div>
       <Popover
         open={dateOpen}
         anchorEl={dateAnchor}
@@ -83,7 +86,7 @@ export function EventFiltersDateRange({
         container={popoverContainer ?? undefined}
         marginThreshold={16}
         disablePortal
-        PaperProps={{ sx: popoverPaperSx }}
+        slotProps={{ paper: { sx: popoverPaperSx } }}
       >
         <div className={styles.popoverHeader}>
           <Typography className={styles.sectionTitle}>Date range</Typography>
@@ -96,20 +99,54 @@ export function EventFiltersDateRange({
             <CloseIcon fontSize="small" />
           </IconButton>
         </div>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <div className={styles.dateRangeCalendar}>
-            <DateCalendar
-              value={endDate ?? startDate}
-              onChange={onCalendarChange}
-              view={calendarView}
-              onViewChange={onViewChange}
-              views={['year', 'month', 'day']}
-              minDate={new Date(2009, 0, 1)}
-              maxDate={new Date(new Date().getFullYear() + 2, 11, 31)}
-              slots={{ day: rangeDay }}
-            />
-          </div>
-        </LocalizationProvider>
+        <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
+          <Chip
+            label="Any date"
+            variant={selectedPreset === 'any' ? 'filled' : 'outlined'}
+            onClick={() => onPresetChange('any')}
+          />
+          <Chip
+            label="From today"
+            variant={selectedPreset === 'today' ? 'filled' : 'outlined'}
+            onClick={() => onPresetChange('today')}
+          />
+          <Chip
+            label="Next month"
+            variant={selectedPreset === 'next-month' ? 'filled' : 'outlined'}
+            onClick={() => onPresetChange('next-month')}
+          />
+          <Chip
+            label="Next 3 months"
+            variant={selectedPreset === 'next-3-months' ? 'filled' : 'outlined'}
+            onClick={() => onPresetChange('next-3-months')}
+          />
+          <Chip
+            label="Specific date"
+            variant={selectedPreset === 'specific' ? 'filled' : 'outlined'}
+            onClick={() => onPresetChange('specific')}
+          />
+          <Chip
+            label="Date range"
+            variant={selectedPreset === 'range' ? 'filled' : 'outlined'}
+            onClick={() => onPresetChange('range')}
+          />
+        </Stack>
+        {(selectedPreset === 'specific' || selectedPreset === 'range') && (
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <div className={styles.dateRangeCalendar}>
+              <DateCalendar
+                value={endDate ?? startDate}
+                onChange={onCalendarChange}
+                view={calendarView}
+                onViewChange={onViewChange}
+                views={['year', 'month', 'day']}
+                minDate={new Date(2009, 0, 1)}
+                maxDate={new Date(new Date().getFullYear() + 2, 11, 31)}
+                slots={{ day: rangeDay }}
+              />
+            </div>
+          </LocalizationProvider>
+        )}
       </Popover>
     </div>
   );

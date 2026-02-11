@@ -143,6 +143,16 @@
   width: 100%;
 }
 
+.chipTriggerWrapper {
+  width: fit-content;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.chipTriggerWrapper .chipGroup {
+  cursor: pointer;
+}
+
 .countryTrigger {
   width: fit-content;
   max-width: 100%;
@@ -304,6 +314,23 @@
   background: #7d2923 !important;
   color: #fff !important;
   border-radius: 999px !important;
+}
+
+.rangeDayHasEvents {
+  position: relative;
+}
+
+.rangeDayHasEvents::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #e94e1b;
+  opacity: 0.8;
 }
 
 .chipSection {

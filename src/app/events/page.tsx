@@ -8,6 +8,7 @@ import styles from './page.module.css';
 
 export default function EventsPage() {
   const [page, setPage] = useState(1);
+  const [eventDates, setEventDates] = useState<Set<number>>(new Set());
 
   const [filters, setFilters] = useState<FilterValues>({
     limit: 20,
@@ -28,6 +29,21 @@ export default function EventsPage() {
         setCategories(categoryMap);
       })
       .catch((err) => console.error('Failed to fetch categories:', err));
+
+    // Fetch all event dates for calendar highlighting (cached on server)
+    fetch('/api/events?dates=true')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data) {
+          const dates = data.data.map((dateStr: string) => {
+            const date = new Date(dateStr);
+            date.setHours(0, 0, 0, 0);
+            return date.getTime();
+          });
+          setEventDates(new Set(dates));
+        }
+      })
+      .catch((err) => console.error('Failed to fetch event dates:', err));
   }, []);
 
   const { events, loading, error, pagination, categoryCounts } = useEvents({
@@ -56,6 +72,7 @@ export default function EventsPage() {
             initialFilters={filters}
             totalCount={loading ? lastTotalCount : pagination?.total}
             categoryCounts={categoryCounts || undefined}
+            eventDates={eventDates}
           />
         </div>
 

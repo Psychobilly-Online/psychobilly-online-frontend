@@ -13,7 +13,7 @@ interface EventFiltersCountriesProps {
   countryLookup: Map<string, Country>;
   countryOpen: boolean;
   countryAnchor: HTMLElement | null;
-  onOpen: (event: MouseEvent<HTMLButtonElement>) => void;
+  onOpen: (event: MouseEvent<any>) => void;
   onClose: () => void;
   onToggleCountry: (id: string) => void;
   onApplyCountries: (ids: string[]) => void;
@@ -47,39 +47,42 @@ export function EventFiltersCountries({
 }: EventFiltersCountriesProps) {
   return (
     <div className={`${styles.formGroup} ${styles.countryGroup}`}>
-      <button
-        type="button"
-        className={styles.countryTrigger}
-        onClick={onOpen}
-        aria-expanded={countryOpen}
-        aria-haspopup="dialog"
-      >
-        <span>
-          {selectedCountryIds.length === 0 && 'All countries'}
-          {selectedCountryIds.length > 0 && selectedRegion && selectedRegion}
-          {selectedCountryIds.length > 0 && !selectedRegion && `${selectedCountryIds.length} selected`}
-        </span>
-      </button>
-      <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
-        {selectedCountryIds.length === 0 && <Chip label="All countries" variant="outlined" />}
-        {selectedCountryIds.length > 0 && selectedRegion && (
-          <Chip label={selectedRegion} onDelete={() => onApplyCountries([])} variant="outlined" />
-        )}
-        {selectedCountryIds.length > 0 &&
-          !selectedRegion &&
-          selectedCountryIds.map((id) => {
-            const country = countryLookup.get(id);
-            if (!country) return null;
-            return (
-              <Chip
-                key={id}
-                label={renderCountryLabel(country)}
-                onDelete={() => onToggleCountry(id)}
-                variant="outlined"
-              />
-            );
-          })}
-      </Stack>
+      <div className={styles.chipTriggerWrapper}>
+        <Stack className={styles.chipGroup} direction="row" flexWrap="wrap" onClick={onOpen}>
+          {selectedCountryIds.length === 0 && (
+            <Chip label="All countries" variant="outlined" onClick={onOpen} />
+          )}
+          {selectedCountryIds.length > 0 && selectedRegion && (
+            <Chip
+              label={selectedRegion}
+              onDelete={(e) => {
+                e.stopPropagation();
+                onApplyCountries([]);
+              }}
+              onClick={onOpen}
+              variant="outlined"
+            />
+          )}
+          {selectedCountryIds.length > 0 &&
+            !selectedRegion &&
+            selectedCountryIds.map((id) => {
+              const country = countryLookup.get(id);
+              if (!country) return null;
+              return (
+                <Chip
+                  key={id}
+                  label={renderCountryLabel(country)}
+                  onDelete={(e) => {
+                    e.stopPropagation();
+                    onToggleCountry(id);
+                  }}
+                  onClick={onOpen}
+                  variant="outlined"
+                />
+              );
+            })}
+        </Stack>
+      </div>
       <Popover
         open={countryOpen}
         anchorEl={countryAnchor}
