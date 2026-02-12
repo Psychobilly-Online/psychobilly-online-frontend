@@ -101,7 +101,8 @@ Required environment variables (see `.env.example`):
 ## 🎯 MVP Features
 
 - [x] Homepage
-- [ ] Events listing
+- [x] Events listing with infinite scroll
+- [x] Event filtering (country, city, date, search)
 - [ ] Event details
 - [ ] Admin dashboard
 - [ ] Add/edit events
