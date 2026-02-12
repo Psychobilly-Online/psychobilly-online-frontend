@@ -127,16 +127,16 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         setEvents([]);
       }
     } finally {
-      // Only update loading state if this request wasn't aborted
+      setLoading(false);
+      // Only clear the abort controller ref if this request wasn't aborted
       if (!abortController.signal.aborted) {
-        setLoading(false);
         abortControllerRef.current = null;
       }
     }
   };
 
   const loadMore = () => {
-    if (hasMore && infiniteScroll) {
+    if (!loading && hasMore && infiniteScroll) {
       const nextPage = currentPage + 1;
       setCurrentPage(nextPage);
       fetchEvents(nextPage, true);
