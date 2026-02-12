@@ -41,6 +41,16 @@ export function EventCard({ event, categoryName }: EventCardProps) {
   };
 
   const eventDate = parseDate(event.date_start);
+  const endDate = event.date_end ? parseDate(event.date_end) : null;
+
+  // Check if event spans multiple days
+  const isMultiDay = endDate && eventDate && endDate.getTime() !== eventDate.getTime();
+  
+  // Check if event spans multiple months
+  const isMultiMonth = isMultiDay && 
+    eventDate && 
+    endDate && 
+    (eventDate.getMonth() !== endDate.getMonth() || eventDate.getFullYear() !== endDate.getFullYear());
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('de-DE', {
@@ -51,10 +61,17 @@ export function EventCard({ event, categoryName }: EventCardProps) {
     }).format(date);
   };
 
+  const formatShortDate = (date: Date) => {
+    return new Intl.DateTimeFormat('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+    }).format(date);
+  };
+
   const getDay = (date: Date) => date.getDate();
 
   const getMonth = (date: Date) => {
-    return new Intl.DateTimeFormat('de-DE', { month: 'short' }).format(date);
+    return new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
   };
 
   const getYear = (date: Date) => date.getFullYear();
@@ -69,9 +86,45 @@ export function EventCard({ event, categoryName }: EventCardProps) {
     <div className={styles.eventCard}>
       {/* Date Badge */}
       <div className={styles.dateBadge}>
-        <div className={styles.dateDay}>{getDay(eventDate)}</div>
-        <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
-        <div className={styles.dateYear}>{getYear(eventDate)}</div>
+        {isMultiMonth ? (
+          <>
+            <div className={styles.dateRange}>
+              <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
+              <div className={styles.dateRangeSeparator}>-</div>
+              <div className={styles.dateRangeEnd}>{getDay(endDate!)}</div>
+            </div>
+            <div className={styles.dateMonthRange}>
+              <span className={styles.monthStart}>{getMonth(eventDate)}</span>
+              <span className={styles.monthSeparator}> </span>
+              <span className={styles.monthEnd}>{getMonth(endDate!)}</span>
+            </div>
+            <div className={styles.dateYear}>
+              {getYear(eventDate) === getYear(endDate!) 
+                ? getYear(eventDate) 
+                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate!)).slice(-2)}`}
+            </div>
+          </>
+        ) : isMultiDay ? (
+          <>
+            <div className={styles.dateRange}>
+              <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
+              <div className={styles.dateRangeSeparator}>-</div>
+              <div className={styles.dateRangeEnd}>{getDay(endDate!)}</div>
+            </div>
+            <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
+            <div className={styles.dateYear}>
+              {getYear(eventDate) === getYear(endDate!) 
+                ? getYear(eventDate) 
+                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate!)).slice(-2)}`}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles.dateDay}>{getDay(eventDate)}</div>
+            <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
+            <div className={styles.dateYear}>{getYear(eventDate)}</div>
+          </>
+        )}
       </div>
 
       <div className={styles.cardContent}>
@@ -80,12 +133,6 @@ export function EventCard({ event, categoryName }: EventCardProps) {
           <h3 className={styles.headline}>{decodeHtml(event.headline)}</h3>
 
           <div className={styles.meta}>
-            {(categoryName || event.category_id) && (
-              <div className={styles.metaItem}>
-                🏷️ {categoryName || `Category ${event.category_id}`}
-              </div>
-            )}
-
             {event.venue && (event.venue.city || event.venue.name) && (
               <div className={styles.metaItem}>
                 📍 {[event.venue.city, event.venue.name].filter(Boolean).join(', ')}
@@ -93,6 +140,12 @@ export function EventCard({ event, categoryName }: EventCardProps) {
             )}
 
             {event.bands && <div className={styles.metaItem}>🎸 {decodeHtml(event.bands)}</div>}
+
+            {(categoryName || event.category_id) && (
+              <div className={styles.metaItem}>
+                🏷️ {categoryName || `Category ${event.category_id}`}
+              </div>
+            )}
           </div>
 
           {event.text && (

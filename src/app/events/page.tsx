@@ -4,11 +4,14 @@ import { useEvents } from '@/hooks/useEvents';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { EventCard } from '@/components/events/EventCard';
 import { EventFilters, FilterValues } from '@/components/events/EventFilters';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './page.module.css';
 
 export default function EventsPage() {
   const [eventDates, setEventDates] = useState<Set<number>>(new Set());
+  const [shouldCollapseFilters, setShouldCollapseFilters] = useState(false);
+  const lastScrollY = useRef(0);
+  const hasAutoCollapsed = useRef(false); // Track if we've already auto-collapsed once
 
   const [filters, setFilters] = useState<FilterValues>({
     limit: 25,
@@ -66,6 +69,28 @@ export default function EventsPage() {
     }
   }, [pagination?.total]);
 
+  // Auto-collapse filters when scrolling down (only once)
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Auto-collapse once if scrolling down and past 50px
+      if (!hasAutoCollapsed.current && currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setShouldCollapseFilters(true);
+        hasAutoCollapsed.current = true;
+      }
+      // Reset auto-collapse flag if scrolling back to top
+      else if (currentScrollY < 10) {
+        hasAutoCollapsed.current = false;
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
   };
@@ -80,6 +105,8 @@ export default function EventsPage() {
             totalCount={loading ? lastTotalCount : pagination?.total}
             categoryCounts={categoryCounts || undefined}
             eventDates={eventDates}
+            shouldCollapse={shouldCollapseFilters}
+            onCollapseComplete={() => setShouldCollapseFilters(false)}
           />
         </div>
 

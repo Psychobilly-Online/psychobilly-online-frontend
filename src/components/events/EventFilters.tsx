@@ -56,6 +56,8 @@ interface EventFiltersProps {
   totalCount?: number;
   categoryCounts?: Record<number, number>;
   eventDates?: Set<number>;
+  shouldCollapse?: boolean;
+  onCollapseComplete?: () => void;
 }
 
 export function EventFilters({
@@ -64,6 +66,8 @@ export function EventFilters({
   totalCount,
   categoryCounts,
   eventDates,
+  shouldCollapse = false,
+  onCollapseComplete,
 }: EventFiltersProps) {
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
@@ -84,6 +88,14 @@ export function EventFilters({
   const [dateAnchor, setDateAnchor] = useState<HTMLElement | null>(null);
   const [countryAnchor, setCountryAnchor] = useState<HTMLElement | null>(null);
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
+
+  // Handle external collapse trigger (e.g., from scroll)
+  useEffect(() => {
+    if (shouldCollapse && isExpanded) {
+      setIsExpanded(false);
+      onCollapseComplete?.();
+    }
+  }, [shouldCollapse, isExpanded, onCollapseComplete]);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [calendarView, setCalendarView] = useState<'day' | 'month' | 'year'>('day');
   const [datePreset, setDatePreset] = useState<
