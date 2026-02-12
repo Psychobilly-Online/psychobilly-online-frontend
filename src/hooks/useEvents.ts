@@ -138,7 +138,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       if (err.name === 'AbortError') {
         return;
       }
-      
+
       // Only update state if this is still the latest request
       if (currentRequestId === requestIdRef.current) {
         setError(err.message || 'An error occurred');
