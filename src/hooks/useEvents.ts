@@ -30,7 +30,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginatedResponse<Event>['pagination'] | null>(null);
   const [categoryCounts, setCategoryCounts] = useState<Record<number, number> | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentBatch, setCurrentBatch] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const filtersRef = useRef<string>('');
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -49,8 +49,8 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       setLoading(true);
       setError(null);
 
-      // Convert page to offset for API
-      const { page: _page, limit = 20, ...otherFilters } = filters;
+      // Convert batch to offset for API
+      const { page: _page, limit = 25, ...otherFilters } = filters;
       const offset = (pageToFetch - 1) * limit;
 
       // Build query string from filters
@@ -96,22 +96,27 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
 
       // Backend returns 'meta', transform to expected 'pagination' structure
       if (data.meta) {
-        const limit = data.meta.limit || 20;
+        const limit = data.meta.limit || 25;
         const total = data.meta.total || 0;
         const offset = data.meta.offset || 0;
-        const currentPage = Math.floor(offset / limit) + 1;
-        const totalPages = Math.ceil(total / limit);
+        const responseBatch = Math.floor(offset / limit) + 1;
+        const totalBatches = Math.ceil(total / limit);
 
         setPagination({
           total: total,
-          page: currentPage,
+          page: responseBatch,
           limit: limit,
-          pages: totalPages,
+          pages: totalBatches,
         });
         setCategoryCounts(data.meta.category_counts || null);
 
-        // Check if there are more pages
-        setHasMore(currentPage < totalPages);
+        // Check if there are more batches to load
+        setHasMore(responseBatch < totalBatches);
+        
+        // Update currentBatch after successful append
+        if (append && infiniteScroll) {
+          setCurrentBatch(responseBatch);
+        }
       } else {
         setPagination(null);
         setCategoryCounts(null);
@@ -137,9 +142,9 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
 
   const loadMore = () => {
     if (!loading && hasMore && infiniteScroll) {
-      const nextPage = currentPage + 1;
-      setCurrentPage(nextPage);
-      fetchEvents(nextPage, true);
+      const nextBatch = currentBatch + 1;
+      // Don't update currentBatch here - will be updated in fetchEvents after success
+      fetchEvents(nextBatch, true);
     }
   };
 
@@ -152,16 +157,16 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       filtersRef.current = newFiltersKey;
 
       if (infiniteScroll) {
-        // In infinite scroll mode, always reset to page 1
-        setCurrentPage(1);
+        // In infinite scroll mode, always reset to batch 1
+        setCurrentBatch(1);
         setEvents([]);
         setHasMore(true);
         fetchEvents(1, false);
       } else {
         // In pagination mode, use the page from filters or default to 1
-        const targetPage = filters.page ?? 1;
-        setCurrentPage(targetPage);
-        fetchEvents(targetPage, false);
+        const targetBatch = filters.page ?? 1;
+        setCurrentBatch(targetBatch);
+        fetchEvents(targetBatch, false);
       }
     }
   }, [JSON.stringify(filters), infiniteScroll]);
@@ -174,12 +179,12 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
     categoryCounts,
     refetch: () => {
       if (infiniteScroll) {
-        setCurrentPage(1);
+        setCurrentBatch(1);
         setEvents([]);
         setHasMore(true);
         fetchEvents(1, false);
       } else {
-        fetchEvents(currentPage, false);
+        fetchEvents(currentBatch, false);
       }
     },
     loadMore,

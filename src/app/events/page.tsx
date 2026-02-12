@@ -11,7 +11,7 @@ export default function EventsPage() {
   const [eventDates, setEventDates] = useState<Set<number>>(new Set());
 
   const [filters, setFilters] = useState<FilterValues>({
-    limit: 20,
+    limit: 25,
     sort_by: 'date',
     sort_order: 'ASC',
   });

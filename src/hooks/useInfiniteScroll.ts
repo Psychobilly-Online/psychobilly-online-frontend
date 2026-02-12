@@ -38,8 +38,8 @@ export function useInfiniteScroll({
         observerRef.current.disconnect();
       }
 
-      // Don't observe if no more items
-      if (!hasMoreRef.current) {
+      // Don't observe if node is null or no more items
+      if (!node || !hasMoreRef.current) {
         return;
       }
 
@@ -58,9 +58,7 @@ export function useInfiniteScroll({
       );
 
       // Start observing the target element
-      if (node) {
-        observerRef.current.observe(node);
-      }
+      observerRef.current.observe(node);
     },
     [onLoadMore, rootMargin, threshold],
   );

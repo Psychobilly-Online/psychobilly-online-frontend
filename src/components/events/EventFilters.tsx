@@ -444,21 +444,6 @@ export function EventFilters({
             </div>
             <Stack spacing={2}>
               <FormControl fullWidth size="small" sx={inputSx}>
-                <InputLabel id="limit-label">Results per page</InputLabel>
-                <Select
-                  labelId="limit-label"
-                  label="Results per page"
-                  value={filters.limit || 20}
-                  onChange={(e) => handleInputChange('limit', parseInt(String(e.target.value)))}
-                >
-                  <MenuItem value="10">10</MenuItem>
-                  <MenuItem value="20">20</MenuItem>
-                  <MenuItem value="50">50</MenuItem>
-                  <MenuItem value="100">100</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth size="small" sx={inputSx}>
                 <InputLabel id="sort-by-label">Sort by</InputLabel>
                 <Select
                   labelId="sort-by-label"
