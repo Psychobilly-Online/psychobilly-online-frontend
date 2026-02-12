@@ -11,7 +11,6 @@ describe('EventCard', () => {
     venue_id: 1,
     approved: true,
     venue: {
-      id: 1,
       name: 'Test Venue',
       city: 'Berlin',
     },
@@ -90,7 +89,7 @@ describe('EventCard', () => {
       const event = {
         ...mockBaseEvent,
         bands: 'The Meteors',
-        venue: { id: 1, name: 'Test Venue', city: 'Berlin' },
+        venue: { name: 'Test Venue', city: 'Berlin' },
       };
       render(<EventCard event={event} />);
 
@@ -103,7 +102,7 @@ describe('EventCard', () => {
       const event = {
         ...mockBaseEvent,
         bands: 'The Meteors',
-        venue: { id: 1, name: 'Test Venue', city: 'Berlin' },
+        venue: { name: 'Test Venue', city: 'Berlin' },
         category_id: 1,
       };
       render(<EventCard event={event} categoryName="Festival" />);

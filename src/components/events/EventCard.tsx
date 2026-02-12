@@ -33,10 +33,13 @@ export function EventCard({ event, categoryName }: EventCardProps) {
     return `https://${trimmed}`;
   };
 
-  // Validate and parse date
+  // Validate and parse date (timezone-safe)
+  // Parses YYYY-MM-DD as local date to avoid UTC midnight causing day shifts
   const parseDate = (dateString: string) => {
     if (!dateString) return null;
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (!year || !month || !day) return null;
+    const date = new Date(year, month - 1, day);
     return isNaN(date.getTime()) ? null : date;
   };
 
@@ -53,22 +56,6 @@ export function EventCard({ event, categoryName }: EventCardProps) {
     endDate &&
     (eventDate.getMonth() !== endDate.getMonth() ||
       eventDate.getFullYear() !== endDate.getFullYear());
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('de-DE', {
-      weekday: 'short',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
-  };
-
-  const formatShortDate = (date: Date) => {
-    return new Intl.DateTimeFormat('de-DE', {
-      day: '2-digit',
-      month: '2-digit',
-    }).format(date);
-  };
 
   const getDay = (date: Date) => date.getDate();
 
