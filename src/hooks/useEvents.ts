@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Event, PaginatedResponse, EventFilters } from '@/types';
 
 interface UseEventsResult {
@@ -10,27 +10,53 @@ interface UseEventsResult {
   pagination: PaginatedResponse<Event>['pagination'] | null;
   categoryCounts: Record<number, number> | null;
   refetch: () => void;
+  loadMore: () => void;
+  hasMore: boolean;
+}
+
+interface UseEventsOptions extends EventFilters {
+  infiniteScroll?: boolean;
 }
 
 /**
  * Custom hook for fetching events
  * Uses the BFF API route instead of calling backend directly
+ * Supports both pagination and infinite scroll modes
  */
-export function useEvents(filters: EventFilters = {}): UseEventsResult {
+export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
+  const { infiniteScroll = false, ...filters } = options;
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginatedResponse<Event>['pagination'] | null>(null);
   const [categoryCounts, setCategoryCounts] = useState<Record<number, number> | null>(null);
+  const [currentBatch, setCurrentBatch] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const filtersRef = useRef<string>('');
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const eventIdsRef = useRef<Set<number>>(new Set());
+  const requestIdRef = useRef(0);
 
-  const fetchEvents = async () => {
+  const fetchEvents = async (pageToFetch: number, append: boolean = false) => {
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new abort controller for this request
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    // Increment request ID to track this specific request
+    const currentRequestId = ++requestIdRef.current;
+
     try {
       setLoading(true);
       setError(null);
 
-      // Convert page to offset for API
-      const { page, limit = 20, ...otherFilters } = filters;
-      const offset = page ? (page - 1) * limit : 0;
+      // Convert batch to offset for API
+      const { page: _page, limit = 25, ...otherFilters } = filters;
+      const offset = (pageToFetch - 1) * limit;
 
       // Build query string from filters
       const params = new URLSearchParams();
@@ -52,44 +78,131 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
       // Call BFF API route (internal Next.js API)
       const url = `/api/events?${params.toString()}`;
 
-      const response = await fetch(url);
+      const response = await fetch(url, { signal: abortController.signal });
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch events');
       }
 
-      setEvents(data.data || []);
+      // Only update state if this is still the latest request
+      if (currentRequestId !== requestIdRef.current) {
+        return;
+      }
+
+      const newEvents = data.data || [];
+
+      // In infinite scroll mode, append events; otherwise replace
+      if (append && infiniteScroll) {
+        // Use the ref-based Set for O(1) deduplication
+        const uniqueNewEvents = newEvents.filter((e: Event) => {
+          if (eventIdsRef.current.has(e.id)) {
+            return false;
+          }
+          eventIdsRef.current.add(e.id);
+          return true;
+        });
+        setEvents((prev) => [...prev, ...uniqueNewEvents]);
+      } else {
+        // Reset the Set when replacing events
+        eventIdsRef.current.clear();
+        newEvents.forEach((e: Event) => eventIdsRef.current.add(e.id));
+        setEvents(newEvents);
+      }
 
       // Backend returns 'meta', transform to expected 'pagination' structure
       if (data.meta) {
-        const limit = data.meta.limit || 20;
+        const limit = data.meta.limit || 25;
         const total = data.meta.total || 0;
         const offset = data.meta.offset || 0;
-        const currentPage = Math.floor(offset / limit) + 1;
+        const responseBatch = Math.floor(offset / limit) + 1;
+        const totalBatches = Math.ceil(total / limit);
 
         setPagination({
           total: total,
-          page: currentPage,
+          page: responseBatch,
           limit: limit,
-          pages: Math.ceil(total / limit),
+          pages: totalBatches,
         });
         setCategoryCounts(data.meta.category_counts || null);
+
+        // Check if there are more batches to load
+        setHasMore(responseBatch < totalBatches);
+
+        // Update currentBatch after successful append
+        if (append && infiniteScroll) {
+          setCurrentBatch(responseBatch);
+        }
       } else {
         setPagination(null);
         setCategoryCounts(null);
+        setHasMore(false);
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
-      setEvents([]);
+      // Ignore abort errors as they are expected when filters change
+      if (err.name === 'AbortError') {
+        return;
+      }
+
+      // Only update state if this is still the latest request
+      if (currentRequestId === requestIdRef.current) {
+        setError(err.message || 'An error occurred');
+        if (!append) {
+          setEvents([]);
+        }
+      }
     } finally {
-      setLoading(false);
+      // Only update loading state if this is still the latest request
+      if (currentRequestId === requestIdRef.current) {
+        setLoading(false);
+        // Only clear the abort controller ref if this request wasn't aborted
+        if (!abortController.signal.aborted) {
+          abortControllerRef.current = null;
+        }
+      }
     }
   };
 
+  const loadMore = () => {
+    if (!loading && hasMore && infiniteScroll) {
+      const nextBatch = currentBatch + 1;
+      // Don't update currentBatch here - will be updated in fetchEvents after success
+      fetchEvents(nextBatch, true);
+    }
+  };
+
+  // Reset state when filters change
   useEffect(() => {
-    fetchEvents();
-  }, [JSON.stringify(filters)]); // Re-fetch when filters change
+    const newFiltersKey = JSON.stringify(filters);
+
+    // If filters changed, reset and fetch
+    if (newFiltersKey !== filtersRef.current) {
+      filtersRef.current = newFiltersKey;
+
+      if (infiniteScroll) {
+        // In infinite scroll mode, always reset to batch 1
+        setCurrentBatch(1);
+        setEvents([]);
+        setHasMore(true);
+        eventIdsRef.current.clear();
+        fetchEvents(1, false);
+      } else {
+        // In pagination mode, use the page from filters or default to 1
+        const targetBatch = filters.page ?? 1;
+        setCurrentBatch(targetBatch);
+        fetchEvents(targetBatch, false);
+      }
+    }
+  }, [JSON.stringify(filters), infiniteScroll]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   return {
     events,
@@ -97,6 +210,18 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
     error,
     pagination,
     categoryCounts,
-    refetch: fetchEvents,
+    refetch: () => {
+      if (infiniteScroll) {
+        setCurrentBatch(1);
+        setEvents([]);
+        setHasMore(true);
+        eventIdsRef.current.clear();
+        fetchEvents(1, false);
+      } else {
+        fetchEvents(currentBatch, false);
+      }
+    },
+    loadMore,
+    hasMore,
   };
 }

@@ -1,17 +1,17 @@
 'use client';
 
 import { useEvents } from '@/hooks/useEvents';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { EventCard } from '@/components/events/EventCard';
 import { EventFilters, FilterValues } from '@/components/events/EventFilters';
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 
 export default function EventsPage() {
-  const [page, setPage] = useState(1);
   const [eventDates, setEventDates] = useState<Set<number>>(new Set());
 
   const [filters, setFilters] = useState<FilterValues>({
-    limit: 20,
+    limit: 25,
     sort_by: 'date',
     sort_order: 'ASC',
   });
@@ -46,11 +46,19 @@ export default function EventsPage() {
       .catch((err) => console.error('Failed to fetch event dates:', err));
   }, []);
 
-  const { events, loading, error, pagination, categoryCounts } = useEvents({
-    page,
+  const { events, loading, error, pagination, categoryCounts, loadMore, hasMore } = useEvents({
+    infiniteScroll: true,
     ...filters,
   });
   const [lastTotalCount, setLastTotalCount] = useState<number | undefined>(undefined);
+
+  // Setup infinite scroll - trigger loading 2 screens before bottom
+  const lastElementRef = useInfiniteScroll({
+    loading,
+    hasMore,
+    onLoadMore: loadMore,
+    rootMargin: '800px', // Load earlier to avoid jumping
+  });
 
   useEffect(() => {
     if (typeof pagination?.total === 'number') {
@@ -60,7 +68,6 @@ export default function EventsPage() {
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
-    setPage(1); // Reset to first page when filters change
   };
 
   return (
@@ -87,38 +94,25 @@ export default function EventsPage() {
         {events.length > 0 && (
           <>
             <div className={`${styles.eventsList} ${loading ? styles.eventsListLoading : ''}`}>
-              {events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  categoryName={event.category_id ? categories[event.category_id] : undefined}
-                />
-              ))}
+              {events.map((event, index) => {
+                // Attach ref to the last element for infinite scroll detection
+                const isLastElement = index === events.length - 1;
+                return (
+                  <div key={event.id} ref={isLastElement ? lastElementRef : null}>
+                    <EventCard
+                      event={event}
+                      categoryName={event.category_id ? categories[event.category_id] : undefined}
+                    />
+                  </div>
+                );
+              })}
             </div>
 
-            {pagination && pagination.pages > 1 && (
-              <div className={styles.paginationBar}>
-                <div className={styles.pagination}>
-                  <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                    className={styles.paginationButton}
-                  >
-                    Previous
-                  </button>
+            {loading && <div className={styles.loadingMore}>Loading more events...</div>}
 
-                  <span className={styles.paginationInfo}>
-                    Page {page} of {pagination.pages} ({pagination.total} events)
-                  </span>
-
-                  <button
-                    onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
-                    disabled={page === pagination.pages}
-                    className={styles.paginationButton}
-                  >
-                    Next
-                  </button>
-                </div>
+            {!loading && !hasMore && events.length > 0 && (
+              <div className={styles.endMessage}>
+                No more events to load. Showing all {pagination?.total || events.length} events.
               </div>
             )}
           </>

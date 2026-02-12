@@ -86,7 +86,9 @@ export function EventFilters({
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [calendarView, setCalendarView] = useState<'day' | 'month' | 'year'>('day');
-  const [datePreset, setDatePreset] = useState<'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range' | null>(null);
+  const [datePreset, setDatePreset] = useState<
+    'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range' | null
+  >(null);
   const [showAllCountries, setShowAllCountries] = useState(false);
   const [loadingRegion, setLoadingRegion] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -113,7 +115,9 @@ export function EventFilters({
     setDateAnchor(null);
   };
 
-  const handleDatePresetChange = (preset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range') => {
+  const handleDatePresetChange = (
+    preset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range',
+  ) => {
     setDatePreset(preset);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -439,21 +443,6 @@ export function EventFilters({
               </IconButton>
             </div>
             <Stack spacing={2}>
-              <FormControl fullWidth size="small" sx={inputSx}>
-                <InputLabel id="limit-label">Results per page</InputLabel>
-                <Select
-                  labelId="limit-label"
-                  label="Results per page"
-                  value={filters.limit || 20}
-                  onChange={(e) => handleInputChange('limit', parseInt(String(e.target.value)))}
-                >
-                  <MenuItem value="10">10</MenuItem>
-                  <MenuItem value="20">20</MenuItem>
-                  <MenuItem value="50">50</MenuItem>
-                  <MenuItem value="100">100</MenuItem>
-                </Select>
-              </FormControl>
-
               <FormControl fullWidth size="small" sx={inputSx}>
                 <InputLabel id="sort-by-label">Sort by</InputLabel>
                 <Select
