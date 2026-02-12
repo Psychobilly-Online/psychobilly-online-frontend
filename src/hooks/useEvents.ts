@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Event, PaginatedResponse, EventFilters } from '@/types';
 
 interface UseEventsResult {
@@ -135,13 +135,13 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
     }
   };
 
-  const loadMore = useCallback(() => {
+  const loadMore = () => {
     if (!loading && hasMore && infiniteScroll) {
       const nextPage = currentPage + 1;
       setCurrentPage(nextPage);
       fetchEvents(nextPage, true);
     }
-  }, [loading, hasMore, infiniteScroll, currentPage]);
+  };
 
   // Reset state when filters change
   useEffect(() => {
