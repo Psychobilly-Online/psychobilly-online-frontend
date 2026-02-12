@@ -38,14 +38,15 @@ export function useInfiniteScroll({
         observerRef.current.disconnect();
       }
 
-      // Don't observe if loading or no more items
-      if (loadingRef.current || !hasMoreRef.current) {
+      // Don't observe if no more items
+      if (!hasMoreRef.current) {
         return;
       }
 
       // Create new observer
       observerRef.current = new IntersectionObserver(
         (entries) => {
+          // Only trigger if not currently loading and has more items
           if (entries[0].isIntersecting && hasMoreRef.current && !loadingRef.current) {
             onLoadMore();
           }
