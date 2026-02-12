@@ -31,7 +31,7 @@
 .eventsList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   min-height: 240px;
   transition: opacity 0.2s ease;
 }
@@ -42,14 +42,14 @@
 
 .filterBar {
   position: sticky;
-  top: 0;
+  top: 44px;
   z-index: 10;
-  margin: 0 0 20px 0;
+  margin: 0 0 18px 0;
 }
 
 .status {
   text-align: center;
-  padding: 36px 20px;
+  padding: 36px 18px;
   font-size: 16px;
   color: #b5b5b5;
 }
@@ -60,7 +60,7 @@
 
 .loadingMore {
   text-align: center;
-  padding: 24px 20px;
+  padding: 27px 18px;
   font-size: 15px;
   color: #999;
   font-style: italic;
@@ -68,11 +68,11 @@
 
 .endMessage {
   text-align: center;
-  padding: 24px 20px;
+  padding: 27px 18px;
   font-size: 14px;
   color: #666;
   border-top: 1px solid #2d2d30;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 @media (max-width: 1024px) {

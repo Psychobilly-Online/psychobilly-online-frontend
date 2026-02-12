@@ -1,27 +1,43 @@
 .filterContainer {
-  background: #1b1b1d;
-  border: 1px solid #2d2d30;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  margin-bottom: 20px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 9px;
+  box-shadow: 0 9px 18px rgba(0, 0, 0, 0.25);
+  margin-bottom: 18px;
   width: 100%;
+}
+
+/* When sticky, remove top border radius */
+.filterContainer.sticky {
+  border-radius: 0 0 9px 9px;
 }
 
 .collapsed .filterHeader {
   border-bottom: none;
-  border-radius: 12px;
+  border-radius: 9px;
+}
+
+/* When sticky and collapsed, remove top border radius */
+.collapsed.sticky .filterHeader {
+  border-radius: 0 0 9px 9px;
 }
 
 .filterHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 18px;
-  background: #202022;
-  border-bottom: 1px solid #2d2d30;
-  border-top-right-radius: 12px;
-  border-top-left-radius: 12px;
-  gap: 12px;
+  padding: 9px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+  border-top-right-radius: 9px;
+  border-top-left-radius: 9px;
+  gap: 9px;
+}
+
+/* Override filterHeader top radius when sticky (must come after .filterHeader) */
+.filterContainer.sticky .filterHeader {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
 }
 
 .filterHeader:hover {
@@ -31,7 +47,7 @@
 .headerActions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
 .headerMain {
@@ -44,17 +60,17 @@
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 9px;
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.headerSearch {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1 1 auto;
-  min-width: 220px;
+.eventsTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.02em;
 }
 
 .settingsButton {
@@ -70,17 +86,17 @@
 }
 
 .settingsPopover {
-  padding: 16px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 9px;
 }
 
 .dateRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 9px;
   flex-wrap: nowrap;
 }
 
@@ -118,21 +134,9 @@
 
 .chipGroup {
   display: flex;
-  gap: 8px;
+  gap: 9px;
   flex-wrap: wrap;
   align-items: flex-start;
-}
-
-.searchIconButton {
-  border: 1px solid #343437;
-  background: #2a2a2d;
-  color: #fff;
-  width: fit-content;
-}
-
-.searchIconButton:hover {
-  background: #35353a;
-  border-color: #4a4a50;
 }
 
 .countryGroup {
@@ -175,7 +179,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
 }
 
 .popoverCloseButton {
@@ -185,13 +189,13 @@
 .countryPopover {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 9px;
 }
 
 .countryListSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
 }
 
 .countryChipLabel {
@@ -201,9 +205,9 @@
 }
 
 .flagIcon {
-  width: 16px;
-  height: 12px;
-  border-radius: 2px;
+  width: 18px;
+  height: 9px;
+  border-radius: 3px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -222,21 +226,13 @@
   color: #fff;
 }
 
-.resultCount {
-  font-size: 12px;
-  color: #b5b5b5;
-  text-transform: none;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
 .toggleButton {
   background: #2a2a2d;
   border: 1px solid #343437;
   border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
-  padding: 4px 10px;
+  padding: 3px 9px;
   color: #ddd;
   transition:
     background 0.2s,
@@ -249,22 +245,22 @@
 }
 
 .filterForm {
-  padding: 16px 18px 18px;
+  padding: 18px 18px 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 9px;
 }
 
 .filterRows {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 9px;
 }
 
 .filterRow {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 9px;
   padding: 0;
 }
 
@@ -323,11 +319,11 @@
 .rangeDayHasEvents::after {
   content: '';
   position: absolute;
-  bottom: 4px;
+  bottom: 3px;
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   background-color: #e94e1b;
   opacity: 0.8;
@@ -336,14 +332,14 @@
 .chipSection {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 18px;
   flex: 0 1 auto;
   align-items: flex-start;
 }
 
 .formGroup small {
   display: block;
-  margin-top: 4px;
+  margin-top: 3px;
   font-size: 11px;
   color: #a0a0a0;
 }
@@ -351,17 +347,17 @@
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .filterContainer {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
     border-radius: 0;
   }
 
   .filterHeader {
-    padding: 12px 15px;
+    padding: 9px 18px;
     border-radius: 0;
   }
 
   .filterForm {
-    padding: 14px;
+    padding: 18px;
   }
 
   .formGroup,

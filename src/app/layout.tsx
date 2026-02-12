@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ClientLayout } from '@/components/layout/ClientLayout';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -23,11 +24,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="/styles/flexboxgrid.css" />
       </head>
       <body id="pageBody">
-        <div id="container" className="container">
-          <div id="header" />
-          {children}
-          <div id="pageBottom">&copy; Psychobilly Online 2008 / 2026</div>
-        </div>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

@@ -5,19 +5,17 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { EventCard } from '@/components/events/EventCard';
 import { EventFilters, FilterValues } from '@/components/events/EventFilters';
 import { useState, useEffect, useRef } from 'react';
+import { useSearchContext } from '@/contexts/SearchContext';
 import styles from './page.module.css';
 
 export default function EventsPage() {
+  const { filters, setFilters } = useSearchContext();
   const [eventDates, setEventDates] = useState<Set<number>>(new Set());
   const [shouldCollapseFilters, setShouldCollapseFilters] = useState(false);
+  const [isFilterSticky, setIsFilterSticky] = useState(false);
   const lastScrollY = useRef(0);
-  const hasAutoCollapsed = useRef(false); // Track if we've already auto-collapsed once
-
-  const [filters, setFilters] = useState<FilterValues>({
-    limit: 25,
-    sort_by: 'date',
-    sort_order: 'ASC',
-  });
+  const hasAutoCollapsed = useRef(false);
+  const filterRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState<Record<number, string>>({});
 
   useEffect(() => {
@@ -77,6 +75,13 @@ export default function EventsPage() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
+      // Check if filter is sticky (reached top position)
+      if (filterRef.current) {
+        const rect = filterRef.current.getBoundingClientRect();
+        const topBarHeight = 45; // TopBar height in px
+        setIsFilterSticky(rect.top <= topBarHeight);
+      }
+
       // Auto-collapse once if scrolling down and past 50px
       if (
         !hasAutoCollapsed.current &&
@@ -105,7 +110,7 @@ export default function EventsPage() {
   return (
     <div id="content" className={`row ${styles.eventsLayout}`}>
       <div className={`col1 col-lg-12 col-md-12 col-xs-12 ${styles.mainColumn}`} id="col1">
-        <div className={styles.filterBar}>
+        <div className={styles.filterBar} ref={filterRef}>
           <EventFilters
             onFilterChange={handleFilterChange}
             initialFilters={filters}
@@ -114,6 +119,7 @@ export default function EventsPage() {
             eventDates={eventDates}
             shouldCollapse={shouldCollapseFilters}
             onCollapseComplete={() => setShouldCollapseFilters(false)}
+            isSticky={isFilterSticky}
           />
         </div>
 

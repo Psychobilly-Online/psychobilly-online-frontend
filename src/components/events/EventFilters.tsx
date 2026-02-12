@@ -17,7 +17,6 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { isSameDay, isWithinInterval } from 'date-fns';
-import { EventFiltersSearch } from './EventFiltersSearch';
 import { EventFiltersCountries } from './EventFiltersCountries';
 import { EventFiltersDateRange } from './EventFiltersDateRange';
 import { EventFiltersCategories } from './EventFiltersCategories';
@@ -58,6 +57,7 @@ interface EventFiltersProps {
   eventDates?: Set<number>;
   shouldCollapse?: boolean;
   onCollapseComplete?: () => void;
+  isSticky?: boolean;
 }
 
 export function EventFilters({
@@ -68,6 +68,7 @@ export function EventFilters({
   eventDates,
   shouldCollapse = false,
   onCollapseComplete,
+  isSticky = false,
 }: EventFiltersProps) {
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
@@ -427,21 +428,15 @@ export function EventFilters({
     <ThemeProvider theme={filterTheme}>
       <div
         ref={filterContainerRef}
-        className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''}`}
+        className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''} ${isSticky ? styles.sticky : ''}`}
       >
         <div className={styles.filterHeader}>
           <div className={styles.headerMain}>
             <div className={styles.headerLeft}>
-              <EventFiltersSearch
-                value={filters.search || ''}
-                onChange={(value) => handleInputChange('search', value)}
-                inputRef={searchInputRef}
-                inputSx={inputSx}
-              />
               {typeof totalCount === 'number' && (
-                <span className={styles.resultCount}>
-                  {totalCount} event{totalCount > 1 && 's'} found
-                </span>
+                <h2 className={styles.eventsTitle}>
+                  {totalCount} event{totalCount !== 1 ? 's' : ''} found
+                </h2>
               )}
             </div>
           </div>
