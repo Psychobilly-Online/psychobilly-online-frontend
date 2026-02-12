@@ -2,6 +2,7 @@
 
 import { Event } from '@/types';
 import { apiClient } from '@/lib/api-client';
+import { parseDate } from '@/lib/date-utils';
 import styles from './EventCard.module.css';
 
 interface EventCardProps {
@@ -31,16 +32,6 @@ export function EventCard({ event, categoryName }: EventCardProps) {
       return trimmed;
     }
     return `https://${trimmed}`;
-  };
-
-  // Validate and parse date (timezone-safe)
-  // Parses YYYY-MM-DD as local date to avoid UTC midnight causing day shifts
-  const parseDate = (dateString: string) => {
-    if (!dateString) return null;
-    const [year, month, day] = dateString.split('-').map(Number);
-    if (!year || !month || !day) return null;
-    const date = new Date(year, month - 1, day);
-    return isNaN(date.getTime()) ? null : date;
   };
 
   const eventDate = parseDate(event.date_start);
