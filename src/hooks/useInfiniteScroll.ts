@@ -24,12 +24,14 @@ export function useInfiniteScroll({
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef(loading);
   const hasMoreRef = useRef(hasMore);
+  const onLoadMoreRef = useRef(onLoadMore);
 
   // Update refs when values change
   useEffect(() => {
     loadingRef.current = loading;
     hasMoreRef.current = hasMore;
-  }, [loading, hasMore]);
+    onLoadMoreRef.current = onLoadMore;
+  }, [loading, hasMore, onLoadMore]);
 
   const lastElementRef = useCallback(
     (node: HTMLElement | null) => {
@@ -48,7 +50,7 @@ export function useInfiniteScroll({
         (entries) => {
           // Only trigger if not currently loading and has more items
           if (entries[0].isIntersecting && hasMoreRef.current && !loadingRef.current) {
-            onLoadMore();
+            onLoadMoreRef.current();
           }
         },
         {
@@ -62,7 +64,7 @@ export function useInfiniteScroll({
         observerRef.current.observe(node);
       }
     },
-    [onLoadMore, rootMargin, threshold],
+    [rootMargin, threshold],
   );
 
   // Cleanup on unmount
