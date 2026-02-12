@@ -150,7 +150,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
     // If filters changed, reset and fetch
     if (newFiltersKey !== filtersRef.current) {
       filtersRef.current = newFiltersKey;
-      
+
       if (infiniteScroll) {
         // In infinite scroll mode, always reset to page 1
         setCurrentPage(1);

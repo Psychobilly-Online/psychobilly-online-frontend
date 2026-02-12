@@ -157,9 +157,7 @@ describe('useEvents', () => {
 
       global.fetch = fetchMock as unknown as typeof fetch;
 
-      const { result } = renderHook(() =>
-        useEvents({ infiniteScroll: true, limit: 1 }),
-      );
+      const { result } = renderHook(() => useEvents({ infiniteScroll: true, limit: 1 }));
 
       // Wait for initial load
       await waitFor(() => {
@@ -221,9 +219,7 @@ describe('useEvents', () => {
 
       global.fetch = fetchMock as unknown as typeof fetch;
 
-      const { result } = renderHook(() =>
-        useEvents({ infiniteScroll: true, limit: 2 }),
-      );
+      const { result } = renderHook(() => useEvents({ infiniteScroll: true, limit: 2 }));
 
       // Wait for initial load
       await waitFor(() => {
@@ -265,9 +261,7 @@ describe('useEvents', () => {
 
       global.fetch = fetchMock as unknown as typeof fetch;
 
-      const { result } = renderHook(() =>
-        useEvents({ infiniteScroll: true, limit: 10 }),
-      );
+      const { result } = renderHook(() => useEvents({ infiniteScroll: true, limit: 10 }));
 
       // Wait for initial load
       await waitFor(() => {
@@ -303,9 +297,7 @@ describe('useEvents', () => {
 
       global.fetch = fetchMock as unknown as typeof fetch;
 
-      const { result } = renderHook(() =>
-        useEvents({ infiniteScroll: true, limit: 1 }),
-      );
+      const { result } = renderHook(() => useEvents({ infiniteScroll: true, limit: 1 }));
 
       // While loading, try to load more
       expect(result.current.loading).toBe(true);
@@ -350,9 +342,7 @@ describe('useEvents', () => {
 
       global.fetch = fetchMock as unknown as typeof fetch;
 
-      renderHook(() =>
-        useEvents({ infiniteScroll: false, limit: 10, page: 3 }),
-      );
+      renderHook(() => useEvents({ infiniteScroll: false, limit: 10, page: 3 }));
 
       await waitFor(() => {
         expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -385,9 +375,7 @@ describe('useEvents', () => {
 
       global.fetch = fetchMock as unknown as typeof fetch;
 
-      const { result } = renderHook(() =>
-        useEvents({ infiniteScroll: false, limit: 10, page: 2 }),
-      );
+      const { result } = renderHook(() => useEvents({ infiniteScroll: false, limit: 10, page: 2 }));
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false);
