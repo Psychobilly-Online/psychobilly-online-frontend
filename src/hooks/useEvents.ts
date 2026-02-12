@@ -147,22 +147,24 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   useEffect(() => {
     const newFiltersKey = JSON.stringify(filters);
 
-    // If filters changed, reset to page 1
+    // If filters changed, reset and fetch
     if (newFiltersKey !== filtersRef.current) {
       filtersRef.current = newFiltersKey;
-      setCurrentPage(1);
-      setEvents([]);
-      setHasMore(true);
-      fetchEvents(1, false);
-    }
-  }, [JSON.stringify(filters)]);
 
-  // Initial fetch
-  useEffect(() => {
-    if (events.length === 0 && !loading && !error) {
-      fetchEvents(1, false);
+      if (infiniteScroll) {
+        // In infinite scroll mode, always reset to page 1
+        setCurrentPage(1);
+        setEvents([]);
+        setHasMore(true);
+        fetchEvents(1, false);
+      } else {
+        // In pagination mode, use the page from filters or default to 1
+        const targetPage = filters.page ?? 1;
+        setCurrentPage(targetPage);
+        fetchEvents(targetPage, false);
+      }
     }
-  }, []);
+  }, [JSON.stringify(filters), infiniteScroll]);
 
   return {
     events,
@@ -170,7 +172,16 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
     error,
     pagination,
     categoryCounts,
-    refetch: () => fetchEvents(1, false),
+    refetch: () => {
+      if (infiniteScroll) {
+        setCurrentPage(1);
+        setEvents([]);
+        setHasMore(true);
+        fetchEvents(1, false);
+      } else {
+        fetchEvents(currentPage, false);
+      }
+    },
     loadMore,
     hasMore,
   };
