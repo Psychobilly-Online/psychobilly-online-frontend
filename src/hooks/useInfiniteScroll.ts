@@ -53,7 +53,7 @@ export function useInfiniteScroll({
         {
           rootMargin,
           threshold,
-        }
+        },
       );
 
       // Start observing the target element
@@ -61,7 +61,7 @@ export function useInfiniteScroll({
         observerRef.current.observe(node);
       }
     },
-    [onLoadMore, rootMargin, threshold]
+    [onLoadMore, rootMargin, threshold],
   );
 
   // Cleanup on unmount

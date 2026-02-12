@@ -83,8 +83,8 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       if (append && infiniteScroll) {
         setEvents((prev) => {
           // Deduplicate by event ID
-          const existingIds = new Set(prev.map(e => e.id));
-          const uniqueNewEvents = newEvents.filter(e => !existingIds.has(e.id));
+          const existingIds = new Set(prev.map((e: Event) => e.id));
+          const uniqueNewEvents = newEvents.filter((e: Event) => !existingIds.has(e.id));
           return [...prev, ...uniqueNewEvents];
         });
       } else {
@@ -136,7 +136,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   // Reset state when filters change
   useEffect(() => {
     const newFiltersKey = JSON.stringify(filters);
-    
+
     // If filters changed, reset to page 1
     if (newFiltersKey !== filtersRef.current) {
       filtersRef.current = newFiltersKey;

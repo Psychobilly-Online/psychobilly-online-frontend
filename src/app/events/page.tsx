@@ -108,9 +108,7 @@ export default function EventsPage() {
               })}
             </div>
 
-            {loading && (
-              <div className={styles.loadingMore}>Loading more events...</div>
-            )}
+            {loading && <div className={styles.loadingMore}>Loading more events...</div>}
 
             {!loading && !hasMore && events.length > 0 && (
               <div className={styles.endMessage}>
