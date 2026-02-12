@@ -34,6 +34,8 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   const [hasMore, setHasMore] = useState(true);
   const filtersRef = useRef<string>('');
   const abortControllerRef = useRef<AbortController | null>(null);
+  const eventIdsRef = useRef<Set<number>>(new Set());
+  const requestIdRef = useRef(0);
 
   const fetchEvents = async (pageToFetch: number, append: boolean = false) => {
     // Cancel any in-flight request
@@ -44,6 +46,9 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
     // Create new abort controller for this request
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
+
+    // Increment request ID to track this specific request
+    const currentRequestId = ++requestIdRef.current;
 
     try {
       setLoading(true);
@@ -80,17 +85,28 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         throw new Error(data.error || 'Failed to fetch events');
       }
 
+      // Only update state if this is still the latest request
+      if (currentRequestId !== requestIdRef.current) {
+        return;
+      }
+
       const newEvents = data.data || [];
 
       // In infinite scroll mode, append events; otherwise replace
       if (append && infiniteScroll) {
-        setEvents((prev) => {
-          // Deduplicate by event ID
-          const existingIds = new Set(prev.map((e: Event) => e.id));
-          const uniqueNewEvents = newEvents.filter((e: Event) => !existingIds.has(e.id));
-          return [...prev, ...uniqueNewEvents];
+        // Use the ref-based Set for O(1) deduplication
+        const uniqueNewEvents = newEvents.filter((e: Event) => {
+          if (eventIdsRef.current.has(e.id)) {
+            return false;
+          }
+          eventIdsRef.current.add(e.id);
+          return true;
         });
+        setEvents((prev) => [...prev, ...uniqueNewEvents]);
       } else {
+        // Reset the Set when replacing events
+        eventIdsRef.current.clear();
+        newEvents.forEach((e: Event) => eventIdsRef.current.add(e.id));
         setEvents(newEvents);
       }
 
@@ -122,15 +138,22 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       if (err.name === 'AbortError') {
         return;
       }
-      setError(err.message || 'An error occurred');
-      if (!append) {
-        setEvents([]);
+      
+      // Only update state if this is still the latest request
+      if (currentRequestId === requestIdRef.current) {
+        setError(err.message || 'An error occurred');
+        if (!append) {
+          setEvents([]);
+        }
       }
     } finally {
-      setLoading(false);
-      // Only clear the abort controller ref if this request wasn't aborted
-      if (!abortController.signal.aborted) {
-        abortControllerRef.current = null;
+      // Only update loading state if this is still the latest request
+      if (currentRequestId === requestIdRef.current) {
+        setLoading(false);
+        // Only clear the abort controller ref if this request wasn't aborted
+        if (!abortController.signal.aborted) {
+          abortControllerRef.current = null;
+        }
       }
     }
   };
@@ -156,6 +179,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         setCurrentPage(1);
         setEvents([]);
         setHasMore(true);
+        eventIdsRef.current.clear();
         fetchEvents(1, false);
       } else {
         // In pagination mode, use the page from filters or default to 1
@@ -165,6 +189,15 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       }
     }
   }, [JSON.stringify(filters), infiniteScroll]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   return {
     events,
@@ -177,6 +210,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         setCurrentPage(1);
         setEvents([]);
         setHasMore(true);
+        eventIdsRef.current.clear();
         fetchEvents(1, false);
       } else {
         fetchEvents(currentPage, false);
