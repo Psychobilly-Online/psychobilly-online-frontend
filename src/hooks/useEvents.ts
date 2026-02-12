@@ -128,7 +128,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
 
         // Check if there are more batches to load
         setHasMore(responseBatch < totalBatches);
-        
+
         // Update currentBatch after successful append
         if (append && infiniteScroll) {
           setCurrentBatch(responseBatch);
