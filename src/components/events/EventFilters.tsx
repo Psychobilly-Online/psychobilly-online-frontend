@@ -89,12 +89,16 @@ export function EventFilters({
   const [countryAnchor, setCountryAnchor] = useState<HTMLElement | null>(null);
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
 
+  const prevShouldCollapseRef = useRef<boolean>(false);
   // Handle external collapse trigger (e.g., from scroll)
   useEffect(() => {
-    if (shouldCollapse && isExpanded) {
-      setIsExpanded(false);
+    if (shouldCollapse && !prevShouldCollapseRef.current) {
+      if (isExpanded) {
+        setIsExpanded(false);
+      }
       onCollapseComplete?.();
     }
+    prevShouldCollapseRef.current = shouldCollapse;
   }, [shouldCollapse, isExpanded, onCollapseComplete]);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [calendarView, setCalendarView] = useState<'day' | 'month' | 'year'>('day');
