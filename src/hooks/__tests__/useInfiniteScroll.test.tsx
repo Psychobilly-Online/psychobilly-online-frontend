@@ -27,7 +27,8 @@ describe('useInfiniteScroll', () => {
       return observeInstance;
     });
 
-    global.IntersectionObserver = mockIntersectionObserver as unknown as typeof IntersectionObserver;
+    global.IntersectionObserver =
+      mockIntersectionObserver as unknown as typeof IntersectionObserver;
   });
 
   afterEach(() => {
