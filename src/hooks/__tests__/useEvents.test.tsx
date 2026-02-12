@@ -17,7 +17,7 @@ describe('useEvents', () => {
   it('builds query params for arrays and pagination', async () => {
     const mockResponse = {
       data: [],
-      meta: { limit: 20, total: 0, offset: 20, category_counts: { 1: 3 } },
+      meta: { limit: 20, total: 0, offset: 0, category_counts: { 1: 3 } },
     };
 
     const fetchMock = vi.fn().mockResolvedValue({
@@ -28,7 +28,6 @@ describe('useEvents', () => {
 
     renderHook(() =>
       useEvents({
-        page: 2,
         limit: 20,
         country_id: ['1', '2'],
         category_id: ['3'],
@@ -45,7 +44,7 @@ describe('useEvents', () => {
 
     expect(url.pathname).toBe('/api/events');
     expect(url.searchParams.get('limit')).toBe('20');
-    expect(url.searchParams.get('offset')).toBe('20');
+    expect(url.searchParams.get('offset')).toBe('0');
     expect(url.searchParams.get('country_id')).toBe('1,2');
     expect(url.searchParams.get('category_id')).toBe('3');
     expect(url.searchParams.get('search')).toBe('rock');

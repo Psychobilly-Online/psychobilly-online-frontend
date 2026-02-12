@@ -102,6 +102,23 @@
   font-size: 14px;
 }
 
+.loadingMore {
+  text-align: center;
+  padding: 24px 20px;
+  font-size: 15px;
+  color: #999;
+  font-style: italic;
+}
+
+.endMessage {
+  text-align: center;
+  padding: 24px 20px;
+  font-size: 14px;
+  color: #666;
+  border-top: 1px solid #2d2d30;
+  margin-top: 16px;
+}
+
 @media (max-width: 1024px) {
   .filterBar {
     top: 0;

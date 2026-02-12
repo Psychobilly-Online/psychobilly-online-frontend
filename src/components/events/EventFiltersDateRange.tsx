@@ -18,7 +18,9 @@ interface EventFiltersDateRangeProps {
   onClose: () => void;
   onUpdateDateRange: (start: Date | null, end: Date | null) => void;
   onCalendarChange: (date: Date | null) => void;
-  onPresetChange: (preset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range') => void;
+  onPresetChange: (
+    preset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range',
+  ) => void;
   selectedPreset: 'any' | 'today' | 'next-month' | 'next-3-months' | 'specific' | 'range' | null;
   calendarView: 'day' | 'month' | 'year';
   onViewChange: (view: 'day' | 'month' | 'year') => void;

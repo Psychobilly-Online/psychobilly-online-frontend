@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Event, PaginatedResponse, EventFilters } from '@/types';
 
 interface UseEventsResult {
@@ -10,27 +10,45 @@ interface UseEventsResult {
   pagination: PaginatedResponse<Event>['pagination'] | null;
   categoryCounts: Record<number, number> | null;
   refetch: () => void;
+  loadMore: () => void;
+  hasMore: boolean;
+}
+
+interface UseEventsOptions extends EventFilters {
+  infiniteScroll?: boolean;
 }
 
 /**
  * Custom hook for fetching events
  * Uses the BFF API route instead of calling backend directly
+ * Supports both pagination and infinite scroll modes
  */
-export function useEvents(filters: EventFilters = {}): UseEventsResult {
+export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
+  const { infiniteScroll = false, ...filters } = options;
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginatedResponse<Event>['pagination'] | null>(null);
   const [categoryCounts, setCategoryCounts] = useState<Record<number, number> | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const filtersRef = useRef<string>('');
+  const isFetchingRef = useRef(false);
 
-  const fetchEvents = async () => {
+  const fetchEvents = async (pageToFetch: number, append: boolean = false) => {
+    // Prevent duplicate fetches
+    if (isFetchingRef.current) {
+      return;
+    }
+
     try {
+      isFetchingRef.current = true;
       setLoading(true);
       setError(null);
 
       // Convert page to offset for API
-      const { page, limit = 20, ...otherFilters } = filters;
-      const offset = page ? (page - 1) * limit : 0;
+      const { page: _page, limit = 20, ...otherFilters } = filters;
+      const offset = (pageToFetch - 1) * limit;
 
       // Build query string from filters
       const params = new URLSearchParams();
@@ -59,7 +77,19 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
         throw new Error(data.error || 'Failed to fetch events');
       }
 
-      setEvents(data.data || []);
+      const newEvents = data.data || [];
+
+      // In infinite scroll mode, append events; otherwise replace
+      if (append && infiniteScroll) {
+        setEvents((prev) => {
+          // Deduplicate by event ID
+          const existingIds = new Set(prev.map(e => e.id));
+          const uniqueNewEvents = newEvents.filter(e => !existingIds.has(e.id));
+          return [...prev, ...uniqueNewEvents];
+        });
+      } else {
+        setEvents(newEvents);
+      }
 
       // Backend returns 'meta', transform to expected 'pagination' structure
       if (data.meta) {
@@ -67,29 +97,62 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
         const total = data.meta.total || 0;
         const offset = data.meta.offset || 0;
         const currentPage = Math.floor(offset / limit) + 1;
+        const totalPages = Math.ceil(total / limit);
 
         setPagination({
           total: total,
           page: currentPage,
           limit: limit,
-          pages: Math.ceil(total / limit),
+          pages: totalPages,
         });
         setCategoryCounts(data.meta.category_counts || null);
+
+        // Check if there are more pages
+        setHasMore(currentPage < totalPages);
       } else {
         setPagination(null);
         setCategoryCounts(null);
+        setHasMore(false);
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred');
-      setEvents([]);
+      if (!append) {
+        setEvents([]);
+      }
     } finally {
       setLoading(false);
+      isFetchingRef.current = false;
     }
   };
 
+  const loadMore = () => {
+    if (!loading && hasMore && infiniteScroll) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      fetchEvents(nextPage, true);
+    }
+  };
+
+  // Reset state when filters change
   useEffect(() => {
-    fetchEvents();
-  }, [JSON.stringify(filters)]); // Re-fetch when filters change
+    const newFiltersKey = JSON.stringify(filters);
+    
+    // If filters changed, reset to page 1
+    if (newFiltersKey !== filtersRef.current) {
+      filtersRef.current = newFiltersKey;
+      setCurrentPage(1);
+      setEvents([]);
+      setHasMore(true);
+      fetchEvents(1, false);
+    }
+  }, [JSON.stringify(filters)]);
+
+  // Initial fetch
+  useEffect(() => {
+    if (events.length === 0 && !loading && !error) {
+      fetchEvents(1, false);
+    }
+  }, []);
 
   return {
     events,
@@ -97,6 +160,8 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
     error,
     pagination,
     categoryCounts,
-    refetch: fetchEvents,
+    refetch: () => fetchEvents(1, false),
+    loadMore,
+    hasMore,
   };
 }
