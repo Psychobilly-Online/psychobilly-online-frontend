@@ -71,6 +71,9 @@ export default function EventsPage() {
 
   // Auto-collapse filters when scrolling down (only once)
   useEffect(() => {
+    // Initialize to current position to avoid false detection on first scroll
+    lastScrollY.current = window.scrollY;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 

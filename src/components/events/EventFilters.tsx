@@ -90,30 +90,45 @@ export function EventFilters({
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
 
   const prevShouldCollapseRef = useRef<boolean>(false);
+  const collapseCompleteRef = useRef<boolean>(false);
+
   // Handle external collapse trigger (e.g., from scroll)
   useEffect(() => {
     if (shouldCollapse && !prevShouldCollapseRef.current) {
-      if (isExpanded) {
-        setIsExpanded(false);
-      }
+      // Collapse the filters
+      setIsExpanded(false);
       // Close any open popovers to prevent them from being detached
-      if (settingsAnchor || dateAnchor || countryAnchor || categoryAnchor) {
-        setSettingsAnchor(null);
-        setDateAnchor(null);
-        setCountryAnchor(null);
-        setCategoryAnchor(null);
-      }
-      onCollapseComplete?.();
+      setSettingsAnchor(null);
+      setDateAnchor(null);
+      setCountryAnchor(null);
+      setCategoryAnchor(null);
+      // Reset completion flag for this collapse cycle
+      collapseCompleteRef.current = false;
     }
     prevShouldCollapseRef.current = shouldCollapse;
+  }, [shouldCollapse]);
+
+  // Notify once collapse has actually completed (state applied and popovers closed)
+  useEffect(() => {
+    if (!shouldCollapse) {
+      // Reset when no longer collapsing
+      collapseCompleteRef.current = false;
+      return;
+    }
+    const allClosed =
+      !isExpanded && !settingsAnchor && !dateAnchor && !countryAnchor && !categoryAnchor;
+    if (allClosed && !collapseCompleteRef.current) {
+      collapseCompleteRef.current = true;
+      onCollapseComplete?.();
+    }
   }, [
     shouldCollapse,
     isExpanded,
-    onCollapseComplete,
     settingsAnchor,
     dateAnchor,
     countryAnchor,
     categoryAnchor,
+    onCollapseComplete,
   ]);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [calendarView, setCalendarView] = useState<'day' | 'month' | 'year'>('day');
