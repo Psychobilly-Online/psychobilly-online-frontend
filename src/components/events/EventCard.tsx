@@ -46,14 +46,19 @@ export function EventCard({ event, categoryName }: EventCardProps) {
   const eventDate = parseDate(event.date_start);
   const endDate = event.date_end ? parseDate(event.date_end) : null;
 
-  // Check if event spans multiple days
-  const isMultiDay = endDate && eventDate && endDate.getTime() !== eventDate.getTime();
+  // If date is invalid, don't render the card
+  if (!eventDate) {
+    console.warn(`Invalid date for event ${event.id}:`, event.date_start);
+    return null;
+  }
+
+  // Check if event spans multiple days (explicit boolean, eventDate is validated above)
+  const isMultiDay = endDate !== null && endDate.getTime() !== eventDate.getTime();
 
   // Check if event spans multiple months
   const isMultiMonth =
+    endDate !== null &&
     isMultiDay &&
-    eventDate &&
-    endDate &&
     (eventDate.getMonth() !== endDate.getMonth() ||
       eventDate.getFullYear() !== endDate.getFullYear());
 
@@ -65,46 +70,40 @@ export function EventCard({ event, categoryName }: EventCardProps) {
 
   const getYear = (date: Date) => date.getFullYear();
 
-  // If date is invalid, don't render the card
-  if (!eventDate) {
-    console.warn(`Invalid date for event ${event.id}:`, event.date_start);
-    return null;
-  }
-
   return (
     <div className={styles.eventCard}>
       {/* Date Badge */}
       <div className={styles.dateBadge}>
-        {isMultiMonth ? (
+        {isMultiMonth && endDate ? (
           <>
             <div className={styles.dateRange}>
               <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
               <div className={styles.dateRangeSeparator}>-</div>
-              <div className={styles.dateRangeEnd}>{getDay(endDate!)}</div>
+              <div className={styles.dateRangeEnd}>{getDay(endDate)}</div>
             </div>
             <div className={styles.dateMonthRange}>
               <span className={styles.monthStart}>{getMonth(eventDate)}</span>
               <span className={styles.monthSeparator}> </span>
-              <span className={styles.monthEnd}>{getMonth(endDate!)}</span>
+              <span className={styles.monthEnd}>{getMonth(endDate)}</span>
             </div>
             <div className={styles.dateYear}>
-              {getYear(eventDate) === getYear(endDate!)
+              {getYear(eventDate) === getYear(endDate)
                 ? getYear(eventDate)
-                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate!)).slice(-2)}`}
+                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate)).slice(-2)}`}
             </div>
           </>
-        ) : isMultiDay ? (
+        ) : isMultiDay && endDate ? (
           <>
             <div className={styles.dateRange}>
               <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
               <div className={styles.dateRangeSeparator}>-</div>
-              <div className={styles.dateRangeEnd}>{getDay(endDate!)}</div>
+              <div className={styles.dateRangeEnd}>{getDay(endDate)}</div>
             </div>
             <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
             <div className={styles.dateYear}>
-              {getYear(eventDate) === getYear(endDate!)
+              {getYear(eventDate) === getYear(endDate)
                 ? getYear(eventDate)
-                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate!)).slice(-2)}`}
+                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate)).slice(-2)}`}
             </div>
           </>
         ) : (
