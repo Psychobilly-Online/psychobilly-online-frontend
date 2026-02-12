@@ -58,50 +58,6 @@
   color: #d32f2f;
 }
 
-.paginationBar {
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-  margin-top: 24px;
-  background: #1b1b1d;
-  border: 1px solid #2d2d30;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  padding: 10px 14px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-}
-
-.paginationButton {
-  padding: 8px 16px;
-  background: #2a2a2d;
-  border: 1px solid #343437;
-  border-radius: 8px;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.paginationButton:hover:not(:disabled) {
-  background: #35353a;
-  border-color: #4a4a50;
-}
-
-.paginationButton:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.paginationInfo {
-  color: #999;
-  font-size: 14px;
-}
-
 .loadingMore {
   text-align: center;
   padding: 24px 20px;
@@ -128,9 +84,5 @@
 @media (max-width: 768px) {
   .title {
     font-size: 22px;
-  }
-
-  .paginationBar {
-    border-radius: 0;
   }
 }
