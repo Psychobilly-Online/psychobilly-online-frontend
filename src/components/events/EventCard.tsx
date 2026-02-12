@@ -45,12 +45,14 @@ export function EventCard({ event, categoryName }: EventCardProps) {
 
   // Check if event spans multiple days
   const isMultiDay = endDate && eventDate && endDate.getTime() !== eventDate.getTime();
-  
+
   // Check if event spans multiple months
-  const isMultiMonth = isMultiDay && 
-    eventDate && 
-    endDate && 
-    (eventDate.getMonth() !== endDate.getMonth() || eventDate.getFullYear() !== endDate.getFullYear());
+  const isMultiMonth =
+    isMultiDay &&
+    eventDate &&
+    endDate &&
+    (eventDate.getMonth() !== endDate.getMonth() ||
+      eventDate.getFullYear() !== endDate.getFullYear());
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('de-DE', {
@@ -99,8 +101,8 @@ export function EventCard({ event, categoryName }: EventCardProps) {
               <span className={styles.monthEnd}>{getMonth(endDate!)}</span>
             </div>
             <div className={styles.dateYear}>
-              {getYear(eventDate) === getYear(endDate!) 
-                ? getYear(eventDate) 
+              {getYear(eventDate) === getYear(endDate!)
+                ? getYear(eventDate)
                 : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate!)).slice(-2)}`}
             </div>
           </>
@@ -113,8 +115,8 @@ export function EventCard({ event, categoryName }: EventCardProps) {
             </div>
             <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
             <div className={styles.dateYear}>
-              {getYear(eventDate) === getYear(endDate!) 
-                ? getYear(eventDate) 
+              {getYear(eventDate) === getYear(endDate!)
+                ? getYear(eventDate)
                 : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate!)).slice(-2)}`}
             </div>
           </>

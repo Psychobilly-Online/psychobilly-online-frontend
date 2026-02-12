@@ -73,9 +73,13 @@ export default function EventsPage() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Auto-collapse once if scrolling down and past 50px
-      if (!hasAutoCollapsed.current && currentScrollY > lastScrollY.current && currentScrollY > 50) {
+      if (
+        !hasAutoCollapsed.current &&
+        currentScrollY > lastScrollY.current &&
+        currentScrollY > 50
+      ) {
         setShouldCollapseFilters(true);
         hasAutoCollapsed.current = true;
       }
@@ -83,7 +87,7 @@ export default function EventsPage() {
       else if (currentScrollY < 10) {
         hasAutoCollapsed.current = false;
       }
-      
+
       lastScrollY.current = currentScrollY;
     };
 
