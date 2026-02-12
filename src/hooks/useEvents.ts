@@ -8,6 +8,7 @@ interface UseEventsResult {
   loading: boolean;
   error: string | null;
   pagination: PaginatedResponse<Event>['pagination'] | null;
+  categoryCounts: Record<number, number> | null;
   refetch: () => void;
 }
 
@@ -20,6 +21,7 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginatedResponse<Event>['pagination'] | null>(null);
+  const [categoryCounts, setCategoryCounts] = useState<Record<number, number> | null>(null);
 
   const fetchEvents = async () => {
     try {
@@ -36,6 +38,12 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
       params.append('offset', String(offset));
 
       Object.entries(otherFilters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            params.append(key, value.join(','));
+          }
+          return;
+        }
         if (value !== undefined && value !== null && value !== '') {
           params.append(key, String(value));
         }
@@ -66,8 +74,10 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
           limit: limit,
           pages: Math.ceil(total / limit),
         });
+        setCategoryCounts(data.meta.category_counts || null);
       } else {
         setPagination(null);
+        setCategoryCounts(null);
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred');
@@ -86,6 +96,7 @@ export function useEvents(filters: EventFilters = {}): UseEventsResult {
     loading,
     error,
     pagination,
+    categoryCounts,
     refetch: fetchEvents,
   };
 }

@@ -66,10 +66,12 @@ export interface EventFilters {
   page?: number;
   limit?: number;
   search?: string;
-  country_id?: string;
+  country_id?: string[];
   city?: string;
-  category_id?: string;
+  category_id?: string[];
   from_date?: string; // YYYY-MM-DD
   to_date?: string; // YYYY-MM-DD
+  sort_by?: string;
+  sort_order?: string;
   status?: string; // 'approved', 'pending', 'rejected'
 }

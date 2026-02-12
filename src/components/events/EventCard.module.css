@@ -147,6 +147,10 @@
 }
 
 @media (max-width: 768px) {
+  .eventCard {
+    border-radius: 0;
+  }
+
   .cardContent {
     flex-direction: column;
   }

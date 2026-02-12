@@ -32,6 +32,12 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-height: 240px;
+  transition: opacity 0.2s ease;
+}
+
+.eventsListLoading {
+  opacity: 0.6;
 }
 
 .filterBar {

@@ -8,12 +8,12 @@ import styles from './page.module.css';
 
 export default function EventsPage() {
   const [page, setPage] = useState(1);
+  const [eventDates, setEventDates] = useState<Set<number>>(new Set());
 
-  // Default to showing upcoming events (from today onwards)
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
   const [filters, setFilters] = useState<FilterValues>({
     limit: 20,
-    from_date: today, // Default: show only upcoming events
+    sort_by: 'date',
+    sort_order: 'ASC',
   });
   const [categories, setCategories] = useState<Record<number, string>>({});
 
@@ -29,12 +29,34 @@ export default function EventsPage() {
         setCategories(categoryMap);
       })
       .catch((err) => console.error('Failed to fetch categories:', err));
+
+    // Fetch all event dates for calendar highlighting (cached on server)
+    fetch('/api/events?dates=true')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data) {
+          const dates = data.data.map((dateStr: string) => {
+            const date = new Date(dateStr);
+            date.setHours(0, 0, 0, 0);
+            return date.getTime();
+          });
+          setEventDates(new Set(dates));
+        }
+      })
+      .catch((err) => console.error('Failed to fetch event dates:', err));
   }, []);
 
-  const { events, loading, error, pagination } = useEvents({
+  const { events, loading, error, pagination, categoryCounts } = useEvents({
     page,
     ...filters,
   });
+  const [lastTotalCount, setLastTotalCount] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (typeof pagination?.total === 'number') {
+      setLastTotalCount(pagination.total);
+    }
+  }, [pagination?.total]);
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
@@ -48,11 +70,13 @@ export default function EventsPage() {
           <EventFilters
             onFilterChange={handleFilterChange}
             initialFilters={filters}
-            totalCount={pagination?.total}
+            totalCount={loading ? lastTotalCount : pagination?.total}
+            categoryCounts={categoryCounts || undefined}
+            eventDates={eventDates}
           />
         </div>
 
-        {loading && <div className={styles.status}>Loading events...</div>}
+        {loading && events.length === 0 && <div className={styles.status}>Loading events...</div>}
 
         {error && <div className={`${styles.status} ${styles.statusError}`}>Error: {error}</div>}
 
@@ -60,9 +84,9 @@ export default function EventsPage() {
           <div className={styles.status}>No events found.</div>
         )}
 
-        {!loading && !error && events.length > 0 && (
+        {events.length > 0 && (
           <>
-            <div className={styles.eventsList}>
+            <div className={`${styles.eventsList} ${loading ? styles.eventsListLoading : ''}`}>
               {events.map((event) => (
                 <EventCard
                   key={event.id}

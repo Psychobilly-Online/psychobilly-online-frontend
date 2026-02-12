@@ -31,7 +31,7 @@ Open [http://localhost:3000](http://localhost:3000)
 
 - **Framework:** Next.js 15 (App Router)
 - **UI:** React 19
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS + MUI (@mui/material, @mui/x-date-pickers)
 - **Language:** TypeScript
 - **API:** REST (connects to psychobilly-online-api)
 
