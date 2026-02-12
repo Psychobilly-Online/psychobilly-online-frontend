@@ -96,10 +96,25 @@ export function EventFilters({
       if (isExpanded) {
         setIsExpanded(false);
       }
+      // Close any open popovers to prevent them from being detached
+      if (settingsAnchor || dateAnchor || countryAnchor || categoryAnchor) {
+        setSettingsAnchor(null);
+        setDateAnchor(null);
+        setCountryAnchor(null);
+        setCategoryAnchor(null);
+      }
       onCollapseComplete?.();
     }
     prevShouldCollapseRef.current = shouldCollapse;
-  }, [shouldCollapse, isExpanded, onCollapseComplete]);
+  }, [
+    shouldCollapse,
+    isExpanded,
+    onCollapseComplete,
+    settingsAnchor,
+    dateAnchor,
+    countryAnchor,
+    categoryAnchor,
+  ]);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [calendarView, setCalendarView] = useState<'day' | 'month' | 'year'>('day');
   const [datePreset, setDatePreset] = useState<
