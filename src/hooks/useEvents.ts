@@ -33,16 +33,19 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const filtersRef = useRef<string>('');
-  const isFetchingRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const fetchEvents = async (pageToFetch: number, append: boolean = false) => {
-    // Prevent duplicate fetches
-    if (isFetchingRef.current) {
-      return;
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
 
+    // Create new abort controller for this request
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     try {
-      isFetchingRef.current = true;
       setLoading(true);
       setError(null);
 
@@ -70,7 +73,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       // Call BFF API route (internal Next.js API)
       const url = `/api/events?${params.toString()}`;
 
-      const response = await fetch(url);
+      const response = await fetch(url, { signal: abortController.signal });
       const data = await response.json();
 
       if (!response.ok) {
@@ -115,13 +118,20 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         setHasMore(false);
       }
     } catch (err: any) {
+      // Ignore abort errors as they are expected when filters change
+      if (err.name === 'AbortError') {
+        return;
+      }
       setError(err.message || 'An error occurred');
       if (!append) {
         setEvents([]);
       }
     } finally {
       setLoading(false);
-      isFetchingRef.current = false;
+      // Only clear the abort controller ref if this request wasn't aborted
+      if (!abortController.signal.aborted) {
+        abortControllerRef.current = null;
+      }
     }
   };
 
