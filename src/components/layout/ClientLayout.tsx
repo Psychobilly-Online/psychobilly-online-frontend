@@ -4,6 +4,7 @@ import { TopBar } from './TopBar';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import { SearchProvider } from '@/contexts/SearchContext';
+import styles from './ClientLayout.module.css';
 
 function TopBarWrapper() {
   const pathname = usePathname();
@@ -28,10 +29,12 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <SearchProvider>
       <TopBarWrapper />
-      <div id="container" className="container">
-        <div id="header" />
+      <div id="container" className={styles.container}>
+        <div id="header" className={styles.header} />
         {children}
-        <div id="pageBottom">&copy; Psychobilly Online 2008 / 2026</div>
+        <div id="pageBottom" className={styles.pageBottom}>
+          &copy; Psychobilly Online 2008 / 2026
+        </div>
       </div>
     </SearchProvider>
   );

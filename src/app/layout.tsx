@@ -18,11 +18,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="stylesheet" href="/styles/helpers.css" />
-        <link rel="stylesheet" href="/styles/site.css" />
-        <link rel="stylesheet" href="/styles/flexboxgrid.css" />
-      </head>
       <body id="pageBody">
         <ClientLayout>{children}</ClientLayout>
       </body>

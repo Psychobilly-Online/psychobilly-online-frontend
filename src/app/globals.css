@@ -6,8 +6,12 @@
   --spacing-2: 6px;
   --spacing-3: 9px;
   --spacing-4: 12px;
+  --spacing-5: 15px;
   --spacing-6: 18px;
+  --spacing-7: 21px;
+  --spacing-8: 24px;
   --spacing-9: 27px;
+  --spacing-10: 30px;
   --spacing-12: 36px;
   --spacing-15: 45px;
 
@@ -59,6 +63,17 @@
   --shadow-lg: 0 9px 27px rgba(0, 0, 0, 0.35);
   --shadow-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   --shadow-subtle: 0 0 0 1px rgba(0, 0, 0, 0.2);
+
+  /* Legacy variables (for compatibility) */
+  --page-bg: #0f0f10;
+  --content-bg: transparent;
+  --panel-bg: #1b1b1d;
+  --panel-border: #2d2d30;
+  --text-primary: #f5f5f5;
+  --text-muted: #b5b5b5;
+  --link: #e6e6e6;
+  --link-hover: #ffffff;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 
   /* Legacy Tailwind Compatibility */
   --background: #0a0a0a;

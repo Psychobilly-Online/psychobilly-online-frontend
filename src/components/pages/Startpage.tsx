@@ -1,12 +1,15 @@
+import styles from './Startpage.module.css';
+
 export function Startpage() {
   return (
-    <div id="content" className="row">
-      <div className="col1 col-lg-8 col-md-8 col-xs-12" id="col1">
-        <div className="bigBox">
-          <div className="bigBoxContent">
+    <div id="content" className={styles.content}>
+      <div className={styles.row}>
+        <div className={styles.col1} id="col1">
+          <div className={styles.bigBox}>
+            <div className={styles.bigBoxContent}>
             <h1>Psychobilly Online: Farewell and welcome back!</h1>
             After the server got another PHP update, the forum software finally reached its end of
-            life and could not be updated anymore. There was no other choice than switching it off
+            life and could not be updated anymore. There was no other choice but to switch it off
             for good.
             <br />
             <br />
@@ -17,7 +20,7 @@ export function Startpage() {
             password (which requires you to remember your email address you signed up with).
             <br />
             <br />
-            Over the next weeks and months i will work on migrating the old forums, topics and posts
+            Over the next weeks and months I will work on migrating the old forums, topics and posts
             to the new forum. This will most likely take quite some time, as the differences in the
             data structure are complex, and as we talk about more than 1.5 million posts.
             <br />
@@ -27,10 +30,11 @@ export function Startpage() {
               here&apos;s the new board
             </a>
             !
+            </div>
           </div>
         </div>
+        <div className={styles.col2} id="col2"></div>
       </div>
-      <div className="col2 col-lg-4 col-md-4 col-xs-12" id="col2"></div>
     </div>
   );
 }
