@@ -33,7 +33,11 @@
   flex-shrink: 0;
   width: 72px;
   height: 72px;
-  background: linear-gradient(135deg, var(--color-accent-primary-dark), var(--color-accent-primary));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-primary-dark),
+    var(--color-accent-primary)
+  );
   border-radius: var(--spacing-3);
   display: flex;
   flex-direction: column;
