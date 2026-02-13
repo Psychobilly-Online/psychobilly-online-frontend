@@ -14,20 +14,57 @@
 - [x] **Add production date filtering** ✅ DONE
   - Now shows upcoming events by default (from today)
 
-- [ ] **Database Migration - Image Field Cleanup** 🚨 URGENT
-  - See detailed plan: `docs/DATABASE_MIGRATION_PLAN.md`
-  - **Problem**: Dual image fields (6_image with dead refs, 19_image with correct refs)
-  - **Current State**: API now uses 19_image directly
-  - **Next Steps**:
-    - Option A: Migrate 19_image → 6_image, drop 19_image (Quick fix, 2 hours)
-    - Option B: Full table cleanup with proper column names (Better, 2 days)
-  - **Decision needed**: Choose Option A or B tomorrow
+- [x] **Image Field Handling** ✅ RESOLVED
+  - **Decision**: Keep `legacy_image` for old events, use new `image` field for new events
+  - **Status**: Already implemented in API
+  - **Priority**: Not critical, no migration needed
 
 ## 🟡 High Priority (MVP Features)
 
 ### Phase 1: Events List & Detail View
 
-#### Completed Today ✅
+#### NEXT UP 🎯
+
+- [ ] **Event Detail Page**
+  - Individual event page with full details
+  - Shareable URLs (/events/[id])
+  - Estimated: 4-6 hours
+
+#### Recently Completed ✅
+
+- [x] **Top Navigation Bar** - COMPLETED ✅
+  - [x] Create TopBar component with hamburger menu, centered search, notification/account icons
+  - [x] Integrate TopBar into layout (sticky, 45px height)
+  - [x] Connect search to events filter
+  - [x] Remove search field from EventFilters, display "x events found" instead
+  - [x] URL-based filter state management → replaced with React Context
+  - [x] Implement SearchContext for shared filter state
+  - [x] Fix sticky filter border-radius detection
+  - [x] Standardize spacing to 3px scale (3, 6, 9, 18, 27, 36)
+  - [x] Refactor: Use classnames/cx utility instead of string concatenation
+  - [x] Consolidate colors and create CSS variables
+  - [x] Create CSS variables for spacing scale
+  - [x] Create reusable IconButton component (3 sizes, 3 variants)
+  - [x] Replace Material-UI IconButton in EventFilters with custom IconButton
+  - [x] Clean up legacy CSS files (deleted style.css - 1947 lines)
+  - [x] Remove CSS variable fallback values
+  - [x] Fix responsive layout (mobile view broken)
+  - [x] Add TopBar component tests
+  - [x] Add SearchContext tests
+  - [x] Migrate legacy CSS to CSS modules (ClientLayout, Startpage)
+  - [x] Consolidate CSS variables in globals.css (single source of truth)
+  - [x] Remove flexboxgrid.css, helpers.css, site.css (1,830 lines removed)
+  - [x] Fix mobile chip wrapping (chips now flow horizontally on all screen sizes)
+
+- [x] **Search Chips Feature** - COMPLETED ✅
+  - [x] Display search terms as removable chips in filter form
+  - [x] Implement chip removal (x button)
+  - [x] Connect chips to filter logic (AND logic for multiple terms)
+  - [x] Persist chips when switching between filters
+  - [x] Test coverage for SearchChips component
+  - [x] Scroll to top on search/filter changes
+
+#### Recently Completed ✅
 
 - [x] **Event filtering system** - COMPLETED
   - [x] Country dropdown (ordered by event count, active countries only)
@@ -35,7 +72,6 @@
   - [x] Category dropdown (from database)
   - [x] Date range filters (from_date, to_date)
   - [x] Search (headline/bands/city/description)
-  - [x] Results per page selector
   - [x] Backend sorting (date, headline, city, category)
   - [x] Clear filters with count badge
 - [x] **Event display improvements** - COMPLETED
@@ -43,39 +79,45 @@
   - [x] Show venue location (city, venue name) instead of old city field
   - [x] Decode HTML entities (&amp; → &)
   - [x] Auto-add https:// to links
+  - [x] Multi-day date display (same month, cross-month, cross-year)
+  - [x] English month names
+  - [x] Auto-collapse filters on scroll
+- [x] **Infinite scroll** - COMPLETED
+  - [x] Replaced pagination with infinite scroll
+  - [x] Intersection Observer implementation
+  - [x] Event deduplication
+  - [x] Proper race condition handling
+  - [x] Timezone-safe date parsing
+  - [x] Robust date validation (prevents rollover)
 - [x] **Backend enhancements** - COMPLETED
   - [x] GET /v1/cities endpoint (with country filter)
   - [x] GET /v1/countries/active endpoint (ordered by event count)
   - [x] Include venue data in events response
-  - [x] Remove redundant city field from events (use venue.city)
-  - [x] Fixed image field to use 19_image
+  - [x] Fixed image field handling (legacy_image + image)
 
-#### Frontend - Events List Improvements
+#### Frontend - Layout & Navigation
 
-- [x] **Fix special character encoding** ✅ DONE
-  - Estimated: 30 minutes
+- [ ] **Top Navigation Bar** 🔨 NEXT UP
+  - Sticky top bar above header (similar to YouTube)
+  - Layout: [Hamburger menu | Search field (centered) | Notification icon | Account/Login icon]
+  - Search field adapts to context (events on events page, news on news page)
+  - Estimated: 3-4 hours
 
-- [ ] **Auto-add protocol to links**
-  - If link doesn't start with http:// or https://, add it
-  - Prevent broken links
-  - Estimated: 15 minutes
-
-- [ ] **Improve pagination**
-  - Current: Basic prev/next buttons
-  - Add: Page numbers, jump to page, items per page selector
-  - Show "Loading..." state during page transitions
+- [ ] **Filter Form Refinements** 🔨 NEXT UP
+  - Remove search field from filter form
+  - Display "x Events Found" title instead
+  - Keep Settings and toggle icons
+  - Default state: collapsed
+  - Dock at bottom of top bar when scrolling
   - Estimated: 2-3 hours
 
-- [ ] **Responsive image handling**
-  - Hide event images on mobile (< 720px)
-  - Use CSS media queries in EventCard.module.css
-  - Estimated: 15 minutes
-
-- [ ] **Design considerations**
-  - Review spacing, typography, colors
-  - Ensure consistency with homepage
-  - Mobile UX improvements
-  - Estimated: 2-3 hours
+- [ ] **Search Chips Feature** 🔨 NEXT UP
+  - Add (+) button next to search field
+  - Move search terms from field to filter form as chips
+  - Display as choice chips: [Mad Sin (x)]
+  - Allow multiple search terms
+  - Clicking (x) removes the chip
+  - Estimated: 3-4 hours
 
 #### Frontend - Event Detail Page
 
@@ -119,13 +161,6 @@
   - Link field with validation
   - Form validation (client and server)
   - Estimated: 2-3 days
-
-- [ ] **Event editing**
-  - Pre-populated form with existing data
-  - Permission checks (owner or admin only)
-  - Update API integration
-  - Show edit history (if available)
-  - Estimated: 4-6 hours
 
 - [ ] **Event editing**
   - Pre-populated form with existing data

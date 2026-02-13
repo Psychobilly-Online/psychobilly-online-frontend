@@ -1,37 +1,54 @@
 .filterContainer {
-  background: #1b1b1d;
-  border: 1px solid #2d2d30;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  margin-bottom: 20px;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--spacing-3);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-6);
   width: 100%;
+}
+
+/* When sticky, remove top border radius */
+.filterContainer.sticky {
+  border-radius: 0 0 var(--spacing-3) var(--spacing-3);
+  border-top: none;
 }
 
 .collapsed .filterHeader {
   border-bottom: none;
-  border-radius: 12px;
+  border-radius: var(--spacing-3);
+}
+
+/* When sticky and collapsed, remove top border radius */
+.collapsed.sticky .filterHeader {
+  border-radius: 0 0 var(--spacing-3) var(--spacing-3);
 }
 
 .filterHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 18px;
-  background: #202022;
-  border-bottom: 1px solid #2d2d30;
-  border-top-right-radius: 12px;
-  border-top-left-radius: 12px;
-  gap: 12px;
+  padding: var(--spacing-3);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-default);
+  border-top-right-radius: var(--spacing-3);
+  border-top-left-radius: var(--spacing-3);
+  gap: var(--spacing-3);
+}
+
+/* Override filterHeader top radius when sticky (must come after .filterHeader) */
+.filterContainer.sticky .filterHeader {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
 }
 
 .filterHeader:hover {
-  background: #262629;
+  background: var(--color-bg-active);
 }
 
 .headerActions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-3);
 }
 
 .headerMain {
@@ -44,43 +61,31 @@
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-3);
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.headerSearch {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1 1 auto;
-  min-width: 220px;
-}
-
-.settingsButton {
-  color: #ddd !important;
-  border: 1px solid #343437;
-  background: #2a2a2d;
-  flex: 0 1 auto;
-  align-items: flex-start;
-}
-.settingsButton:hover {
-  background: #35353a;
-  border-color: #4a4a50;
+.eventsTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: 0.02em;
 }
 
 .settingsPopover {
-  padding: 16px;
+  padding: var(--spacing-6);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-3);
 }
 
 .dateRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--spacing-3);
   flex-wrap: nowrap;
 }
 
@@ -94,16 +99,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #b5b5b5;
+  color: var(--color-text-muted);
 }
 
 .clearLink {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-2);
   background: transparent;
   border: none;
-  color: #c5c5c5;
+  color: var(--color-text-muted);
   font-size: 12px;
   cursor: pointer;
   text-transform: uppercase;
@@ -113,34 +118,22 @@
 }
 
 .clearLink:hover {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .chipGroup {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-3);
   flex-wrap: wrap;
   align-items: flex-start;
 }
 
-.searchIconButton {
-  border: 1px solid #343437;
-  background: #2a2a2d;
-  color: #fff;
-  width: fit-content;
-}
-
-.searchIconButton:hover {
-  background: #35353a;
-  border-color: #4a4a50;
-}
-
 .countryGroup {
-  width: 100%;
+  width: auto;
 }
 
 .categoryGroup {
-  width: 100%;
+  width: auto;
 }
 
 .chipTriggerWrapper {
@@ -175,43 +168,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-3);
 }
 
 .popoverCloseButton {
-  color: #ddd !important;
+  color: var(--color-text-tertiary) !important;
 }
 
 .countryPopover {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-3);
 }
 
 .countryListSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--spacing-3);
 }
 
 .countryChipLabel {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-2);
 }
 
 .flagIcon {
-  width: 16px;
-  height: 12px;
-  border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  width: var(--spacing-6);
+  height: var(--spacing-3);
+  border-radius: var(--spacing-1);
+  box-shadow: var(--shadow-subtle);
 }
 
 .showAllButton {
   align-self: flex-start;
   background: transparent;
   border: none;
-  color: #b5b5b5;
+  color: var(--color-text-muted);
   font-size: 12px;
   cursor: pointer;
   text-transform: uppercase;
@@ -219,80 +212,58 @@
 }
 
 .showAllButton:hover {
-  color: #fff;
-}
-
-.resultCount {
-  font-size: 12px;
-  color: #b5b5b5;
-  text-transform: none;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.toggleButton {
-  background: #2a2a2d;
-  border: 1px solid #343437;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 4px 10px;
-  color: #ddd;
-  transition:
-    background 0.2s,
-    border-color 0.2s;
-}
-
-.toggleButton:hover {
-  background: #35353a;
-  border-color: #4a4a50;
+  color: var(--color-text-primary);
 }
 
 .filterForm {
-  padding: 16px 18px 18px;
+  padding: var(--spacing-6) var(--spacing-6) var(--spacing-6);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-3);
 }
 
 .filterRows {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--spacing-3);
+  align-items: flex-start;
 }
 
 .filterRow {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-3);
   padding: 0;
 }
 
 .formGroup {
   margin-bottom: 0;
   align-self: flex-start;
-  width: 100%;
+  width: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 6px;
+  gap: var(--spacing-2);
 }
 
 .dateRangeGroup {
-  width: 100%;
+  width: auto;
+  flex-shrink: 0;
 }
 
 .dateRangeTrigger {
-  width: 100%;
+  width: auto;
+  min-width: 200px;
 }
 
 .dateRangeCalendar :global(.MuiPickersCalendarHeader-root),
 .dateRangeCalendar :global(.MuiDayCalendar-header) {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .dateRangeCalendar :global(.MuiPickersDay-root) {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .rangeDay {
@@ -300,19 +271,19 @@
 }
 
 .rangeDayInRange {
-  background: #2a2a2d !important;
-  color: #fff !important;
+  background: var(--color-bg-elevated-alt) !important;
+  color: var(--color-text-primary) !important;
 }
 
 .rangeDayPreview {
-  background: rgba(125, 41, 35, 0.18) !important;
-  color: #fff !important;
+  background: var(--color-accent-overlay) !important;
+  color: var(--color-text-primary) !important;
 }
 
 .rangeDayStart,
 .rangeDayEnd {
-  background: #7d2923 !important;
-  color: #fff !important;
+  background: var(--color-accent-primary-dark) !important;
+  color: var(--color-text-primary) !important;
   border-radius: 999px !important;
 }
 
@@ -323,45 +294,45 @@
 .rangeDayHasEvents::after {
   content: '';
   position: absolute;
-  bottom: 4px;
+  bottom: var(--spacing-1);
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+  width: var(--spacing-1);
+  height: var(--spacing-1);
   border-radius: 50%;
-  background-color: #e94e1b;
+  background-color: var(--color-accent-secondary);
   opacity: 0.8;
 }
 
 .chipSection {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: var(--spacing-6);
   flex: 0 1 auto;
   align-items: flex-start;
 }
 
 .formGroup small {
   display: block;
-  margin-top: 4px;
+  margin-top: var(--spacing-1);
   font-size: 11px;
-  color: #a0a0a0;
+  color: var(--color-text-subtle);
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .filterContainer {
-    margin-bottom: 15px;
+    margin-bottom: var(--spacing-6);
     border-radius: 0;
   }
 
   .filterHeader {
-    padding: 12px 15px;
+    padding: var(--spacing-3) var(--spacing-6);
     border-radius: 0;
   }
 
   .filterForm {
-    padding: 14px;
+    padding: var(--spacing-6);
   }
 
   .formGroup,
@@ -374,10 +345,6 @@
 
   .dateRangeGroup {
     flex: 1 1 100%;
-  }
-
-  .chipSection {
-    flex-direction: column;
   }
 
   .formGroup {

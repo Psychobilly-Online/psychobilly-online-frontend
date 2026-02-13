@@ -3,7 +3,6 @@
 import { type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Popover,
@@ -13,11 +12,10 @@ import {
   Typography,
 } from '@mui/material';
 import { PickersDay, type PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import CloseIcon from '@mui/icons-material/Close';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { isSameDay, isWithinInterval } from 'date-fns';
-import { EventFiltersSearch } from './EventFiltersSearch';
+import { IconButton } from '@/components/common/IconButton';
+import { SearchChips } from '@/components/common/SearchChips';
+import { useSearchContext } from '@/contexts/SearchContext';
 import { EventFiltersCountries } from './EventFiltersCountries';
 import { EventFiltersDateRange } from './EventFiltersDateRange';
 import { EventFiltersCategories } from './EventFiltersCategories';
@@ -57,7 +55,9 @@ interface EventFiltersProps {
   categoryCounts?: Record<number, number>;
   eventDates?: Set<number>;
   shouldCollapse?: boolean;
+  shouldExpand?: boolean;
   onCollapseComplete?: () => void;
+  isSticky?: boolean;
 }
 
 export function EventFilters({
@@ -67,8 +67,11 @@ export function EventFilters({
   categoryCounts,
   eventDates,
   shouldCollapse = false,
+  shouldExpand = false,
   onCollapseComplete,
+  isSticky = false,
 }: EventFiltersProps) {
+  const { filters: contextFilters, clearSearchTerms } = useSearchContext();
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
@@ -90,7 +93,16 @@ export function EventFilters({
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
 
   const prevShouldCollapseRef = useRef<boolean>(false);
+  const prevShouldExpandRef = useRef<boolean>(false);
   const collapseCompleteRef = useRef<boolean>(false);
+
+  // Handle external expand trigger (e.g., after adding search term)
+  useEffect(() => {
+    if (shouldExpand && !prevShouldExpandRef.current) {
+      setIsExpanded(true);
+    }
+    prevShouldExpandRef.current = shouldExpand;
+  }, [shouldExpand]);
 
   // Handle external collapse trigger (e.g., from scroll)
   useEffect(() => {
@@ -239,6 +251,8 @@ export function EventFilters({
     const newFilters = {
       ...filters,
       [field]: normalizeFilterValue(value),
+      // Preserve search term from context
+      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -253,6 +267,7 @@ export function EventFilters({
     setFilters(resetFilters);
     onFilterChange(resetFilters);
     setDateRange([null, null]);
+    clearSearchTerms(); // Clear search chips
   };
 
   const [startDate, endDate] = dateRange;
@@ -306,6 +321,8 @@ export function EventFilters({
       ...filters,
       from_date: start ? formatDate(start) : undefined,
       to_date: normalizedEnd ? formatDate(normalizedEnd) : undefined,
+      // Preserve search term from context
+      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -427,41 +444,69 @@ export function EventFilters({
     <ThemeProvider theme={filterTheme}>
       <div
         ref={filterContainerRef}
-        className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''}`}
+        className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''} ${isSticky ? styles.sticky : ''}`}
       >
         <div className={styles.filterHeader}>
           <div className={styles.headerMain}>
             <div className={styles.headerLeft}>
-              <EventFiltersSearch
-                value={filters.search || ''}
-                onChange={(value) => handleInputChange('search', value)}
-                inputRef={searchInputRef}
-                inputSx={inputSx}
-              />
               {typeof totalCount === 'number' && (
-                <span className={styles.resultCount}>
-                  {totalCount} event{totalCount > 1 && 's'} found
-                </span>
+                <h2 className={styles.eventsTitle}>
+                  {totalCount} event{totalCount !== 1 ? 's' : ''} found
+                </h2>
               )}
             </div>
           </div>
           <div className={styles.headerActions}>
+            {activeFilterCount > 0 && (
+              <IconButton
+                size="small"
+                onClick={handleReset}
+                ariaLabel="Clear search"
+                title="Clear search"
+                icon={
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                }
+              />
+            )}
             <IconButton
               size="small"
-              className={styles.settingsButton}
               onClick={handleOpenSettings}
-              aria-label="Open search settings"
-            >
-              <SettingsOutlinedIcon fontSize="small" />
-            </IconButton>
-            <button
-              type="button"
-              className={styles.toggleButton}
-              aria-label={isExpanded ? 'Collapse filters' : 'Expand filters'}
+              ariaLabel="Open search settings"
+              title="Search settings"
+              icon={
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              }
+            />
+            <IconButton
+              size="small"
+              ariaLabel={isExpanded ? 'Collapse filters' : 'Expand filters'}
+              title={isExpanded ? 'Collapse filters' : 'Expand filters'}
               onClick={() => setIsExpanded((prev) => !prev)}
-            >
-              {isExpanded ? '▼' : '▶'}
-            </button>
+              icon={
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  {isExpanded ? <path d="M7 10l5 5 5-5z" /> : <path d="M10 17l5-5-5-5z" />}
+                </svg>
+              }
+            />
           </div>
         </div>
 
@@ -481,12 +526,21 @@ export function EventFilters({
               <Typography className={styles.sectionTitle}>Search settings</Typography>
               <IconButton
                 size="small"
-                className={styles.popoverCloseButton}
                 onClick={handleCloseSettings}
-                aria-label="Close settings"
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
+                ariaLabel="Close settings"
+                icon={
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                }
+              />
             </div>
             <Stack spacing={2}>
               <FormControl fullWidth size="small" sx={inputSx}>
@@ -523,79 +577,64 @@ export function EventFilters({
         {isExpanded && (
           <form className={styles.filterForm} onSubmit={(e) => e.preventDefault()}>
             <div className={styles.filterRows}>
-              <div className={styles.filterRow}>
-                <div className={styles.dateRow}>
-                  <EventFiltersDateRange
-                    startDate={startDate}
-                    endDate={endDate}
-                    dateOpen={dateOpen}
-                    dateAnchor={dateAnchor}
-                    onOpen={handleOpenDateRange}
-                    onClose={handleCloseDateRange}
-                    onUpdateDateRange={updateDateRange}
-                    onCalendarChange={handleCalendarChange}
-                    onPresetChange={handleDatePresetChange}
-                    selectedPreset={datePreset}
-                    calendarView={calendarView}
-                    onViewChange={setCalendarView}
-                    rangeDay={RangeDay}
-                    formatDateLabel={formatDateLabel}
-                    popoverPaperSx={datePopoverSx}
-                    popoverContainer={filterContainerRef.current}
-                    eventDates={eventDates}
-                  />
-                  {activeFilterCount > 0 && (
-                    <button type="button" className={styles.clearLink} onClick={handleReset}>
-                      <DeleteOutlineIcon fontSize="small" />
-                      Clear filters
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className={styles.filterRow}>
-                <EventFiltersCountries
-                  countries={countries}
-                  selectedCountryIds={selectedCountryIds}
-                  selectedRegion={selectedRegionLabel}
-                  countryLookup={countryLookup}
-                  countryOpen={countryOpen}
-                  countryAnchor={countryAnchor}
-                  onOpen={handleOpenCountries}
-                  onClose={handleCloseCountries}
-                  onToggleCountry={toggleCountry}
-                  onApplyCountries={applyCountries}
-                  onFetchRegion={fetchRegionCountries}
-                  loadingRegion={loadingRegion}
-                  showAllCountries={showAllCountries}
-                  onShowAll={() => setShowAllCountries(true)}
-                  renderCountryLabel={renderCountryLabel}
-                  popoverPaperSx={countryPopoverSx}
-                  popoverContainer={filterContainerRef.current}
-                />
-              </div>
-
-              <div className={styles.filterRow}>
-                <EventFiltersCategories
-                  categories={categories}
-                  selectedCategoryIds={selectedCategoryIds}
-                  categoryCounts={categoryCounts}
-                  categoryOpen={categoryOpen}
-                  categoryAnchor={categoryAnchor}
-                  onOpen={handleOpenCategories}
-                  onClose={handleCloseCategories}
-                  onToggleCategory={(categoryId) => {
-                    const isSelected = selectedCategoryIds.includes(categoryId);
-                    const nextSelected = isSelected
-                      ? selectedCategoryIds.filter((id) => id !== categoryId)
-                      : [...selectedCategoryIds, categoryId];
-                    handleInputChange('category_id', nextSelected);
-                  }}
-                  onClearCategories={() => handleInputChange('category_id', [])}
-                  popoverPaperSx={countryPopoverSx}
-                  popoverContainer={filterContainerRef.current}
-                />
-              </div>
+              <SearchChips />
+              <EventFiltersDateRange
+                startDate={startDate}
+                endDate={endDate}
+                dateOpen={dateOpen}
+                dateAnchor={dateAnchor}
+                onOpen={handleOpenDateRange}
+                onClose={handleCloseDateRange}
+                onUpdateDateRange={updateDateRange}
+                onCalendarChange={handleCalendarChange}
+                onPresetChange={handleDatePresetChange}
+                selectedPreset={datePreset}
+                calendarView={calendarView}
+                onViewChange={setCalendarView}
+                rangeDay={RangeDay}
+                formatDateLabel={formatDateLabel}
+                popoverPaperSx={datePopoverSx}
+                popoverContainer={filterContainerRef.current}
+                eventDates={eventDates}
+              />
+              <EventFiltersCountries
+                countries={countries}
+                selectedCountryIds={selectedCountryIds}
+                selectedRegion={selectedRegionLabel}
+                countryLookup={countryLookup}
+                countryOpen={countryOpen}
+                countryAnchor={countryAnchor}
+                onOpen={handleOpenCountries}
+                onClose={handleCloseCountries}
+                onToggleCountry={toggleCountry}
+                onApplyCountries={applyCountries}
+                onFetchRegion={fetchRegionCountries}
+                loadingRegion={loadingRegion}
+                showAllCountries={showAllCountries}
+                onShowAll={() => setShowAllCountries(true)}
+                renderCountryLabel={renderCountryLabel}
+                popoverPaperSx={countryPopoverSx}
+                popoverContainer={filterContainerRef.current}
+              />
+              <EventFiltersCategories
+                categories={categories}
+                selectedCategoryIds={selectedCategoryIds}
+                categoryCounts={categoryCounts}
+                categoryOpen={categoryOpen}
+                categoryAnchor={categoryAnchor}
+                onOpen={handleOpenCategories}
+                onClose={handleCloseCategories}
+                onToggleCategory={(categoryId) => {
+                  const isSelected = selectedCategoryIds.includes(categoryId);
+                  const nextSelected = isSelected
+                    ? selectedCategoryIds.filter((id) => id !== categoryId)
+                    : [...selectedCategoryIds, categoryId];
+                  handleInputChange('category_id', nextSelected);
+                }}
+                onClearCategories={() => handleInputChange('category_id', [])}
+                popoverPaperSx={countryPopoverSx}
+                popoverContainer={filterContainerRef.current}
+              />
             </div>
           </form>
         )}

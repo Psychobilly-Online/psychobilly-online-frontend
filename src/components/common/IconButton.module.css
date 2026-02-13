@@ -1,0 +1,74 @@
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+.iconButton:hover:not(.disabled) {
+  background-color: var(--color-hover-overlay);
+}
+
+.iconButton:active:not(.disabled) {
+  transform: scale(0.95);
+}
+
+.iconButton.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Size variants */
+.small {
+  width: var(--spacing-12);
+  height: var(--spacing-12);
+  border-radius: calc(var(--spacing-12) / 2);
+}
+
+.small svg {
+  width: var(--spacing-6);
+  height: var(--spacing-6);
+  flex-shrink: 0;
+}
+
+.medium {
+  width: var(--spacing-15);
+  height: var(--spacing-15);
+  border-radius: calc(var(--spacing-15) / 2);
+}
+
+.medium svg {
+  width: var(--spacing-9);
+  height: var(--spacing-9);
+  flex-shrink: 0;
+}
+
+.medium > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Visual variants */
+.primary {
+  color: var(--color-accent-primary);
+}
+
+.primary:hover:not(.disabled) {
+  background-color: var(--color-accent-overlay);
+}
+
+.ghost {
+  opacity: 0.7;
+}
+
+.ghost:hover:not(.disabled) {
+  opacity: 1;
+}

@@ -11,27 +11,27 @@
 }
 
 .header {
-  margin-bottom: 18px;
+  margin-bottom: var(--spacing-6);
   text-align: center;
 }
 
 .title {
   font-size: 26px;
-  margin-bottom: 6px;
-  color: #fff;
+  margin-bottom: var(--spacing-2);
+  color: var(--color-text-primary);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .subtitle {
   font-size: 14px;
-  color: #a0a0a0;
+  color: var(--color-text-subtle);
 }
 
 .eventsList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-6);
   min-height: 240px;
   transition: opacity 0.2s ease;
 }
@@ -42,43 +42,37 @@
 
 .filterBar {
   position: sticky;
-  top: 0;
+  top: var(--spacing-15);
   z-index: 10;
-  margin: 0 0 20px 0;
+  margin: 0 0 var(--spacing-6) 0;
 }
 
 .status {
   text-align: center;
-  padding: 36px 20px;
+  padding: var(--spacing-12) var(--spacing-6);
   font-size: 16px;
-  color: #b5b5b5;
+  color: var(--color-text-muted);
 }
 
 .statusError {
-  color: #d32f2f;
+  color: var(--color-error);
 }
 
 .loadingMore {
   text-align: center;
-  padding: 24px 20px;
+  padding: var(--spacing-9) var(--spacing-6);
   font-size: 15px;
-  color: #999;
+  color: var(--color-text-disabled);
   font-style: italic;
 }
 
 .endMessage {
   text-align: center;
-  padding: 24px 20px;
+  padding: var(--spacing-9) var(--spacing-6);
   font-size: 14px;
-  color: #666;
-  border-top: 1px solid #2d2d30;
-  margin-top: 16px;
-}
-
-@media (max-width: 1024px) {
-  .filterBar {
-    top: 0;
-  }
+  color: var(--color-text-faint);
+  border-top: 1px solid var(--color-border-subtle);
+  margin-top: var(--spacing-6);
 }
 
 @media (max-width: 768px) {

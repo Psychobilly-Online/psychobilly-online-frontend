@@ -1,0 +1,17 @@
+.searchRow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 32px;
+  margin-bottom: var(--spacing-3);
+  width: auto;
+  flex: 0 1 auto;
+}
+
+.chipsContainer {
+  flex: 0 1 auto;
+}
+
+.chipGroup {
+  gap: var(--spacing-2);
+}

@@ -1,24 +1,28 @@
 'use client';
 
+import cx from 'classnames';
 import { useEvents } from '@/hooks/useEvents';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { EventCard } from '@/components/events/EventCard';
 import { EventFilters, FilterValues } from '@/components/events/EventFilters';
 import { useState, useEffect, useRef } from 'react';
+import { useSearchContext } from '@/contexts/SearchContext';
+import { TOP_BAR_HEIGHT } from '@/constants/layout';
 import styles from './page.module.css';
 
 export default function EventsPage() {
+  const { filters, setFilters, searchTerms } = useSearchContext();
   const [eventDates, setEventDates] = useState<Set<number>>(new Set());
   const [shouldCollapseFilters, setShouldCollapseFilters] = useState(false);
+  const [shouldExpandFilters, setShouldExpandFilters] = useState(false);
+  const [isFilterSticky, setIsFilterSticky] = useState(false);
   const lastScrollY = useRef(0);
-  const hasAutoCollapsed = useRef(false); // Track if we've already auto-collapsed once
-
-  const [filters, setFilters] = useState<FilterValues>({
-    limit: 25,
-    sort_by: 'date',
-    sort_order: 'ASC',
-  });
+  const hasAutoCollapsed = useRef(false);
+  const filterRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState<Record<number, string>>({});
+  const previousSearchTerms = useRef<string[]>([]);
+  const previousFilters = useRef<FilterValues>({});
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     // Fetch categories for display
@@ -49,6 +53,44 @@ export default function EventsPage() {
       .catch((err) => console.error('Failed to fetch event dates:', err));
   }, []);
 
+  // Scroll to top and expand filters when search terms or filters change
+  useEffect(() => {
+    // Skip on initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      previousSearchTerms.current = searchTerms;
+      previousFilters.current = filters;
+      return;
+    }
+
+    // Check if search terms actually changed (order-independent comparison)
+    const termsChanged =
+      searchTerms.length !== previousSearchTerms.current.length ||
+      !searchTerms.every((term) => previousSearchTerms.current.includes(term)) ||
+      !previousSearchTerms.current.every((term) => searchTerms.includes(term));
+
+    // Check if filters changed (country_id, category_id, from_date, to_date)
+    const filtersChanged =
+      JSON.stringify(filters.country_id) !== JSON.stringify(previousFilters.current.country_id) ||
+      JSON.stringify(filters.category_id) !== JSON.stringify(previousFilters.current.category_id) ||
+      filters.from_date !== previousFilters.current.from_date ||
+      filters.to_date !== previousFilters.current.to_date;
+
+    if (termsChanged || filtersChanged) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (searchTerms.length > 0) {
+        setShouldExpandFilters(true);
+        // Reset expand trigger after a short delay
+        const timer = setTimeout(() => setShouldExpandFilters(false), 100);
+        previousSearchTerms.current = searchTerms;
+        previousFilters.current = filters;
+        return () => clearTimeout(timer);
+      }
+      previousSearchTerms.current = searchTerms;
+      previousFilters.current = filters;
+    }
+  }, [searchTerms, filters.country_id, filters.category_id, filters.from_date, filters.to_date]);
+
   const { events, loading, error, pagination, categoryCounts, loadMore, hasMore } = useEvents({
     infiniteScroll: true,
     ...filters,
@@ -77,6 +119,12 @@ export default function EventsPage() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
+      // Check if filter is sticky (reached top position)
+      if (filterRef.current) {
+        const rect = filterRef.current.getBoundingClientRect();
+        setIsFilterSticky(rect.top <= TOP_BAR_HEIGHT);
+      }
+
       // Auto-collapse once if scrolling down and past 50px
       if (
         !hasAutoCollapsed.current &&
@@ -103,9 +151,12 @@ export default function EventsPage() {
   };
 
   return (
-    <div id="content" className={`row ${styles.eventsLayout}`}>
-      <div className={`col1 col-lg-12 col-md-12 col-xs-12 ${styles.mainColumn}`} id="col1">
-        <div className={styles.filterBar}>
+    <div id="content" className={cx('row', styles.eventsLayout)}>
+      <div
+        className={cx('col1', 'col-lg-12', 'col-md-12', 'col-xs-12', styles.mainColumn)}
+        id="col1"
+      >
+        <div className={cx(styles.filterBar, isFilterSticky && styles.sticky)} ref={filterRef}>
           <EventFilters
             onFilterChange={handleFilterChange}
             initialFilters={filters}
@@ -113,13 +164,15 @@ export default function EventsPage() {
             categoryCounts={categoryCounts || undefined}
             eventDates={eventDates}
             shouldCollapse={shouldCollapseFilters}
+            shouldExpand={shouldExpandFilters}
             onCollapseComplete={() => setShouldCollapseFilters(false)}
+            isSticky={isFilterSticky}
           />
         </div>
 
-        {loading && events.length === 0 && <div className={styles.status}>Loading events...</div>}
+        {loading && events.length === 0 && <div className={styles.status}>Searching events...</div>}
 
-        {error && <div className={`${styles.status} ${styles.statusError}`}>Error: {error}</div>}
+        {error && <div className={cx(styles.status, styles.statusError)}>Error: {error}</div>}
 
         {!loading && !error && events.length === 0 && (
           <div className={styles.status}>No events found.</div>
@@ -127,7 +180,7 @@ export default function EventsPage() {
 
         {events.length > 0 && (
           <>
-            <div className={`${styles.eventsList} ${loading ? styles.eventsListLoading : ''}`}>
+            <div className={cx(styles.eventsList, loading && styles.eventsListLoading)}>
               {events.map((event, index) => {
                 // Attach ref to the last element for infinite scroll detection
                 const isLastElement = index === events.length - 1;

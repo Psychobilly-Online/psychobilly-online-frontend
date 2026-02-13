@@ -1,6 +1,6 @@
 # Psychobilly Online - Frontend
 
-Modern Next.js 15 frontend for Psychobilly Online community.
+Modern Next.js 16 frontend for Psychobilly Online community.
 
 > **📚 See [Root README](../README.md)** for complete project overview and architecture  
 > **🗺️ See [ROADMAP](../ROADMAP.md)** for project timeline and phases  
@@ -29,10 +29,12 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## 🏗️ Tech Stack
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router, Turbopack)
 - **UI:** React 19
-- **Styling:** Tailwind CSS + MUI (@mui/material, @mui/x-date-pickers)
+- **Component Library:** MUI (@mui/material, @mui/x-date-pickers)
+- **Styling:** CSS Modules + Design System (CSS variables)
 - **Language:** TypeScript
+- **Testing:** Vitest + React Testing Library
 - **API:** REST (connects to psychobilly-online-api)
 
 ## 📁 Project Structure
@@ -40,28 +42,47 @@ Open [http://localhost:3000](http://localhost:3000)
 ```
 src/
 ├── app/
-│   ├── (public)/        # Public pages
-│   │   ├── page.tsx     # Homepage
-│   │   ├── events/      # Events pages
-│   │   └── venues/      # Venues pages
-│   ├── (admin)/         # Admin pages (auth required)
-│   │   └── admin/
-│   │       ├── page.tsx # Dashboard
-│   │       ├── events/  # Manage events
-│   │       └── venues/  # Manage venues
-│   ├── api/             # API routes
-│   ├── layout.tsx       # Root layout
-│   └── globals.css
+│   ├── api/                    # API routes (Next.js backend)
+│   │   ├── categories/         # Event categories endpoint
+│   │   ├── cities/             # Cities endpoint
+│   │   ├── countries/          # Countries endpoints
+│   │   └── events/             # Events endpoints
+│   ├── events/                 # Events listing page
+│   │   ├── page.tsx            # Events list with infinite scroll
+│   │   └── page.module.css     # Page-specific styles
+│   ├── layout.tsx              # Root layout with TopBar
+│   ├── page.tsx                # Homepage (Startpage)
+│   └── globals.css             # Design system variables
 ├── components/
-│   ├── ui/              # Reusable UI components
-│   ├── admin/           # Admin-specific components
-│   └── public/          # Public-facing components
+│   ├── common/                 # Reusable UI components
+│   │   ├── IconButton.tsx      # Custom icon button (3 sizes, 3 variants)
+│   │   ├── SearchChips.tsx     # Search term chips
+│   │   └── __tests__/          # Component tests
+│   ├── events/                 # Event-related components
+│   │   ├── EventCard.tsx       # Event display card
+│   │   ├── EventFilters.tsx    # Advanced filter form
+│   │   ├── EventFilters*.tsx   # Filter sub-components
+│   │   └── __tests__/          # Component tests
+│   ├── layout/                 # Layout components
+│   │   ├── TopBar.tsx          # Top navigation bar
+│   │   ├── ClientLayout.tsx    # Client-side layout wrapper
+│   │   └── __tests__/          # Component tests
+│   └── pages/                  # Page components
+│       └── Startpage.tsx       # Homepage content
+├── contexts/
+│   └── SearchContext.tsx       # Global search state management
+├── hooks/
+│   ├── useEvents.ts            # Events data fetching hook
+│   └── useInfiniteScroll.ts    # Infinite scroll logic
 ├── lib/
-│   ├── api.ts           # API client
-│   ├── auth.ts          # Authentication utilities
-│   └── utils.ts         # Helper functions
-└── types/
-    └── index.ts         # TypeScript types
+│   ├── api-client.ts           # API client with error handling
+│   └── date-utils.ts           # Date formatting utilities
+├── constants/
+│   └── layout.ts               # Layout constants (TOP_BAR_HEIGHT)
+├── types/
+│   └── index.ts                # TypeScript interfaces
+└── test/
+    └── setup.ts                # Vitest test configuration
 ```
 
 ## 🌐 API Integration
@@ -78,10 +99,14 @@ JWT-based authentication with the main API. Tokens are stored and sent with prot
 ## 📦 Available Scripts
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm start        # Start production server
-npm run lint     # Run ESLint
+npm run dev          # Start development server
+npm run build        # Build for production
+npm start            # Start production server
+npm run lint         # Run ESLint
+npm run test         # Run tests in watch mode
+npm run test:run     # Run tests once
+npm run test:ui      # Open Vitest UI
+npm run format       # Format with Prettier
 ```
 
 ## 🚢 Deployment
@@ -102,10 +127,32 @@ Required environment variables (see `.env.example`):
 
 - [x] Homepage
 - [x] Events listing with infinite scroll
-- [x] Event filtering (country, city, date, search)
-- [ ] Event details
+- [x] Event filtering (country, city, date range, category, search)
+- [x] Advanced filter UI with chips and popovers
+- [x] Top navigation bar with context-aware search
+- [x] Responsive design (mobile, tablet, desktop)
+- [x] CSS design system with scoped modules
+- [ ] Event details page
 - [ ] Admin dashboard
 - [ ] Add/edit events
 - [ ] Add/edit venues
 - [ ] Image upload integration
 - [ ] User authentication
+
+## 🎨 Design System
+
+### CSS Variables (globals.css)
+
+- **Spacing Scale:** 3px base (`--spacing-1` through `--spacing-15`)
+- **Color Palette:** 20+ semantic variables
+  - Backgrounds: `--color-bg-*`
+  - Borders: `--color-border-*`
+  - Text: `--color-text-*`
+  - Accents: `--color-accent-*`
+- **Shadows:** `--shadow-sm`, `--shadow-md`, `--shadow-lg`
+
+### Responsive Breakpoints
+
+- Mobile: < 768px
+- Tablet: 768px - 991px (48em)
+- Desktop: ≥ 992px (64em, max 1200px)
