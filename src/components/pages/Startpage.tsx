@@ -6,7 +6,7 @@ export function Startpage() {
           <div className="bigBoxContent">
             <h1>Psychobilly Online: Farewell and welcome back!</h1>
             After the server got another PHP update, the forum software finally reached its end of
-            life and could not be updated anymore. There was no other choice then switching it off
+            life and could not be updated anymore. There was no other choice than switching it off
             for good.
             <br />
             <br />
