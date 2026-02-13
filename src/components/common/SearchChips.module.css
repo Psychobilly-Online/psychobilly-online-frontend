@@ -1,5 +1,5 @@
 .chipsContainer {
-  margin-bottom: var(--spacing-3);
+  flex: 1;
 }
 
 .chipGroup {

@@ -40,7 +40,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
 
     const newTerms = [...searchTerms, trimmedTerm];
     setSearchTerms(newTerms);
-    
+
     // Update filters with comma-separated search terms
     setFilters((prev) => ({
       ...prev,
@@ -51,7 +51,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
   const removeSearchTerm = (term: string) => {
     const newTerms = searchTerms.filter((t) => t !== term);
     setSearchTerms(newTerms);
-    
+
     // Update filters with comma-separated search terms
     setFilters((prev) => ({
       ...prev,
@@ -69,7 +69,14 @@ export function SearchProvider({ children }: SearchProviderProps) {
 
   return (
     <SearchContext.Provider
-      value={{ filters, setFilters, searchTerms, addSearchTerm, removeSearchTerm, clearSearchTerms }}
+      value={{
+        filters,
+        setFilters,
+        searchTerms,
+        addSearchTerm,
+        removeSearchTerm,
+        clearSearchTerms,
+      }}
     >
       {children}
     </SearchContext.Provider>
