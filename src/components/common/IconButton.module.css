@@ -39,9 +39,9 @@
 }
 
 .medium {
-  width: var(--spacing-12);
-  height: var(--spacing-12);
-  border-radius: calc(var(--spacing-12) / 2);
+  width: var(--spacing-15);
+  height: var(--spacing-15);
+  border-radius: calc(var(--spacing-15) / 2);
 }
 
 .medium svg {
@@ -54,17 +54,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.large {
-  width: var(--spacing-15);
-  height: var(--spacing-15);
-  border-radius: calc(var(--spacing-15) / 2);
-}
-
-.large svg {
-  width: var(--spacing-9);
-  height: var(--spacing-9);
 }
 
 /* Visual variants */

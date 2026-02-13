@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, ReactNode, useState } from 'react';
-import { FilterValues } from '@/components/events/EventFilters';
+import type { FilterValues } from '@/components/events/EventFilters';
 
 interface SearchContextType {
   filters: FilterValues;
@@ -36,27 +36,36 @@ export function SearchProvider({ children }: SearchProviderProps) {
 
   const addSearchTerm = (term: string) => {
     const trimmedTerm = term.trim();
-    if (!trimmedTerm || searchTerms.includes(trimmedTerm)) return;
+    if (!trimmedTerm) return;
 
-    const newTerms = [...searchTerms, trimmedTerm];
-    setSearchTerms(newTerms);
+    setSearchTerms((prev) => {
+      // Check if term already exists
+      if (prev.includes(trimmedTerm)) return prev;
 
-    // Update filters with comma-separated search terms
-    setFilters((prev) => ({
-      ...prev,
-      search: newTerms.join(','),
-    }));
+      const newTerms = [...prev, trimmedTerm];
+
+      // Update filters with comma-separated search terms
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        search: newTerms.join(','),
+      }));
+
+      return newTerms;
+    });
   };
 
   const removeSearchTerm = (term: string) => {
-    const newTerms = searchTerms.filter((t) => t !== term);
-    setSearchTerms(newTerms);
+    setSearchTerms((prev) => {
+      const newTerms = prev.filter((t) => t !== term);
 
-    // Update filters with comma-separated search terms
-    setFilters((prev) => ({
-      ...prev,
-      search: newTerms.length > 0 ? newTerms.join(',') : undefined,
-    }));
+      // Update filters with comma-separated search terms
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        search: newTerms.length > 0 ? newTerms.join(',') : undefined,
+      }));
+
+      return newTerms;
+    });
   };
 
   const clearSearchTerms = () => {

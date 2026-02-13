@@ -10,7 +10,6 @@ describe('SearchContext', () => {
       });
 
       expect(result.current.filters).toEqual({
-        search: undefined,
         sort_by: 'date',
         sort_order: 'ASC',
         limit: 25,

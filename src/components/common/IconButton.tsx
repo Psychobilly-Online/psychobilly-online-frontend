@@ -13,7 +13,7 @@ export interface IconButtonProps {
   /** Button type */
   type?: 'button' | 'submit' | 'reset';
   /** Size variant */
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium';
   /** Visual variant */
   variant?: 'default' | 'primary' | 'ghost';
   /** Additional CSS class */
@@ -28,7 +28,7 @@ export function IconButton({
   title,
   onClick,
   type = 'button',
-  size = 'medium',
+  size = 'small',
   variant = 'default',
   className,
   disabled = false,

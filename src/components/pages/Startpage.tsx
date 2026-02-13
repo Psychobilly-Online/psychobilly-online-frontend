@@ -13,7 +13,7 @@ export function Startpage() {
             While it seemed as this would be the last nail to the coffin of Psychobilly Online, it
             simply didn&apos;t want to die. A brandnew software has been installed, and all user
             accounts have been migrated to the new forum. The only downside is that the encrypted
-            passwords could not be transfered to the new forum, so you will need to set up a new
+            passwords could not be transferred to the new forum, so you will need to set up a new
             password (which requires you to remember your email address you signed up with).
             <br />
             <br />

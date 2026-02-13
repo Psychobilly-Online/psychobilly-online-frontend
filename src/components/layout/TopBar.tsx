@@ -46,7 +46,7 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
       <div className={styles.container}>
         {/* Hamburger Menu */}
         <IconButton
-          size="medium"
+          size="small"
           ariaLabel="Open menu"
           title="Open menu"
           onClick={() => {
@@ -75,7 +75,7 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
             type="submit"
             className={cx(styles.submitButton, !searchQuery && styles.disabled)}
             aria-label="Submit search"
-            disabled={!searchQuery}
+            disabled={!searchQuery.trim()}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8" />

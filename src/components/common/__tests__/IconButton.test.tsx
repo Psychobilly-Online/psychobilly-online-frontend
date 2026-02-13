@@ -71,18 +71,11 @@ describe('IconButton', () => {
       expect(button.className).toMatch(/medium/);
     });
 
-    it('applies large size class', () => {
-      render(<IconButton icon={<span>Icon</span>} size="large" ariaLabel="Button" />);
-
-      const button = screen.getByRole('button');
-      expect(button.className).toMatch(/large/);
-    });
-
-    it('defaults to medium size when not specified', () => {
+    it('defaults to small size when not specified', () => {
       render(<IconButton icon={<span>Icon</span>} ariaLabel="Button" />);
 
       const button = screen.getByRole('button');
-      expect(button.className).toMatch(/medium/);
+      expect(button.className).toMatch(/small/);
     });
   });
 
@@ -165,16 +158,6 @@ describe('IconButton', () => {
   });
 
   describe('CSS Classes', () => {
-    it('combines variant and size classes', () => {
-      render(
-        <IconButton icon={<span>Icon</span>} variant="primary" size="large" ariaLabel="Button" />,
-      );
-
-      const button = screen.getByRole('button');
-      expect(button.className).toMatch(/primary/);
-      expect(button.className).toMatch(/large/);
-    });
-
     it('applies base iconButton class', () => {
       render(<IconButton icon={<span>Icon</span>} ariaLabel="Button" />);
 
@@ -187,7 +170,7 @@ describe('IconButton', () => {
         <IconButton
           icon={<span>Icon</span>}
           variant="primary"
-          size="large"
+          size="medium"
           disabled
           ariaLabel="Button"
         />,
@@ -196,7 +179,7 @@ describe('IconButton', () => {
       const button = screen.getByRole('button');
       expect(button.className).toMatch(/iconButton/);
       expect(button.className).toMatch(/primary/);
-      expect(button.className).toMatch(/large/);
+      expect(button.className).toMatch(/medium/);
       expect(button.className).toMatch(/disabled/);
     });
   });

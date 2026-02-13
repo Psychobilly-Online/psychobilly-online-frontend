@@ -41,16 +41,15 @@
   - [x] Replace Material-UI IconButton in EventFilters with custom IconButton
   - [x] Clean up legacy CSS files (deleted style.css - 1947 lines)
   - [x] Remove CSS variable fallback values
-  - [ ] Fix responsive layout (mobile view broken)
-  - [ ] Add TopBar component tests
-  - [ ] Add SearchContext tests
+  - [x] Fix responsive layout (mobile view broken)
+  - [x] Add TopBar component tests
+  - [x] Add SearchContext tests
 
-- [ ] **Search Chips Feature** (~3-4 hours)
-  - [ ] Add (+) button to TopBar search field
-  - [ ] Display search terms as removable chips in filter form
-  - [ ] Implement chip removal (x button)
-  - [ ] Connect chips to filter logic (AND logic for multiple terms)
-  - [ ] Persist chips when switching between filters
+- [x] **Search Chips Feature** (~3-4 hours)
+  - [x] Display search terms as removable chips in filter form
+  - [x] Implement chip removal (x button)
+  - [x] Connect chips to filter logic (AND logic for multiple terms)
+  - [x] Persist chips when switching between filters
 
 #### Recently Completed ✅
 
