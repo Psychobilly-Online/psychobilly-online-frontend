@@ -1,6 +1,6 @@
 'use client';
 
-import cx from 'classnames';;
+import cx from 'classnames';
 import { useEvents } from '@/hooks/useEvents';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { EventCard } from '@/components/events/EventCard';
