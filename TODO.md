@@ -25,7 +25,14 @@
 
 #### NEXT UP 🎯
 
-- [ ] **Top Navigation Bar** - IN PROGRESS
+- [ ] **Event Detail Page**
+  - Individual event page with full details
+  - Shareable URLs (/events/[id])
+  - Estimated: 4-6 hours
+
+#### Recently Completed ✅
+
+- [x] **Top Navigation Bar** - COMPLETED ✅
   - [x] Create TopBar component with hamburger menu, centered search, notification/account icons
   - [x] Integrate TopBar into layout (sticky, 45px height)
   - [x] Connect search to events filter
@@ -44,12 +51,18 @@
   - [x] Fix responsive layout (mobile view broken)
   - [x] Add TopBar component tests
   - [x] Add SearchContext tests
+  - [x] Migrate legacy CSS to CSS modules (ClientLayout, Startpage)
+  - [x] Consolidate CSS variables in globals.css (single source of truth)
+  - [x] Remove flexboxgrid.css, helpers.css, site.css (1,830 lines removed)
+  - [x] Fix mobile chip wrapping (chips now flow horizontally on all screen sizes)
 
-- [x] **Search Chips Feature** (~3-4 hours)
+- [x] **Search Chips Feature** - COMPLETED ✅
   - [x] Display search terms as removable chips in filter form
   - [x] Implement chip removal (x button)
   - [x] Connect chips to filter logic (AND logic for multiple terms)
   - [x] Persist chips when switching between filters
+  - [x] Test coverage for SearchChips component
+  - [x] Scroll to top on search/filter changes
 
 #### Recently Completed ✅
 
@@ -148,13 +161,6 @@
   - Link field with validation
   - Form validation (client and server)
   - Estimated: 2-3 days
-
-- [ ] **Event editing**
-  - Pre-populated form with existing data
-  - Permission checks (owner or admin only)
-  - Update API integration
-  - Show edit history (if available)
-  - Estimated: 4-6 hours
 
 - [ ] **Event editing**
   - Pre-populated form with existing data

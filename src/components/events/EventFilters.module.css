@@ -349,10 +349,6 @@
     flex: 1 1 100%;
   }
 
-  .chipSection {
-    flex-direction: column;
-  }
-
   .formGroup {
     margin-bottom: 0;
   }
