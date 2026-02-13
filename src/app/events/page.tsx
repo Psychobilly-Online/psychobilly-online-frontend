@@ -89,7 +89,7 @@ export default function EventsPage() {
       previousSearchTerms.current = searchTerms;
       previousFilters.current = filters;
     }
-  }, [searchTerms, filters]);
+  }, [searchTerms, filters.country_id, filters.category_id, filters.from_date, filters.to_date]);
 
   const { events, loading, error, pagination, categoryCounts, loadMore, hasMore } = useEvents({
     infiniteScroll: true,
