@@ -7,7 +7,6 @@ import { SearchProvider, useSearchContext } from '@/contexts/SearchContext';
 
 function TopBarWrapper() {
   const pathname = usePathname();
-  const { filters, performSearch } = useSearchContext();
 
   // Determine context based on pathname
   const getSearchContext = (): 'events' | 'news' | 'default' => {
@@ -16,17 +15,9 @@ function TopBarWrapper() {
     return 'default';
   };
 
-  const isEventsPage = pathname?.startsWith('/events');
   const isHomePage = pathname === '/';
 
-  return (
-    <TopBar
-      searchContext={getSearchContext()}
-      onSearch={isEventsPage ? performSearch : undefined}
-      searchValue={isEventsPage ? filters.search || '' : ''}
-      hide={isHomePage}
-    />
-  );
+  return <TopBar searchContext={getSearchContext()} hide={isHomePage} />;
 }
 
 interface ClientLayoutProps {

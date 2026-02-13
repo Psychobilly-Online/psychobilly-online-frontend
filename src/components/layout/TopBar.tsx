@@ -3,36 +3,26 @@
 import cx from 'classnames';
 import { useState, useEffect } from 'react';
 import { IconButton } from '@/components/common/IconButton';
+import { useSearchContext } from '@/contexts/SearchContext';
 import styles from './TopBar.module.css';
 
 interface TopBarProps {
   /** Current page context for search (e.g., 'events', 'news') */
   searchContext?: 'events' | 'news' | 'default';
-  /** Callback when search is submitted */
-  onSearch?: (query: string) => void;
-  /** Initial search value */
-  searchValue?: string;
   /** Hide the TopBar (for homepage/startpage) */
   hide?: boolean;
 }
 
-export function TopBar({
-  searchContext = 'default',
-  onSearch,
-  searchValue = '',
-  hide = false,
-}: TopBarProps) {
-  const [searchQuery, setSearchQuery] = useState(searchValue);
-
-  // Sync internal state with prop changes
-  useEffect(() => {
-    setSearchQuery(searchValue);
-  }, [searchValue]);
+export function TopBar({ searchContext = 'default', hide = false }: TopBarProps) {
+  const { addSearchTerm } = useSearchContext();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearch && searchQuery.trim()) {
-      onSearch(searchQuery.trim());
+    const trimmedQuery = searchQuery.trim();
+    if (trimmedQuery) {
+      addSearchTerm(trimmedQuery);
+      setSearchQuery(''); // Clear input after adding term
     }
   };
 

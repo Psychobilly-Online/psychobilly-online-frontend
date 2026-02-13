@@ -6,7 +6,10 @@ import { FilterValues } from '@/components/events/EventFilters';
 interface SearchContextType {
   filters: FilterValues;
   setFilters: (filters: FilterValues) => void;
-  performSearch: (query: string) => void;
+  searchTerms: string[];
+  addSearchTerm: (term: string) => void;
+  removeSearchTerm: (term: string) => void;
+  clearSearchTerms: () => void;
 }
 
 const SearchContext = createContext<SearchContextType | null>(null);
@@ -29,16 +32,45 @@ export function SearchProvider({ children }: SearchProviderProps) {
     sort_by: 'date',
     sort_order: 'ASC',
   });
+  const [searchTerms, setSearchTerms] = useState<string[]>([]);
 
-  const performSearch = (query: string) => {
+  const addSearchTerm = (term: string) => {
+    const trimmedTerm = term.trim();
+    if (!trimmedTerm || searchTerms.includes(trimmedTerm)) return;
+
+    const newTerms = [...searchTerms, trimmedTerm];
+    setSearchTerms(newTerms);
+    
+    // Update filters with comma-separated search terms
     setFilters((prev) => ({
       ...prev,
-      search: query || undefined,
+      search: newTerms.join(','),
+    }));
+  };
+
+  const removeSearchTerm = (term: string) => {
+    const newTerms = searchTerms.filter((t) => t !== term);
+    setSearchTerms(newTerms);
+    
+    // Update filters with comma-separated search terms
+    setFilters((prev) => ({
+      ...prev,
+      search: newTerms.length > 0 ? newTerms.join(',') : undefined,
+    }));
+  };
+
+  const clearSearchTerms = () => {
+    setSearchTerms([]);
+    setFilters((prev) => ({
+      ...prev,
+      search: undefined,
     }));
   };
 
   return (
-    <SearchContext.Provider value={{ filters, setFilters, performSearch }}>
+    <SearchContext.Provider
+      value={{ filters, setFilters, searchTerms, addSearchTerm, removeSearchTerm, clearSearchTerms }}
+    >
       {children}
     </SearchContext.Provider>
   );

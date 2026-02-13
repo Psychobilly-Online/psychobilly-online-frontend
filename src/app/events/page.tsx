@@ -10,9 +10,10 @@ import { useSearchContext } from '@/contexts/SearchContext';
 import styles from './page.module.css';
 
 export default function EventsPage() {
-  const { filters, setFilters } = useSearchContext();
+  const { filters, setFilters, searchTerms } = useSearchContext();
   const [eventDates, setEventDates] = useState<Set<number>>(new Set());
   const [shouldCollapseFilters, setShouldCollapseFilters] = useState(false);
+  const [shouldExpandFilters, setShouldExpandFilters] = useState(false);
   const [isFilterSticky, setIsFilterSticky] = useState(false);
   const lastScrollY = useRef(0);
   const hasAutoCollapsed = useRef(false);
@@ -47,6 +48,17 @@ export default function EventsPage() {
       })
       .catch((err) => console.error('Failed to fetch event dates:', err));
   }, []);
+
+  // Scroll to top and expand filters when search terms change
+  useEffect(() => {
+    if (searchTerms.length > 0) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setShouldExpandFilters(true);
+      // Reset expand trigger after a short delay
+      const timer = setTimeout(() => setShouldExpandFilters(false), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [searchTerms.length]);
 
   const { events, loading, error, pagination, categoryCounts, loadMore, hasMore } = useEvents({
     infiniteScroll: true,
@@ -122,12 +134,13 @@ export default function EventsPage() {
             categoryCounts={categoryCounts || undefined}
             eventDates={eventDates}
             shouldCollapse={shouldCollapseFilters}
+            shouldExpand={shouldExpandFilters}
             onCollapseComplete={() => setShouldCollapseFilters(false)}
             isSticky={isFilterSticky}
           />
         </div>
 
-        {loading && events.length === 0 && <div className={styles.status}>Loading events...</div>}
+        {loading && events.length === 0 && <div className={styles.status}>Searching events...</div>}
 
         {error && <div className={cx(styles.status, styles.statusError)}>Error: {error}</div>}
 

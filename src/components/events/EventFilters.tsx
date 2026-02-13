@@ -14,6 +14,8 @@ import {
 import { PickersDay, type PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import { IconButton } from '@/components/common/IconButton';
+import { SearchChips } from '@/components/common/SearchChips';
+import { useSearchContext } from '@/contexts/SearchContext';
 import { EventFiltersCountries } from './EventFiltersCountries';
 import { EventFiltersDateRange } from './EventFiltersDateRange';
 import { EventFiltersCategories } from './EventFiltersCategories';
@@ -53,6 +55,7 @@ interface EventFiltersProps {
   categoryCounts?: Record<number, number>;
   eventDates?: Set<number>;
   shouldCollapse?: boolean;
+  shouldExpand?: boolean;
   onCollapseComplete?: () => void;
   isSticky?: boolean;
 }
@@ -64,9 +67,11 @@ export function EventFilters({
   categoryCounts,
   eventDates,
   shouldCollapse = false,
+  shouldExpand = false,
   onCollapseComplete,
   isSticky = false,
 }: EventFiltersProps) {
+  const { clearSearchTerms } = useSearchContext();
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
@@ -88,7 +93,16 @@ export function EventFilters({
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
 
   const prevShouldCollapseRef = useRef<boolean>(false);
+  const prevShouldExpandRef = useRef<boolean>(false);
   const collapseCompleteRef = useRef<boolean>(false);
+
+  // Handle external expand trigger (e.g., after adding search term)
+  useEffect(() => {
+    if (shouldExpand && !prevShouldExpandRef.current) {
+      setIsExpanded(true);
+    }
+    prevShouldExpandRef.current = shouldExpand;
+  }, [shouldExpand]);
 
   // Handle external collapse trigger (e.g., from scroll)
   useEffect(() => {
@@ -251,6 +265,7 @@ export function EventFilters({
     setFilters(resetFilters);
     onFilterChange(resetFilters);
     setDateRange([null, null]);
+    clearSearchTerms(); // Clear search chips
   };
 
   const [startDate, endDate] = dateRange;
@@ -536,6 +551,7 @@ export function EventFilters({
         {isExpanded && (
           <form className={styles.filterForm} onSubmit={(e) => e.preventDefault()}>
             <div className={styles.filterRows}>
+              <SearchChips />
               <div className={styles.filterRow}>
                 <div className={styles.dateRow}>
                   <EventFiltersDateRange

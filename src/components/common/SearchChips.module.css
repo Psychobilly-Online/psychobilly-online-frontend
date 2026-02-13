@@ -1,0 +1,7 @@
+.chipsContainer {
+  margin-bottom: var(--spacing-3);
+}
+
+.chipGroup {
+  gap: var(--spacing-2);
+}
