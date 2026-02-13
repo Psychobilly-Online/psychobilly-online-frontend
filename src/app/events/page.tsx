@@ -21,6 +21,7 @@ export default function EventsPage() {
   const filterRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState<Record<number, string>>({});
   const previousSearchTerms = useRef<string[]>([]);
+  const previousFilters = useRef<FilterValues>({});
   const isInitialMount = useRef(true);
 
   useEffect(() => {
@@ -52,12 +53,13 @@ export default function EventsPage() {
       .catch((err) => console.error('Failed to fetch event dates:', err));
   }, []);
 
-  // Scroll to top and expand filters when search terms change
+  // Scroll to top and expand filters when search terms or filters change
   useEffect(() => {
     // Skip on initial mount
     if (isInitialMount.current) {
       isInitialMount.current = false;
       previousSearchTerms.current = searchTerms;
+      previousFilters.current = filters;
       return;
     }
 
@@ -67,18 +69,27 @@ export default function EventsPage() {
       !searchTerms.every((term) => previousSearchTerms.current.includes(term)) ||
       !previousSearchTerms.current.every((term) => searchTerms.includes(term));
 
-    if (termsChanged) {
+    // Check if filters changed (country_id, category_id, from_date, to_date)
+    const filtersChanged =
+      JSON.stringify(filters.country_id) !== JSON.stringify(previousFilters.current.country_id) ||
+      JSON.stringify(filters.category_id) !== JSON.stringify(previousFilters.current.category_id) ||
+      filters.from_date !== previousFilters.current.from_date ||
+      filters.to_date !== previousFilters.current.to_date;
+
+    if (termsChanged || filtersChanged) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (searchTerms.length > 0) {
         setShouldExpandFilters(true);
         // Reset expand trigger after a short delay
         const timer = setTimeout(() => setShouldExpandFilters(false), 100);
         previousSearchTerms.current = searchTerms;
+        previousFilters.current = filters;
         return () => clearTimeout(timer);
       }
       previousSearchTerms.current = searchTerms;
+      previousFilters.current = filters;
     }
-  }, [searchTerms]);
+  }, [searchTerms, filters]);
 
   const { events, loading, error, pagination, categoryCounts, loadMore, hasMore } = useEvents({
     infiniteScroll: true,

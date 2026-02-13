@@ -574,73 +574,63 @@ export function EventFilters({
           <form className={styles.filterForm} onSubmit={(e) => e.preventDefault()}>
             <div className={styles.filterRows}>
               <SearchChips />
-              <div className={styles.filterRow}>
-                <div className={styles.dateRow}>
-                  <EventFiltersDateRange
-                    startDate={startDate}
-                    endDate={endDate}
-                    dateOpen={dateOpen}
-                    dateAnchor={dateAnchor}
-                    onOpen={handleOpenDateRange}
-                    onClose={handleCloseDateRange}
-                    onUpdateDateRange={updateDateRange}
-                    onCalendarChange={handleCalendarChange}
-                    onPresetChange={handleDatePresetChange}
-                    selectedPreset={datePreset}
-                    calendarView={calendarView}
-                    onViewChange={setCalendarView}
-                    rangeDay={RangeDay}
-                    formatDateLabel={formatDateLabel}
-                    popoverPaperSx={datePopoverSx}
-                    popoverContainer={filterContainerRef.current}
-                    eventDates={eventDates}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.filterRow}>
-                <EventFiltersCountries
-                  countries={countries}
-                  selectedCountryIds={selectedCountryIds}
-                  selectedRegion={selectedRegionLabel}
-                  countryLookup={countryLookup}
-                  countryOpen={countryOpen}
-                  countryAnchor={countryAnchor}
-                  onOpen={handleOpenCountries}
-                  onClose={handleCloseCountries}
-                  onToggleCountry={toggleCountry}
-                  onApplyCountries={applyCountries}
-                  onFetchRegion={fetchRegionCountries}
-                  loadingRegion={loadingRegion}
-                  showAllCountries={showAllCountries}
-                  onShowAll={() => setShowAllCountries(true)}
-                  renderCountryLabel={renderCountryLabel}
-                  popoverPaperSx={countryPopoverSx}
-                  popoverContainer={filterContainerRef.current}
-                />
-              </div>
-
-              <div className={styles.filterRow}>
-                <EventFiltersCategories
-                  categories={categories}
-                  selectedCategoryIds={selectedCategoryIds}
-                  categoryCounts={categoryCounts}
-                  categoryOpen={categoryOpen}
-                  categoryAnchor={categoryAnchor}
-                  onOpen={handleOpenCategories}
-                  onClose={handleCloseCategories}
-                  onToggleCategory={(categoryId) => {
-                    const isSelected = selectedCategoryIds.includes(categoryId);
-                    const nextSelected = isSelected
-                      ? selectedCategoryIds.filter((id) => id !== categoryId)
-                      : [...selectedCategoryIds, categoryId];
-                    handleInputChange('category_id', nextSelected);
-                  }}
-                  onClearCategories={() => handleInputChange('category_id', [])}
-                  popoverPaperSx={countryPopoverSx}
-                  popoverContainer={filterContainerRef.current}
-                />
-              </div>
+              <EventFiltersDateRange
+                startDate={startDate}
+                endDate={endDate}
+                dateOpen={dateOpen}
+                dateAnchor={dateAnchor}
+                onOpen={handleOpenDateRange}
+                onClose={handleCloseDateRange}
+                onUpdateDateRange={updateDateRange}
+                onCalendarChange={handleCalendarChange}
+                onPresetChange={handleDatePresetChange}
+                selectedPreset={datePreset}
+                calendarView={calendarView}
+                onViewChange={setCalendarView}
+                rangeDay={RangeDay}
+                formatDateLabel={formatDateLabel}
+                popoverPaperSx={datePopoverSx}
+                popoverContainer={filterContainerRef.current}
+                eventDates={eventDates}
+              />
+              <EventFiltersCountries
+                countries={countries}
+                selectedCountryIds={selectedCountryIds}
+                selectedRegion={selectedRegionLabel}
+                countryLookup={countryLookup}
+                countryOpen={countryOpen}
+                countryAnchor={countryAnchor}
+                onOpen={handleOpenCountries}
+                onClose={handleCloseCountries}
+                onToggleCountry={toggleCountry}
+                onApplyCountries={applyCountries}
+                onFetchRegion={fetchRegionCountries}
+                loadingRegion={loadingRegion}
+                showAllCountries={showAllCountries}
+                onShowAll={() => setShowAllCountries(true)}
+                renderCountryLabel={renderCountryLabel}
+                popoverPaperSx={countryPopoverSx}
+                popoverContainer={filterContainerRef.current}
+              />
+              <EventFiltersCategories
+                categories={categories}
+                selectedCategoryIds={selectedCategoryIds}
+                categoryCounts={categoryCounts}
+                categoryOpen={categoryOpen}
+                categoryAnchor={categoryAnchor}
+                onOpen={handleOpenCategories}
+                onClose={handleCloseCategories}
+                onToggleCategory={(categoryId) => {
+                  const isSelected = selectedCategoryIds.includes(categoryId);
+                  const nextSelected = isSelected
+                    ? selectedCategoryIds.filter((id) => id !== categoryId)
+                    : [...selectedCategoryIds, categoryId];
+                  handleInputChange('category_id', nextSelected);
+                }}
+                onClearCategories={() => handleInputChange('category_id', [])}
+                popoverPaperSx={countryPopoverSx}
+                popoverContainer={filterContainerRef.current}
+              />
             </div>
           </form>
         )}
