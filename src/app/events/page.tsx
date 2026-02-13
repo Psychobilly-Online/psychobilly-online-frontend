@@ -1,5 +1,6 @@
 'use client';
 
+import cx from 'classnames';;
 import { useEvents } from '@/hooks/useEvents';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { EventCard } from '@/components/events/EventCard';
@@ -110,7 +111,7 @@ export default function EventsPage() {
   return (
     <div id="content" className={`row ${styles.eventsLayout}`}>
       <div className={`col1 col-lg-12 col-md-12 col-xs-12 ${styles.mainColumn}`} id="col1">
-        <div className={styles.filterBar} ref={filterRef}>
+        <div className={cx([styles.filterBar, isFilterSticky && styles.sticky])} ref={filterRef}>
           <EventFilters
             onFilterChange={handleFilterChange}
             initialFilters={filters}
