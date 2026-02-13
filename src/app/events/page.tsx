@@ -7,6 +7,7 @@ import { EventCard } from '@/components/events/EventCard';
 import { EventFilters, FilterValues } from '@/components/events/EventFilters';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchContext } from '@/contexts/SearchContext';
+import { TOP_BAR_HEIGHT } from '@/constants/layout';
 import styles from './page.module.css';
 
 export default function EventsPage() {
@@ -60,10 +61,11 @@ export default function EventsPage() {
       return;
     }
 
-    // Check if search terms actually changed
+    // Check if search terms actually changed (order-independent comparison)
     const termsChanged =
       searchTerms.length !== previousSearchTerms.current.length ||
-      searchTerms.some((term, index) => term !== previousSearchTerms.current[index]);
+      !searchTerms.every((term) => previousSearchTerms.current.includes(term)) ||
+      !previousSearchTerms.current.every((term) => searchTerms.includes(term));
 
     if (termsChanged) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -109,8 +111,7 @@ export default function EventsPage() {
       // Check if filter is sticky (reached top position)
       if (filterRef.current) {
         const rect = filterRef.current.getBoundingClientRect();
-        const topBarHeight = 45; // TopBar height in px
-        setIsFilterSticky(rect.top <= topBarHeight);
+        setIsFilterSticky(rect.top <= TOP_BAR_HEIGHT);
       }
 
       // Auto-collapse once if scrolling down and past 50px

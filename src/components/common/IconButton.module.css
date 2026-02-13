@@ -57,14 +57,14 @@
 }
 
 .large {
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
+  width: var(--spacing-15);
+  height: var(--spacing-15);
+  border-radius: calc(var(--spacing-15) / 2);
 }
 
 .large svg {
-  width: 30px;
-  height: 30px;
+  width: var(--spacing-9);
+  height: var(--spacing-9);
 }
 
 /* Visual variants */

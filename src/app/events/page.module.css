@@ -42,7 +42,7 @@
 
 .filterBar {
   position: sticky;
-  top: 45px;
+  top: var(--spacing-15);
   z-index: 10;
   margin: 0 0 18px 0;
 }
