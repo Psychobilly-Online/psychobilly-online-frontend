@@ -1,7 +1,7 @@
 'use client';
 
 import cx from 'classnames';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { IconButton } from '@/components/common/IconButton';
 import { useSearchContext } from '@/contexts/SearchContext';
 import styles from './TopBar.module.css';

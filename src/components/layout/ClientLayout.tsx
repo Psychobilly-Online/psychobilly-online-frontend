@@ -3,7 +3,7 @@
 import { TopBar } from './TopBar';
 import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
-import { SearchProvider, useSearchContext } from '@/contexts/SearchContext';
+import { SearchProvider } from '@/contexts/SearchContext';
 
 function TopBarWrapper() {
   const pathname = usePathname();

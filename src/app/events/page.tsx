@@ -61,7 +61,7 @@ export default function EventsPage() {
     }
 
     // Check if search terms actually changed
-    const termsChanged = 
+    const termsChanged =
       searchTerms.length !== previousSearchTerms.current.length ||
       searchTerms.some((term, index) => term !== previousSearchTerms.current[index]);
 
