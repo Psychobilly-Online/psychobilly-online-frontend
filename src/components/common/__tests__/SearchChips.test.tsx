@@ -11,7 +11,7 @@ describe('SearchChips', () => {
       const { container } = render(
         <SearchProvider>
           <SearchChips />
-        </SearchProvider>
+        </SearchProvider>,
       );
 
       expect(container.firstChild).toBeNull();
@@ -32,7 +32,7 @@ describe('SearchChips', () => {
       render(
         <SearchProvider>
           <TestComponent />
-        </SearchProvider>
+        </SearchProvider>,
       );
 
       await waitFor(() => {
@@ -63,7 +63,7 @@ describe('SearchChips', () => {
       render(
         <SearchProvider>
           <TestComponent />
-        </SearchProvider>
+        </SearchProvider>,
       );
 
       await waitFor(() => {
@@ -92,7 +92,7 @@ describe('SearchChips', () => {
       const { container } = render(
         <SearchProvider>
           <TestComponent />
-        </SearchProvider>
+        </SearchProvider>,
       );
 
       await waitFor(() => {

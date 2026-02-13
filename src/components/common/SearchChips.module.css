@@ -1,3 +1,11 @@
+.searchRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 32px;
+  margin-bottom: var(--spacing-3);
+}
+
 .chipsContainer {
   flex: 1;
 }

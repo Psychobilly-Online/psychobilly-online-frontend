@@ -6,6 +6,8 @@ export interface IconButtonProps {
   icon: React.ReactNode;
   /** Accessibility label */
   ariaLabel: string;
+  /** Tooltip text (shown on hover) */
+  title?: string;
   /** Click handler */
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /** Button type */
@@ -23,6 +25,7 @@ export interface IconButtonProps {
 export function IconButton({
   icon,
   ariaLabel,
+  title,
   onClick,
   type = 'button',
   size = 'medium',
@@ -42,6 +45,7 @@ export function IconButton({
       )}
       onClick={onClick}
       aria-label={ariaLabel}
+      title={title}
       disabled={disabled}
     >
       {icon}

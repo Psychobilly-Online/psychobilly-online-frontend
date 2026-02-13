@@ -106,7 +106,9 @@ describe('IconButton', () => {
       const user = userEvent.setup();
       const handleClick = vi.fn();
 
-      render(<IconButton icon={<span>Icon</span>} onClick={handleClick} disabled ariaLabel="Button" />);
+      render(
+        <IconButton icon={<span>Icon</span>} onClick={handleClick} disabled ariaLabel="Button" />,
+      );
 
       const button = screen.getByRole('button');
       await user.click(button);
@@ -164,7 +166,9 @@ describe('IconButton', () => {
 
   describe('CSS Classes', () => {
     it('combines variant and size classes', () => {
-      render(<IconButton icon={<span>Icon</span>} variant="primary" size="large" ariaLabel="Button" />);
+      render(
+        <IconButton icon={<span>Icon</span>} variant="primary" size="large" ariaLabel="Button" />,
+      );
 
       const button = screen.getByRole('button');
       expect(button.className).toMatch(/primary/);
@@ -179,7 +183,15 @@ describe('IconButton', () => {
     });
 
     it('combines all classes when disabled', () => {
-      render(<IconButton icon={<span>Icon</span>} variant="primary" size="large" disabled ariaLabel="Button" />);
+      render(
+        <IconButton
+          icon={<span>Icon</span>}
+          variant="primary"
+          size="large"
+          disabled
+          ariaLabel="Button"
+        />,
+      );
 
       const button = screen.getByRole('button');
       expect(button.className).toMatch(/iconButton/);

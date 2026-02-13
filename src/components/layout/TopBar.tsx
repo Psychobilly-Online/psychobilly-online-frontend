@@ -48,6 +48,7 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
         <IconButton
           size="medium"
           ariaLabel="Open menu"
+          title="Open menu"
           onClick={() => {
             /* TODO: Implement menu */
           }}
@@ -91,6 +92,7 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
           <IconButton
             size="small"
             ariaLabel="Notifications"
+            title="Notifications"
             onClick={() => {
               /* TODO: Implement notifications */
             }}
@@ -105,6 +107,7 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
           <IconButton
             size="small"
             ariaLabel="Account"
+            title="Account"
             onClick={() => {
               /* TODO: Implement account menu */
             }}

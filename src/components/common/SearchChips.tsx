@@ -12,17 +12,19 @@ export function SearchChips() {
   }
 
   return (
-    <div className={styles.chipsContainer}>
-      <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
-        {searchTerms.map((term) => (
-          <Chip
-            key={term}
-            label={term}
-            onDelete={() => removeSearchTerm(term)}
-            variant="outlined"
-          />
-        ))}
-      </Stack>
+    <div className={styles.searchRow}>
+      <div className={styles.chipsContainer}>
+        <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
+          {searchTerms.map((term) => (
+            <Chip
+              key={term}
+              label={term}
+              onDelete={() => removeSearchTerm(term)}
+              variant="outlined"
+            />
+          ))}
+        </Stack>
+      </div>
     </div>
   );
 }

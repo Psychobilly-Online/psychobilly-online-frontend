@@ -48,7 +48,7 @@ describe('SearchContext', () => {
       act(() => {
         result.current.addSearchTerm('Mad Sin');
       });
-      
+
       act(() => {
         result.current.addSearchTerm('Berlin');
       });
@@ -252,7 +252,7 @@ describe('SearchContext', () => {
       act(() => {
         result.current.addSearchTerm('Mad Sin');
       });
-      
+
       act(() => {
         result.current.setFilters({
           ...result.current.filters,

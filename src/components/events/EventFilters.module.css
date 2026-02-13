@@ -235,14 +235,6 @@
   padding: 0;
 }
 
-.searchRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-3);
-  min-height: 32px;
-}
-
 .formGroup {
   margin-bottom: 0;
   align-self: flex-start;

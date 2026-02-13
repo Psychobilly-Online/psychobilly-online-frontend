@@ -453,10 +453,31 @@ export function EventFilters({
             </div>
           </div>
           <div className={styles.headerActions}>
+            {activeFilterCount > 0 && (
+              <IconButton
+                size="small"
+                onClick={handleReset}
+                ariaLabel="Clear search"
+                title="Clear search"
+                icon={
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                }
+              />
+            )}
             <IconButton
               size="small"
               onClick={handleOpenSettings}
               ariaLabel="Open search settings"
+              title="Search settings"
               icon={
                 <svg
                   width="18"
@@ -474,6 +495,7 @@ export function EventFilters({
             <IconButton
               size="small"
               ariaLabel={isExpanded ? 'Collapse filters' : 'Expand filters'}
+              title={isExpanded ? 'Collapse filters' : 'Expand filters'}
               onClick={() => setIsExpanded((prev) => !prev)}
               icon={
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -551,26 +573,7 @@ export function EventFilters({
         {isExpanded && (
           <form className={styles.filterForm} onSubmit={(e) => e.preventDefault()}>
             <div className={styles.filterRows}>
-              <div className={styles.searchRow}>
-                <SearchChips />
-                {activeFilterCount > 0 && (
-                  <button type="button" className={styles.clearLink} onClick={handleReset}>
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      style={{ marginRight: '6px' }}
-                    >
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    </svg>
-                    Clear filters
-                  </button>
-                )}
-              </div>
+              <SearchChips />
               <div className={styles.filterRow}>
                 <div className={styles.dateRow}>
                   <EventFiltersDateRange
