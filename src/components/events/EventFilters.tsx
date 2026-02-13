@@ -71,7 +71,7 @@ export function EventFilters({
   onCollapseComplete,
   isSticky = false,
 }: EventFiltersProps) {
-  const { clearSearchTerms } = useSearchContext();
+  const { filters: contextFilters, clearSearchTerms } = useSearchContext();
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
@@ -251,6 +251,8 @@ export function EventFilters({
     const newFilters = {
       ...filters,
       [field]: normalizeFilterValue(value),
+      // Preserve search term from context
+      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -319,6 +321,8 @@ export function EventFilters({
       ...filters,
       from_date: start ? formatDate(start) : undefined,
       to_date: normalizedEnd ? formatDate(normalizedEnd) : undefined,
+      // Preserve search term from context
+      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);

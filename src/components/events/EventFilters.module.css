@@ -130,12 +130,10 @@
 
 .countryGroup {
   width: auto;
-  flex-shrink: 0;
 }
 
 .categoryGroup {
   width: auto;
-  flex-shrink: 0;
 }
 
 .chipTriggerWrapper {

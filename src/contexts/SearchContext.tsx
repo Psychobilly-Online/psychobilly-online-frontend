@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, ReactNode, useState } from 'react';
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import type { FilterValues } from '@/components/events/EventFilters';
 
 interface SearchContextType {
@@ -34,6 +34,15 @@ export function SearchProvider({ children }: SearchProviderProps) {
   });
   const [searchTerms, setSearchTerms] = useState<string[]>([]);
 
+  // Synchronize searchTerms with filters.search to avoid race conditions
+  useEffect(() => {
+    const searchValue = searchTerms.length > 0 ? searchTerms.join(',') : undefined;
+    setFilters((prev) => ({
+      ...prev,
+      search: searchValue,
+    }));
+  }, [searchTerms]);
+
   const addSearchTerm = (term: string) => {
     const trimmedTerm = term.trim();
     if (!trimmedTerm) return;
@@ -41,39 +50,16 @@ export function SearchProvider({ children }: SearchProviderProps) {
     setSearchTerms((prev) => {
       // Check if term already exists
       if (prev.includes(trimmedTerm)) return prev;
-
-      const newTerms = [...prev, trimmedTerm];
-
-      // Update filters with comma-separated search terms
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        search: newTerms.join(','),
-      }));
-
-      return newTerms;
+      return [...prev, trimmedTerm];
     });
   };
 
   const removeSearchTerm = (term: string) => {
-    setSearchTerms((prev) => {
-      const newTerms = prev.filter((t) => t !== term);
-
-      // Update filters with comma-separated search terms
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        search: newTerms.length > 0 ? newTerms.join(',') : undefined,
-      }));
-
-      return newTerms;
-    });
+    setSearchTerms((prev) => prev.filter((t) => t !== term));
   };
 
   const clearSearchTerms = () => {
     setSearchTerms([]);
-    setFilters((prev) => ({
-      ...prev,
-      search: undefined,
-    }));
   };
 
   return (

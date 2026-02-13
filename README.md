@@ -142,6 +142,7 @@ Required environment variables (see `.env.example`):
 ## 🎨 Design System
 
 ### CSS Variables (globals.css)
+
 - **Spacing Scale:** 3px base (`--spacing-1` through `--spacing-15`)
 - **Color Palette:** 20+ semantic variables
   - Backgrounds: `--color-bg-*`
@@ -151,6 +152,7 @@ Required environment variables (see `.env.example`):
 - **Shadows:** `--shadow-sm`, `--shadow-md`, `--shadow-lg`
 
 ### Responsive Breakpoints
+
 - Mobile: < 768px
 - Tablet: 768px - 991px (48em)
 - Desktop: ≥ 992px (64em, max 1200px)
