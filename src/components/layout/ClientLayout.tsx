@@ -17,12 +17,14 @@ function TopBarWrapper() {
   };
 
   const isEventsPage = pathname?.startsWith('/events');
+  const isHomePage = pathname === '/';
 
   return (
     <TopBar
       searchContext={getSearchContext()}
       onSearch={isEventsPage ? performSearch : undefined}
       searchValue={isEventsPage ? filters.search || '' : ''}
+      hide={isHomePage}
     />
   );
 }

@@ -74,18 +74,6 @@
   letter-spacing: 0.02em;
 }
 
-.settingsButton {
-  color: #ddd !important;
-  border: 1px solid #343437;
-  background: #2a2a2d;
-  flex: 0 1 auto;
-  align-items: flex-start;
-}
-.settingsButton:hover {
-  background: #35353a;
-  border-color: #4a4a50;
-}
-
 .settingsPopover {
   padding: 18px;
   display: flex;
@@ -225,24 +213,6 @@
 
 .showAllButton:hover {
   color: #fff;
-}
-
-.toggleButton {
-  background: #2a2a2d;
-  border: 1px solid #343437;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 3px 9px;
-  color: #ddd;
-  transition:
-    background 0.2s,
-    border-color 0.2s;
-}
-
-.toggleButton:hover {
-  background: #35353a;
-  border-color: #4a4a50;
 }
 
 .filterForm {

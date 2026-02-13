@@ -1,8 +1,68 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ===== SPACING SCALE (3px base) ===== */
+  --spacing-1: 3px;
+  --spacing-2: 6px;
+  --spacing-3: 9px;
+  --spacing-4: 12px;
+  --spacing-6: 18px;
+  --spacing-9: 27px;
+  --spacing-12: 36px;
+  --spacing-15: 45px;
+
+  /* ===== COLOR PALETTE (Dark Theme) ===== */
+  
+  /* Backgrounds */
+  --color-bg-page: #0a0a0a;
+  --color-bg-primary: #1a1a1a;
+  --color-bg-secondary: #1b1b1d;
+  --color-bg-elevated: #2a2a2a;
+  --color-bg-elevated-alt: #2a2a2d;
+  --color-bg-hover: #35353a;
+  --color-bg-active: #262629;
+  
+  /* Borders */
+  --color-border-subtle: #2d2d30;
+  --color-border-default: #333;
+  --color-border-medium: #343437;
+  --color-border-strong: #444;
+  --color-border-stronger: #4a4a50;
+  --color-border-emphasis: #666;
+  
+  /* Text */
+  --color-text-primary: #fff;
+  --color-text-secondary: #ededed;
+  --color-text-tertiary: #ddd;
+  --color-text-muted: #b5b5b5;
+  --color-text-subtle: #a0a0a0;
+  --color-text-disabled: #999;
+  --color-text-placeholder: #888;
+  --color-text-faint: #666;
+  
+  /* Brand / Accent Colors */
+  --color-accent-primary: #b1322a;
+  --color-accent-primary-dark: #7d2923;
+  --color-accent-primary-darker: #9b2923;
+  --color-accent-primary-light: #c1483f;
+  --color-accent-primary-lighter: #d05a50;
+  --color-accent-secondary: #e94e1b;
+  --color-error: #d32f2f;
+  
+  /* Interactive States */
+  --color-hover-overlay: rgba(255, 255, 255, 0.1);
+  --color-accent-overlay: rgba(125, 41, 35, 0.18);
+  
+  /* Shadows */
+  --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 9px 18px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 9px 27px rgba(0, 0, 0, 0.35);
+  --shadow-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-subtle: 0 0 0 1px rgba(0, 0, 0, 0.2);
+
+  /* Legacy Tailwind Compatibility */
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @theme inline {

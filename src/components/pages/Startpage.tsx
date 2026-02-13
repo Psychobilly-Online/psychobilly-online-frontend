@@ -2,7 +2,7 @@ export function Startpage() {
   return (
     <div id="content" className="row">
       <div className="col1 col-lg-8 col-md-8 col-xs-12" id="col1">
-        <div className="bigBox" style={{ marginBottom: '20px' }}>
+        <div className="bigBox">
           <div className="bigBoxContent">
             <h1>Psychobilly Online: Farewell and welcome back!</h1>
             After the server got another PHP update, the forum software finally reached its end of

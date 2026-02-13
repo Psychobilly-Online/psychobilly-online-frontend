@@ -75,12 +75,6 @@
   margin-top: 18px;
 }
 
-@media (max-width: 1024px) {
-  .filterBar {
-    top: 0;
-  }
-}
-
 @media (max-width: 768px) {
   .title {
     font-size: 22px;

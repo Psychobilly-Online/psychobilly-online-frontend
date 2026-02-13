@@ -109,9 +109,9 @@ export default function EventsPage() {
   };
 
   return (
-    <div id="content" className={`row ${styles.eventsLayout}`}>
-      <div className={`col1 col-lg-12 col-md-12 col-xs-12 ${styles.mainColumn}`} id="col1">
-        <div className={cx([styles.filterBar, isFilterSticky && styles.sticky])} ref={filterRef}>
+    <div id="content" className={cx('row', styles.eventsLayout)}>
+      <div className={cx('col1', 'col-lg-12', 'col-md-12', 'col-xs-12', styles.mainColumn)} id="col1">
+        <div className={cx(styles.filterBar, isFilterSticky && styles.sticky)} ref={filterRef}>
           <EventFilters
             onFilterChange={handleFilterChange}
             initialFilters={filters}
@@ -126,7 +126,7 @@ export default function EventsPage() {
 
         {loading && events.length === 0 && <div className={styles.status}>Loading events...</div>}
 
-        {error && <div className={`${styles.status} ${styles.statusError}`}>Error: {error}</div>}
+        {error && <div className={cx(styles.status, styles.statusError)}>Error: {error}</div>}
 
         {!loading && !error && events.length === 0 && (
           <div className={styles.status}>No events found.</div>
@@ -134,7 +134,7 @@ export default function EventsPage() {
 
         {events.length > 0 && (
           <>
-            <div className={`${styles.eventsList} ${loading ? styles.eventsListLoading : ''}`}>
+            <div className={cx(styles.eventsList, loading && styles.eventsListLoading)}>
               {events.map((event, index) => {
                 // Attach ref to the last element for infinite scroll detection
                 const isLastElement = index === events.length - 1;
