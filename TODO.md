@@ -34,10 +34,16 @@
   - [x] Implement SearchContext for shared filter state
   - [x] Fix sticky filter border-radius detection
   - [x] Standardize spacing to 3px scale (3, 6, 9, 18, 27, 36)
+  - [x] Refactor: Use classnames/cx utility instead of string concatenation
+  - [x] Consolidate colors and create CSS variables
+  - [x] Create CSS variables for spacing scale
+  - [x] Create reusable IconButton component (3 sizes, 3 variants)
+  - [x] Replace Material-UI IconButton in EventFilters with custom IconButton
+  - [x] Clean up legacy CSS files (deleted style.css - 1947 lines)
+  - [x] Remove CSS variable fallback values
   - [ ] Fix responsive layout (mobile view broken)
-  - [ ] Refactor: Use classnames/cx utility instead of string concatenation
-  - [ ] Consolidate colors and create CSS variables
-  - [ ] Create CSS variables for spacing scale
+  - [ ] Add TopBar component tests
+  - [ ] Add SearchContext tests
 
 - [ ] **Search Chips Feature** (~3-4 hours)
   - [ ] Add (+) button to TopBar search field

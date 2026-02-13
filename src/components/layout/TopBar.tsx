@@ -16,7 +16,12 @@ interface TopBarProps {
   hide?: boolean;
 }
 
-export function TopBar({ searchContext = 'default', onSearch, searchValue = '', hide = false }: TopBarProps) {
+export function TopBar({
+  searchContext = 'default',
+  onSearch,
+  searchValue = '',
+  hide = false,
+}: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState(searchValue);
 
   // Sync internal state with prop changes

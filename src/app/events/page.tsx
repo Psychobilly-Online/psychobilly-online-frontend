@@ -110,7 +110,10 @@ export default function EventsPage() {
 
   return (
     <div id="content" className={cx('row', styles.eventsLayout)}>
-      <div className={cx('col1', 'col-lg-12', 'col-md-12', 'col-xs-12', styles.mainColumn)} id="col1">
+      <div
+        className={cx('col1', 'col-lg-12', 'col-md-12', 'col-xs-12', styles.mainColumn)}
+        id="col1"
+      >
         <div className={cx(styles.filterBar, isFilterSticky && styles.sticky)} ref={filterRef}>
           <EventFilters
             onFilterChange={handleFilterChange}

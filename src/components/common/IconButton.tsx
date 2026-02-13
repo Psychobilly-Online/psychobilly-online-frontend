@@ -38,7 +38,7 @@ export function IconButton({
         styles[size],
         styles[variant],
         disabled && styles.disabled,
-        className
+        className,
       )}
       onClick={onClick}
       aria-label={ariaLabel}

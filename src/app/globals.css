@@ -12,7 +12,7 @@
   --spacing-15: 45px;
 
   /* ===== COLOR PALETTE (Dark Theme) ===== */
-  
+
   /* Backgrounds */
   --color-bg-page: #0a0a0a;
   --color-bg-primary: #1a1a1a;
@@ -21,7 +21,7 @@
   --color-bg-elevated-alt: #2a2a2d;
   --color-bg-hover: #35353a;
   --color-bg-active: #262629;
-  
+
   /* Borders */
   --color-border-subtle: #2d2d30;
   --color-border-default: #333;
@@ -29,7 +29,7 @@
   --color-border-strong: #444;
   --color-border-stronger: #4a4a50;
   --color-border-emphasis: #666;
-  
+
   /* Text */
   --color-text-primary: #fff;
   --color-text-secondary: #ededed;
@@ -39,7 +39,7 @@
   --color-text-disabled: #999;
   --color-text-placeholder: #888;
   --color-text-faint: #666;
-  
+
   /* Brand / Accent Colors */
   --color-accent-primary: #b1322a;
   --color-accent-primary-dark: #7d2923;
@@ -48,11 +48,11 @@
   --color-accent-primary-lighter: #d05a50;
   --color-accent-secondary: #e94e1b;
   --color-error: #d32f2f;
-  
+
   /* Interactive States */
   --color-hover-overlay: rgba(255, 255, 255, 0.1);
   --color-accent-overlay: rgba(125, 41, 35, 0.18);
-  
+
   /* Shadows */
   --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 9px 18px rgba(0, 0, 0, 0.25);
