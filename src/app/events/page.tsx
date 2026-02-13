@@ -19,6 +19,8 @@ export default function EventsPage() {
   const hasAutoCollapsed = useRef(false);
   const filterRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState<Record<number, string>>({});
+  const previousSearchTerms = useRef<string[]>([]);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     // Fetch categories for display
@@ -51,14 +53,30 @@ export default function EventsPage() {
 
   // Scroll to top and expand filters when search terms change
   useEffect(() => {
-    if (searchTerms.length > 0) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setShouldExpandFilters(true);
-      // Reset expand trigger after a short delay
-      const timer = setTimeout(() => setShouldExpandFilters(false), 100);
-      return () => clearTimeout(timer);
+    // Skip on initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      previousSearchTerms.current = searchTerms;
+      return;
     }
-  }, [searchTerms.length]);
+
+    // Check if search terms actually changed
+    const termsChanged = 
+      searchTerms.length !== previousSearchTerms.current.length ||
+      searchTerms.some((term, index) => term !== previousSearchTerms.current[index]);
+
+    if (termsChanged) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (searchTerms.length > 0) {
+        setShouldExpandFilters(true);
+        // Reset expand trigger after a short delay
+        const timer = setTimeout(() => setShouldExpandFilters(false), 100);
+        previousSearchTerms.current = searchTerms;
+        return () => clearTimeout(timer);
+      }
+      previousSearchTerms.current = searchTerms;
+    }
+  }, [searchTerms]);
 
   const { events, loading, error, pagination, categoryCounts, loadMore, hasMore } = useEvents({
     infiniteScroll: true,
