@@ -167,6 +167,7 @@ export default function EventsPage() {
             shouldExpand={shouldExpandFilters}
             onCollapseComplete={() => setShouldCollapseFilters(false)}
             isSticky={isFilterSticky}
+            loading={loading}
           />
         </div>
 

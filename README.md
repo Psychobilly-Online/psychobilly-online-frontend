@@ -3,8 +3,7 @@
 Modern Next.js 16 frontend for Psychobilly Online community.
 
 > **📚 See [Root README](../README.md)** for complete project overview and architecture  
-> **🗺️ See [ROADMAP](../ROADMAP.md)** for project timeline and phases  
-> **📋 See [TODO.md](./TODO.md)** for current tasks and priorities
+> **🗺️ See [ROADMAP](../ROADMAP.md)** for project timeline and phases
 
 ## 🚀 Quick Start
 

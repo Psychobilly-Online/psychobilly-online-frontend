@@ -58,6 +58,7 @@ interface EventFiltersProps {
   shouldExpand?: boolean;
   onCollapseComplete?: () => void;
   isSticky?: boolean;
+  loading?: boolean;
 }
 
 export function EventFilters({
@@ -70,6 +71,7 @@ export function EventFilters({
   shouldExpand = false,
   onCollapseComplete,
   isSticky = false,
+  loading = false,
 }: EventFiltersProps) {
   const { filters: contextFilters, clearSearchTerms } = useSearchContext();
   useMemo(() => filterTheme, []);
@@ -449,10 +451,35 @@ export function EventFilters({
         <div className={styles.filterHeader}>
           <div className={styles.headerMain}>
             <div className={styles.headerLeft}>
-              {typeof totalCount === 'number' && (
+              {loading && typeof totalCount !== 'number' ? (
                 <h2 className={styles.eventsTitle}>
-                  {totalCount} event{totalCount !== 1 ? 's' : ''} found
+                  <svg
+                    className={styles.loadingSpinner}
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeDasharray="31.4 31.4"
+                      strokeDashoffset="0"
+                    />
+                  </svg>
+                  Loading events...
                 </h2>
+              ) : (
+                typeof totalCount === 'number' && (
+                  <h2 className={styles.eventsTitle}>
+                    {totalCount} event{totalCount !== 1 ? 's' : ''} found
+                  </h2>
+                )
               )}
             </div>
           </div>

@@ -72,6 +72,22 @@
   color: var(--color-text-primary);
   margin: 0;
   letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .settingsPopover {
