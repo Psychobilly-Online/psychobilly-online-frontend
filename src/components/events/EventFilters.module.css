@@ -1,38 +1,38 @@
 .filterContainer {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 9px;
-  box-shadow: 0 9px 18px rgba(0, 0, 0, 0.25);
-  margin-bottom: 18px;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--spacing-3);
+  box-shadow: var(--shadow-md);
+  margin-bottom: var(--spacing-6);
   width: 100%;
 }
 
 /* When sticky, remove top border radius */
 .filterContainer.sticky {
-  border-radius: 0 0 9px 9px;
+  border-radius: 0 0 var(--spacing-3) var(--spacing-3);
   border-top: none;
 }
 
 .collapsed .filterHeader {
   border-bottom: none;
-  border-radius: 9px;
+  border-radius: var(--spacing-3);
 }
 
 /* When sticky and collapsed, remove top border radius */
 .collapsed.sticky .filterHeader {
-  border-radius: 0 0 9px 9px;
+  border-radius: 0 0 var(--spacing-3) var(--spacing-3);
 }
 
 .filterHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 9px;
-  background-color: #1a1a1a;
-  border-bottom: 1px solid #333;
-  border-top-right-radius: 9px;
-  border-top-left-radius: 9px;
-  gap: 9px;
+  padding: var(--spacing-3);
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-default);
+  border-top-right-radius: var(--spacing-3);
+  border-top-left-radius: var(--spacing-3);
+  gap: var(--spacing-3);
 }
 
 /* Override filterHeader top radius when sticky (must come after .filterHeader) */
@@ -42,13 +42,13 @@
 }
 
 .filterHeader:hover {
-  background: #262629;
+  background: var(--color-bg-active);
 }
 
 .headerActions {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--spacing-3);
 }
 
 .headerMain {
@@ -61,7 +61,7 @@
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--spacing-3);
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -69,23 +69,23 @@
 .eventsTitle {
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-primary);
   margin: 0;
   letter-spacing: 0.02em;
 }
 
 .settingsPopover {
-  padding: 18px;
+  padding: var(--spacing-6);
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: var(--spacing-3);
 }
 
 .dateRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 9px;
+  gap: var(--spacing-3);
   flex-wrap: nowrap;
 }
 
@@ -99,16 +99,16 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #b5b5b5;
+  color: var(--color-text-muted);
 }
 
 .clearLink {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-2);
   background: transparent;
   border: none;
-  color: #c5c5c5;
+  color: var(--color-text-muted);
   font-size: 12px;
   cursor: pointer;
   text-transform: uppercase;
@@ -118,12 +118,12 @@
 }
 
 .clearLink:hover {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .chipGroup {
   display: flex;
-  gap: 9px;
+  gap: var(--spacing-3);
   flex-wrap: wrap;
   align-items: flex-start;
 }
@@ -170,43 +170,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 9px;
+  gap: var(--spacing-3);
 }
 
 .popoverCloseButton {
-  color: #ddd !important;
+  color: var(--color-text-tertiary) !important;
 }
 
 .countryPopover {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: var(--spacing-3);
 }
 
 .countryListSection {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: var(--spacing-3);
 }
 
 .countryChipLabel {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-2);
 }
 
 .flagIcon {
-  width: 18px;
-  height: 9px;
-  border-radius: 3px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  width: var(--spacing-6);
+  height: var(--spacing-3);
+  border-radius: var(--spacing-1);
+  box-shadow: var(--shadow-subtle);
 }
 
 .showAllButton {
   align-self: flex-start;
   background: transparent;
   border: none;
-  color: #b5b5b5;
+  color: var(--color-text-muted);
   font-size: 12px;
   cursor: pointer;
   text-transform: uppercase;
@@ -214,14 +214,14 @@
 }
 
 .showAllButton:hover {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .filterForm {
-  padding: 18px 18px 18px;
+  padding: var(--spacing-6) var(--spacing-6) var(--spacing-6);
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: var(--spacing-3);
 }
 
 .filterRows {
@@ -235,7 +235,7 @@
 .filterRow {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: var(--spacing-3);
   padding: 0;
 }
 
@@ -246,7 +246,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 6px;
+  gap: var(--spacing-2);
 }
 
 .dateRangeGroup {
@@ -261,11 +261,11 @@
 
 .dateRangeCalendar :global(.MuiPickersCalendarHeader-root),
 .dateRangeCalendar :global(.MuiDayCalendar-header) {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .dateRangeCalendar :global(.MuiPickersDay-root) {
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .rangeDay {
@@ -273,19 +273,19 @@
 }
 
 .rangeDayInRange {
-  background: #2a2a2d !important;
-  color: #fff !important;
+  background: var(--color-bg-elevated-alt) !important;
+  color: var(--color-text-primary) !important;
 }
 
 .rangeDayPreview {
-  background: rgba(125, 41, 35, 0.18) !important;
-  color: #fff !important;
+  background: var(--color-accent-overlay) !important;
+  color: var(--color-text-primary) !important;
 }
 
 .rangeDayStart,
 .rangeDayEnd {
-  background: #7d2923 !important;
-  color: #fff !important;
+  background: var(--color-accent-primary-dark) !important;
+  color: var(--color-text-primary) !important;
   border-radius: 999px !important;
 }
 
@@ -296,45 +296,45 @@
 .rangeDayHasEvents::after {
   content: '';
   position: absolute;
-  bottom: 3px;
+  bottom: var(--spacing-1);
   left: 50%;
   transform: translateX(-50%);
-  width: 3px;
-  height: 3px;
+  width: var(--spacing-1);
+  height: var(--spacing-1);
   border-radius: 50%;
-  background-color: #e94e1b;
+  background-color: var(--color-accent-secondary);
   opacity: 0.8;
 }
 
 .chipSection {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: var(--spacing-6);
   flex: 0 1 auto;
   align-items: flex-start;
 }
 
 .formGroup small {
   display: block;
-  margin-top: 3px;
+  margin-top: var(--spacing-1);
   font-size: 11px;
-  color: #a0a0a0;
+  color: var(--color-text-subtle);
 }
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .filterContainer {
-    margin-bottom: 18px;
+    margin-bottom: var(--spacing-6);
     border-radius: 0;
   }
 
   .filterHeader {
-    padding: 9px 18px;
+    padding: var(--spacing-3) var(--spacing-6);
     border-radius: 0;
   }
 
   .filterForm {
-    padding: 18px;
+    padding: var(--spacing-6);
   }
 
   .formGroup,

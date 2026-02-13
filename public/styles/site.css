@@ -83,7 +83,7 @@ body,
   margin: 0;
   padding: 0;
   font-family: Tahoma, Arial, Helvetica, Sans-Serif;
-  font-size: 15px;
+  font-size: var(--spacing-5);
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--page-bg);
@@ -115,8 +115,8 @@ a:hover {
   background-position: bottom right;
   border-bottom: 1px solid var(--panel-border);
   position: relative;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: var(--spacing-5);
+  border-bottom-right-radius: var(--spacing-5);
 }
 
 #content {
