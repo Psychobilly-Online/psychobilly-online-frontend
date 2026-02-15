@@ -1,9 +1,8 @@
 # Psychobilly Online - Frontend
 
-Modern Next.js 16 frontend for Psychobilly Online community.
+Modern Next.js 16 frontend for the Psychobilly Online community platform.
 
-> **📚 See [Root README](../README.md)** for complete project overview and architecture  
-> **🗺️ See [ROADMAP](../ROADMAP.md)** for project timeline and phases
+**Live Site:** [app.psychobilly-online.de](https://app.psychobilly-online.de)
 
 ## 🚀 Quick Start
 
@@ -19,6 +18,7 @@ npm install
 
 # Create environment file
 cp .env.example .env.local
+# Edit .env.local with your local API endpoints
 
 # Start development server
 npm run dev
@@ -34,66 +34,22 @@ Open [http://localhost:3000](http://localhost:3000)
 - **Styling:** CSS Modules + Design System (CSS variables)
 - **Language:** TypeScript
 - **Testing:** Vitest + React Testing Library
-- **API:** REST (connects to psychobilly-online-api)
+- **Deployment:** Vercel
 
-## 📁 Project Structure
+## 🌐 Architecture
 
-```
-src/
-├── app/
-│   ├── api/                    # API routes (Next.js backend)
-│   │   ├── categories/         # Event categories endpoint
-│   │   ├── cities/             # Cities endpoint
-│   │   ├── countries/          # Countries endpoints
-│   │   └── events/             # Events endpoints
-│   ├── events/                 # Events listing page
-│   │   ├── page.tsx            # Events list with infinite scroll
-│   │   └── page.module.css     # Page-specific styles
-│   ├── layout.tsx              # Root layout with TopBar
-│   ├── page.tsx                # Homepage (Startpage)
-│   └── globals.css             # Design system variables
-├── components/
-│   ├── common/                 # Reusable UI components
-│   │   ├── IconButton.tsx      # Custom icon button (3 sizes, 3 variants)
-│   │   ├── SearchChips.tsx     # Search term chips
-│   │   └── __tests__/          # Component tests
-│   ├── events/                 # Event-related components
-│   │   ├── EventCard.tsx       # Event display card
-│   │   ├── EventFilters.tsx    # Advanced filter form
-│   │   ├── EventFilters*.tsx   # Filter sub-components
-│   │   └── __tests__/          # Component tests
-│   ├── layout/                 # Layout components
-│   │   ├── TopBar.tsx          # Top navigation bar
-│   │   ├── ClientLayout.tsx    # Client-side layout wrapper
-│   │   └── __tests__/          # Component tests
-│   └── pages/                  # Page components
-│       └── Startpage.tsx       # Homepage content
-├── contexts/
-│   └── SearchContext.tsx       # Global search state management
-├── hooks/
-│   ├── useEvents.ts            # Events data fetching hook
-│   └── useInfiniteScroll.ts    # Infinite scroll logic
-├── lib/
-│   ├── api-client.ts           # API client with error handling
-│   └── date-utils.ts           # Date formatting utilities
-├── constants/
-│   └── layout.ts               # Layout constants (TOP_BAR_HEIGHT)
-├── types/
-│   └── index.ts                # TypeScript interfaces
-└── test/
-    └── setup.ts                # Vitest test configuration
-```
+This frontend connects to:
 
-## 🌐 API Integration
+- **REST API:** `https://psychobilly-online.de/api/v1/` (PHP backend)
+- **Image Service:** `https://psychobilly-online.de/images/`
+- **Forum:** `https://www.psychobilly-online.de/community` (phpBB)
 
-The frontend communicates with:
-
-- **API:** `https://psychobilly-online.de/api/v1/`
-- **Images:** `https://psychobilly-online.de/images/`
-
-## 🔐 Authentication
-
-JWT-based authentication with the main API. Tokens are stored and sent with protected requests.
+**Key Patterns:**
+- BFF (Backend for Frontend) API routes in `/app/api`
+- CSS Modules for component styling
+- Design system with CSS custom properties
+- Infinite scroll for event listings
+- Context API for search state management
 
 ## 📦 Available Scripts
 
@@ -140,18 +96,76 @@ Required environment variables (see `.env.example`):
 
 ## 🎨 Design System
 
-### CSS Variables (globals.css)
+The project uses a comprehensive CSS variable system for consistent theming:
 
-- **Spacing Scale:** 3px base (`--spacing-1` through `--spacing-15`)
-- **Color Palette:** 20+ semantic variables
-  - Backgrounds: `--color-bg-*`
-  - Borders: `--color-border-*`
-  - Text: `--color-text-*`
-  - Accents: `--color-accent-*`
-- **Shadows:** `--shadow-sm`, `--shadow-md`, `--shadow-lg`
+- **Spacing Scale:** 3px base unit (`--spacing-1` to `--spacing-15`)
+- **Color Palette:** Semantic color variables for backgrounds, borders, text, and accents
+- **Typography:** Standardized font sizes and weights
+- **Shadows:** Three levels (sm, md, lg)
+- **Breakpoints:** Mobile (<768px), Tablet (768-991px), Desktop (≥992px)
 
-### Responsive Breakpoints
+**Location:** `src/app/globals.css`
 
-- Mobile: < 768px
-- Tablet: 768px - 991px (48em)
-- Desktop: ≥ 992px (64em, max 1200px)
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
+1. **Fork the repository**
+2. **Create a feature branch:** `git checkout -b feature/your-feature`
+3. **Make your changes** (follow existing code style)
+4. **Write/update tests** for your changes
+5. **Run tests:** `npm run test:run`
+6. **Build:** `npm run build` (ensure no errors)
+7. **Commit:** Use clear, descriptive commit messages
+8. **Push and open a Pull Request**
+
+**Code Style:**
+- Use TypeScript for type safety
+- CSS Modules for component styling
+- Design system variables instead of hardcoded values
+- Test new components and hooks
+- Keep components focused and reusable
+
+## 📄 License
+
+Proprietary - © 2026 Psychobilly Online
+
+---
+
+**Questions?** Open an issue or contact: info@psychobilly-online.dene.de](https://app.psychobilly-online.de) (Vercel)
+
+Auto-deploys from `main` branch. Preview deployments for all pull requests.
+
+## 📝 Environment Variables
+
+Create `.env.local` with these variables (see `.env.example`):
+
+```env
+NEXT_PUBLIC_LEGACY_URL=https://www.psychobilly-online.de
+NEXT_PUBLIC_API_URL=https://psychobilly-online.de/api/v1
+NEXT_PUBLIC_IMAGE_URL=https://psychobilly-online.de/images
+NEXT_PUBLIC_SITE_NAME=Psychobilly Online
+NEXT_PUBLIC_SITE_URL=https://app.psychobilly-online.de
+```
+
+## 🎯 Current Features
+
+**✅ Implemented:**
+- Homepage with project information
+- Events listing with infinite scroll
+- Advanced filtering (country, city, date, category, genre, status, search)
+- Field-specific search (headline, bands, venue, city, description)
+- Top navigation bar
+- Responsive design (mobile-first)
+- CSS design system with scoped modules
+
+**🔨 In Progress:**
+- Event details page
+- User authentication
+
+**📋 Planned:**
+- User dashboards and profiles
+- Event creation/editing
+- Band and venue pages
+- Photo galleries
+- Reviews and comments
