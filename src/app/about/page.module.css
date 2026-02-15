@@ -1,0 +1,245 @@
+.content {
+  background: var(--content-bg);
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--spacing-3) 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.bigBox {
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  border-radius: var(--spacing-4);
+  box-shadow: var(--shadow);
+  margin: 0 0 var(--spacing-7) 0;
+}
+
+.bigBoxContent {
+  padding: var(--spacing-8);
+}
+
+.bigBox h1 {
+  font-size: var(--spacing-8);
+  letter-spacing: 0.06em;
+  margin: 0 0 var(--spacing-6) 0;
+  text-transform: uppercase;
+  color: var(--accent-color);
+}
+
+.bigBox h2 {
+  font-size: var(--spacing-6);
+  margin: var(--spacing-8) 0 var(--spacing-4) 0;
+  color: var(--accent-color);
+  border-bottom: 2px solid var(--panel-border);
+  padding-bottom: var(--spacing-2);
+}
+
+.bigBox h3 {
+  font-size: var(--spacing-5);
+  margin: var(--spacing-4) 0 var(--spacing-3) 0;
+  color: var(--text-primary);
+}
+
+.bigBox p {
+  margin: 0 0 var(--spacing-4) 0;
+  line-height: 1.6;
+}
+
+.bigBox ul {
+  margin: var(--spacing-4) 0;
+  padding-left: var(--spacing-6);
+}
+
+.bigBox li {
+  margin: var(--spacing-3) 0;
+  line-height: 1.6;
+}
+
+.manifesto {
+  background: var(--content-bg);
+  border-left: 4px solid var(--accent-color);
+  padding: var(--spacing-5);
+  margin: var(--spacing-6) 0;
+  font-size: 1.1em;
+  line-height: 1.8;
+}
+
+.techStack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-6);
+  margin: var(--spacing-6) 0;
+}
+
+.techItem {
+  background: var(--content-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--spacing-3);
+  padding: var(--spacing-5);
+}
+
+.techItem h3 {
+  margin-top: 0;
+  color: var(--accent-color);
+}
+
+.techItem ul {
+  margin: var(--spacing-4) 0 0 0;
+  padding-left: var(--spacing-5);
+}
+
+.dataList {
+  background: var(--content-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--spacing-3);
+  padding: var(--spacing-5);
+  margin: var(--spacing-5) 0;
+}
+
+.note {
+  background: var(--content-bg);
+  border-left: 3px solid var(--accent-color);
+  padding: var(--spacing-4);
+  margin: var(--spacing-4) 0;
+  font-size: 0.95em;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.involvement {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-5);
+  margin: var(--spacing-6) 0;
+}
+
+.involveItem {
+  background: var(--content-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--spacing-3);
+  padding: var(--spacing-5);
+}
+
+.involveItem h3 {
+  margin-top: 0;
+  font-size: var(--spacing-5);
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-4);
+  margin: var(--spacing-5) 0;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  background: var(--content-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--spacing-3);
+  padding: var(--spacing-4);
+}
+
+.statusDone {
+  font-size: 1.5em;
+  flex-shrink: 0;
+}
+
+.statusProgress {
+  font-size: 1.5em;
+  flex-shrink: 0;
+}
+
+.statusPlanned {
+  font-size: 1.5em;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.link {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom-color 0.2s ease;
+}
+
+.link:hover {
+  border-bottom-color: var(--accent-color);
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-5) 0;
+}
+
+.linkList li {
+  margin: var(--spacing-3) 0;
+  padding: var(--spacing-3);
+  background: var(--content-bg);
+  border-left: 3px solid var(--accent-color);
+  border-radius: var(--spacing-2);
+}
+
+.footer {
+  margin-top: var(--spacing-8);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--panel-border);
+  font-size: 1.1em;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .techStack {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .involvement {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .statusGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 992px) {
+  .statusGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .bigBoxContent {
+    padding: var(--spacing-6);
+  }
+
+  .bigBox {
+    border-radius: 0;
+  }
+
+  .bigBox h1 {
+    font-size: var(--spacing-7);
+  }
+
+  .bigBox h2 {
+    font-size: var(--spacing-5);
+  }
+
+  .manifesto {
+    padding: var(--spacing-4);
+    font-size: 1em;
+  }
+}

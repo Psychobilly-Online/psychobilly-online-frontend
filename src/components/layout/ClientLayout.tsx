@@ -17,8 +17,9 @@ function TopBarWrapper() {
   };
 
   const isHomePage = pathname === '/';
+  const isAboutPage = pathname === '/about';
 
-  return <TopBar searchContext={getSearchContext()} hide={isHomePage} />;
+  return <TopBar searchContext={getSearchContext()} hide={isHomePage || isAboutPage} />;
 }
 
 interface ClientLayoutProps {
