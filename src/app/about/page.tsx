@@ -19,8 +19,8 @@ export default function AboutPage() {
             <p>
               Psychobilly Online has always been <strong>from fans, for fans</strong>. We&apos;re
               not here to monetize your passion, harvest your data, or manipulate what you see with
-              algorithms. This is a labor of love — a community space built on the principle that
-              real connections matter more than engagement metrics.
+              algorithms. This is a labor of love — a community space built on the principle that real
+              connections matter more than engagement metrics.
             </p>
 
             <p className={styles.manifesto}>
@@ -32,7 +32,7 @@ export default function AboutPage() {
               <br />
               <strong>No algorithmic manipulation.</strong>
               <br />
-              <em>Just real fans, real stories, and real psychobilly.</em>
+              <em>Just real people, real stories, and real psychobilly.</em>
             </p>
 
             <h2>Technical Infrastructure</h2>
@@ -99,7 +99,7 @@ export default function AboutPage() {
                     <strong>600,000+ posts migrated</strong> - More coming
                   </li>
                   <li>
-                    <strong>Private (for now)</strong> - Opens Q4 2026
+                    <strong>Currently closed for new registrations</strong> - Re-opening Q4 2026
                   </li>
                   <li>
                     <strong>3,500 user accounts</strong> - Ready for reactivation
@@ -118,23 +118,23 @@ export default function AboutPage() {
                 <strong>~2,500 venues</strong> worldwide in the database
               </li>
               <li>
-                <strong>~2,400 bands</strong> (names from events; detailed profiles in development)
+                <strong>~2,400 bands</strong> with names extracted from events (detailed profiles coming)
               </li>
               <li>
-                <strong>Events from 2009-2019</strong> currently available (expanding to 1979+ as we
+                <strong>~3,000 events from 2009-2019</strong> currently available (expanding to 1979+ as we
                 grow)
               </li>
               <li>
-                <strong>3,500 user accounts</strong> preserved and ready for reactivation
+                <strong>~3,500 user accounts</strong> preserved and ready for reactivation
               </li>
               <li>
-                <strong>600,000 forum posts</strong> already migrated (more on the way)
+                <strong>~600,000 forum posts</strong> already migrated
               </li>
             </ul>
             <p className={styles.note}>
               <em>
                 These numbers reflect our starting point. The vision is to build a comprehensive
-                archive covering 1979 to present, enriched with community contributions, photos,
+                archive covering the early days to present, enriched with community contributions, photos,
                 reviews, and memories.
               </em>
             </p>
@@ -162,17 +162,16 @@ export default function AboutPage() {
               <div className={styles.involveItem}>
                 <h3>📝 Content Contributors</h3>
                 <p>
-                  Once the site launches, help enrich our database: add missing events, upload
-                  photos from gigs, write reviews, or maintain band pages as a
-                  &quot;godparent&quot;.
+                  Once the site launches, help enrich our database: add missing events, upload photos
+                  from gigs, write reviews, or maintain band pages as a &quot;godparent&quot;.
                 </p>
               </div>
 
               <div className={styles.involveItem}>
                 <h3>💡 Idea Pitchers</h3>
                 <p>
-                  Have suggestions for features or improvements? Open an issue on GitHub or reach
-                  out via email.
+                  Have suggestions for features or improvements? Open an issue on GitHub or reach out
+                  via email.
                 </p>
               </div>
 
@@ -244,7 +243,10 @@ export default function AboutPage() {
               </li>
               <li>
                 <strong>Forum:</strong>{' '}
-                <a href={`${process.env.NEXT_PUBLIC_LEGACY_URL}/community`} className={styles.link}>
+                <a
+                  href={`${process.env.NEXT_PUBLIC_LEGACY_URL}/community`}
+                  className={styles.link}
+                >
                   community.psychobilly-online.de
                 </a>{' '}
                 (private, existing users only)

@@ -7,16 +7,14 @@ export function Startpage() {
         <div className={styles.bigBox}>
           <div className={styles.bigBoxContent}>
             <h1>Psychobilly Online: The Relaunch</h1>
-            <p className={styles.tagline}>
-              <strong>From fans. For fans. Forever independent.</strong>
-            </p>
 
-            <h2>A Fresh Start.</h2>
+            <h2>A Fresh Start</h2>
             <p>
-              Since the late 1990s, Psychobilly Online has been a cornerstone of the global
-              psychobilly community. After years of technical debt and aging infrastructure,
-              we&apos;re rebuilding from the ground up: modernizing the technology while preserving
-              the community spirit that makes this scene special.
+              In the late 1990s and early 2000s, Psychobilly Online has been a cornerstone of the global
+              psychobilly community. After several quiet years — battling technical debt, aging
+              infrastructure, and the pull of corporate social media — we&apos;re reclaiming our
+              ground. We&apos;re rebuilding from scratch: modernizing the technology while
+              preserving the independent, community-driven spirit that makes this scene special.
             </p>
 
             <h2>Current Development Status</h2>
@@ -30,7 +28,7 @@ export function Startpage() {
             <ul className={styles.featureList}>
               <li>
                 <strong>Comprehensive Event Database</strong> - Our goal is to document psychobilly
-                history from 1979 to today, with powerful search and filtering
+                history from the early days to today, with powerful search and filtering
               </li>
               <li>
                 <strong>Band Database</strong> - Detailed band profiles that can be claimed by bands
@@ -50,7 +48,7 @@ export function Startpage() {
               </li>
               <li>
                 <strong>Community-Driven</strong> - No ads, no algorithms, no corporate manipulation
-                — just real fans
+                — just real people
               </li>
             </ul>
 
@@ -69,13 +67,14 @@ export function Startpage() {
 
             <h2>About the Forum</h2>
             <p>
-              The{' '}
+              Our{' '}
               <a href={`${process.env.NEXT_PUBLIC_LEGACY_URL}/community`} className={styles.link}>
                 forum
               </a>{' '}
-              has been running privately for the past 5 years. With{' '}
-              <strong>600,000 posts already migrated</strong> and more on the way, the forum will
-              remain the heart of the community.
+              has been running privately for the past 5 years following a necessary platform
+              migration. With <strong>600,000 posts already migrated</strong> and more on the way,
+              it remains the beating heart of our community — though the beat has slowed down a bit.
+              Help us get it pumping again!
             </p>
             <p>
               <strong>For existing users:</strong> Your accounts are preserved and will work on the
@@ -105,8 +104,7 @@ export function Startpage() {
 
             <p className={styles.signature}>
               <em>
-                Psychobilly Online - No corporate bullshit. No fake profiles. No data mining. Just
-                real fans.
+                Psychobilly Online - No corporate bullshit. No fake profiles. No data mining. Forever independent.
               </em>
             </p>
           </div>
