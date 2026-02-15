@@ -10,10 +10,10 @@ export function Startpage() {
 
             <h2>A Fresh Start</h2>
             <p>
-              In the late 1990s and early 2000s, Psychobilly Online has been a cornerstone of the global
-              psychobilly community. After several quiet years — battling technical debt, aging
-              infrastructure, and the pull of corporate social media — we&apos;re reclaiming our
-              ground. We&apos;re rebuilding from scratch: modernizing the technology while
+              In the late 1990s and early 2000s, Psychobilly Online has been a cornerstone of the
+              global psychobilly community. After several quiet years — battling technical debt,
+              aging infrastructure, and the pull of corporate social media — we&apos;re reclaiming
+              our ground. We&apos;re rebuilding from scratch: modernizing the technology while
               preserving the independent, community-driven spirit that makes this scene special.
             </p>
 
@@ -104,7 +104,8 @@ export function Startpage() {
 
             <p className={styles.signature}>
               <em>
-                Psychobilly Online - No corporate bullshit. No fake profiles. No data mining. Forever independent.
+                Psychobilly Online - No corporate bullshit. No fake profiles. No data mining.
+                Forever independent.
               </em>
             </p>
           </div>
