@@ -49,19 +49,22 @@ export function Startpage() {
                 memories from those who were there
               </li>
               <li>
-                <strong>Community-Driven</strong> - No ads, no algorithms, no corporate
-                manipulation — just real fans
+                <strong>Community-Driven</strong> - No ads, no algorithms, no corporate manipulation
+                — just real fans
               </li>
             </ul>
 
             <h2>Current Database Status</h2>
             <p>
               We&apos;re starting with our existing data and expanding from there:
-              <br /><strong>~2,500 venues</strong> worldwide
-              <br /><strong>~2,400 bands</strong> (names extracted from events, detailed profiles
-              coming)
-              <br /><strong>~3,000 Events from 2009-2019</strong> (expanding to cover 1979+ as we grow)
-              <br /><strong>~3,500 user accounts</strong> ready for reactivation
+              <br />
+              <strong>~2,500 venues</strong> worldwide
+              <br />
+              <strong>~2,400 bands</strong> (names extracted from events, detailed profiles coming)
+              <br />
+              <strong>~3,000 Events from 2009-2019</strong> (expanding to cover 1979+ as we grow)
+              <br />
+              <strong>~3,500 user accounts</strong> ready for reactivation
             </p>
 
             <h2>About the Forum</h2>
@@ -71,8 +74,8 @@ export function Startpage() {
                 forum
               </a>{' '}
               has been running privately for the past 5 years. With{' '}
-              <strong>600,000 posts already migrated</strong> and more on the way, the forum will remain
-              the heart of the community.
+              <strong>600,000 posts already migrated</strong> and more on the way, the forum will
+              remain the heart of the community.
             </p>
             <p>
               <strong>For existing users:</strong> Your accounts are preserved and will work on the
@@ -102,7 +105,8 @@ export function Startpage() {
 
             <p className={styles.signature}>
               <em>
-                Psychobilly Online - No corporate bullshit. No fake profiles. No data mining. Just real fans.
+                Psychobilly Online - No corporate bullshit. No fake profiles. No data mining. Just
+                real fans.
               </em>
             </p>
           </div>
