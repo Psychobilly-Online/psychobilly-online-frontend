@@ -45,6 +45,7 @@ This frontend connects to:
 - **Forum:** `https://www.psychobilly-online.de/community` (phpBB)
 
 **Key Patterns:**
+
 - BFF (Backend for Frontend) API routes in `/app/api`
 - CSS Modules for component styling
 - Design system with CSS custom properties
@@ -120,6 +121,7 @@ We welcome contributions! Here's how to get started:
 8. **Push and open a Pull Request**
 
 **Code Style:**
+
 - Use TypeScript for type safety
 - CSS Modules for component styling
 - Design system variables instead of hardcoded values
@@ -151,6 +153,7 @@ NEXT_PUBLIC_SITE_URL=https://app.psychobilly-online.de
 ## 🎯 Current Features
 
 **✅ Implemented:**
+
 - Homepage with project information
 - Events listing with infinite scroll
 - Advanced filtering (country, city, date, category, genre, status, search)
@@ -160,10 +163,12 @@ NEXT_PUBLIC_SITE_URL=https://app.psychobilly-online.de
 - CSS design system with scoped modules
 
 **🔨 In Progress:**
+
 - Event details page
 - User authentication
 
 **📋 Planned:**
+
 - User dashboards and profiles
 - Event creation/editing
 - Band and venue pages
