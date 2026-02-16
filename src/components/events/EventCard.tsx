@@ -3,6 +3,7 @@
 import { Event } from '@/types';
 import { apiClient } from '@/lib/api-client';
 import { parseDate } from '@/lib/date-utils';
+import Link from 'next/link';
 import styles from './EventCard.module.css';
 
 interface EventCardProps {
@@ -15,6 +16,11 @@ interface EventCardProps {
  * Displays event information in a card layout
  */
 export function EventCard({ event, categoryName }: EventCardProps) {
+  const handleClick = () => {
+    // Save scroll position when navigating away
+    sessionStorage.setItem('eventsScrollPosition', window.scrollY.toString());
+  };
+
   // Helper to decode HTML entities
   const decodeHtml = (html: string | null | undefined): string => {
     if (!html) return '';
@@ -62,106 +68,109 @@ export function EventCard({ event, categoryName }: EventCardProps) {
   const getYear = (date: Date) => date.getFullYear();
 
   return (
-    <div className={styles.eventCard}>
-      {/* Date Badge */}
-      <div className={styles.dateBadge}>
-        {isMultiMonth && endDate ? (
-          <>
-            <div className={styles.dateRange}>
-              <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
-              <div className={styles.dateRangeSeparator}>-</div>
-              <div className={styles.dateRangeEnd}>{getDay(endDate)}</div>
-            </div>
-            <div className={styles.dateMonthRange}>
-              <span className={styles.monthStart}>{getMonth(eventDate)}</span>
-              <span className={styles.monthSeparator}> </span>
-              <span className={styles.monthEnd}>{getMonth(endDate)}</span>
-            </div>
-            <div className={styles.dateYear}>
-              {getYear(eventDate) === getYear(endDate)
-                ? getYear(eventDate)
-                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate)).slice(-2)}`}
-            </div>
-          </>
-        ) : isMultiDay && endDate ? (
-          <>
-            <div className={styles.dateRange}>
-              <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
-              <div className={styles.dateRangeSeparator}>-</div>
-              <div className={styles.dateRangeEnd}>{getDay(endDate)}</div>
-            </div>
-            <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
-            <div className={styles.dateYear}>
-              {getYear(eventDate) === getYear(endDate)
-                ? getYear(eventDate)
-                : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate)).slice(-2)}`}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className={styles.dateDay}>{getDay(eventDate)}</div>
-            <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
-            <div className={styles.dateYear}>{getYear(eventDate)}</div>
-          </>
-        )}
-      </div>
-
-      <div className={styles.cardContent}>
-        {/* Event Details */}
-        <div className={styles.details}>
-          <h3 className={styles.headline}>{decodeHtml(event.headline)}</h3>
-
-          <div className={styles.meta}>
-            {event.venue && (event.venue.city || event.venue.name) && (
-              <div className={styles.metaItem}>
-                📍 {[event.venue.city, event.venue.name].filter(Boolean).join(', ')}
+    <Link href={`/events/${event.id}`} className={styles.eventCardLink} onClick={handleClick}>
+      <div className={styles.eventCard}>
+        {/* Date Badge */}
+        <div className={styles.dateBadge}>
+          {isMultiMonth && endDate ? (
+            <>
+              <div className={styles.dateRange}>
+                <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
+                <div className={styles.dateRangeSeparator}>-</div>
+                <div className={styles.dateRangeEnd}>{getDay(endDate)}</div>
               </div>
-            )}
-
-            {event.bands && <div className={styles.metaItem}>🎸 {decodeHtml(event.bands)}</div>}
-
-            {(categoryName || event.category_id) && (
-              <div className={styles.metaItem}>
-                🏷️ {categoryName || `Category ${event.category_id}`}
+              <div className={styles.dateMonthRange}>
+                <span className={styles.monthStart}>{getMonth(eventDate)}</span>
+                <span className={styles.monthSeparator}> </span>
+                <span className={styles.monthEnd}>{getMonth(endDate)}</span>
               </div>
-            )}
-          </div>
-
-          {event.text && (
-            <p className={styles.description}>
-              {(() => {
-                const decoded = decodeHtml(event.text);
-                return decoded.length > 150 ? `${decoded.substring(0, 150)}...` : decoded;
-              })()}
-            </p>
-          )}
-
-          {/* Links */}
-          {ensureProtocol(event.link) && (
-            <div className={styles.links}>
-              <a
-                href={ensureProtocol(event.link)!}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                ℹ️ More Info
-              </a>
-            </div>
+              <div className={styles.dateYear}>
+                {getYear(eventDate) === getYear(endDate)
+                  ? getYear(eventDate)
+                  : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate)).slice(-2)}`}
+              </div>
+            </>
+          ) : isMultiDay && endDate ? (
+            <>
+              <div className={styles.dateRange}>
+                <div className={styles.dateRangeStart}>{getDay(eventDate)}</div>
+                <div className={styles.dateRangeSeparator}>-</div>
+                <div className={styles.dateRangeEnd}>{getDay(endDate)}</div>
+              </div>
+              <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
+              <div className={styles.dateYear}>
+                {getYear(eventDate) === getYear(endDate)
+                  ? getYear(eventDate)
+                  : `${String(getYear(eventDate)).slice(-2)}/${String(getYear(endDate)).slice(-2)}`}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.dateDay}>{getDay(eventDate)}</div>
+              <div className={styles.dateMonth}>{getMonth(eventDate)}</div>
+              <div className={styles.dateYear}>{getYear(eventDate)}</div>
+            </>
           )}
         </div>
 
-        {/* Event Image */}
-        {event.image && (
-          <div className={styles.image}>
-            <img
-              src={apiClient.images.getUrl(event.image, 'thumb')}
-              alt={event.headline}
-              loading="lazy"
-            />
+        <div className={styles.cardContent}>
+          {/* Event Details */}
+          <div className={styles.details}>
+            <h3 className={styles.headline}>{decodeHtml(event.headline)}</h3>
+
+            <div className={styles.meta}>
+              {event.venue && (event.venue.city || event.venue.name) && (
+                <div className={styles.metaItem}>
+                  📍 {[event.venue.city, event.venue.name].filter(Boolean).join(', ')}
+                </div>
+              )}
+
+              {event.bands && <div className={styles.metaItem}>🎸 {decodeHtml(event.bands)}</div>}
+
+              {(categoryName || event.category_id) && (
+                <div className={styles.metaItem}>
+                  🏷️ {categoryName || `Category ${event.category_id}`}
+                </div>
+              )}
+            </div>
+
+            {event.text && (
+              <p className={styles.description}>
+                {(() => {
+                  const decoded = decodeHtml(event.text);
+                  return decoded.length > 150 ? `${decoded.substring(0, 150)}...` : decoded;
+                })()}
+              </p>
+            )}
+
+            {/* Links */}
+            {ensureProtocol(event.link) && (
+              <div className={styles.links}>
+                <a
+                  href={ensureProtocol(event.link)!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  ℹ️ More Info
+                </a>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Event Image */}
+          {event.image && (
+            <div className={styles.image}>
+              <img
+                src={apiClient.images.getUrl(event.image, 'thumb')}
+                alt={event.headline}
+                loading="lazy"
+              />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -16,6 +16,7 @@ import { isSameDay, isWithinInterval } from 'date-fns';
 import { IconButton } from '@/components/common/IconButton';
 import { SearchChips } from '@/components/common/SearchChips';
 import { useSearchContext } from '@/contexts/SearchContext';
+import { useMetadata } from '@/contexts/MetadataContext';
 import { EventFiltersCountries } from './EventFiltersCountries';
 import { EventFiltersDateRange } from './EventFiltersDateRange';
 import { EventFiltersCategories } from './EventFiltersCategories';
@@ -74,6 +75,7 @@ export function EventFilters({
   loading = false,
 }: EventFiltersProps) {
   const { filters: contextFilters, clearSearchTerms } = useSearchContext();
+  const { countries: metadataCountries, categories: metadataCategories } = useMetadata();
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
@@ -153,14 +155,31 @@ export function EventFilters({
   const [loadingRegion, setLoadingRegion] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const filterContainerRef = useRef<HTMLDivElement>(null);
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [filters, setFilters] = useState<FilterValues>({
     limit: 20,
     sort_by: 'date',
     sort_order: 'ASC',
     ...normalizedInitialFilters,
   });
+
+  // Sync local filters state when initialFilters prop changes (e.g., URL params change from reset/navigation)
+  useEffect(() => {
+    setFilters((currentFilters) => {
+      const newFilters = {
+        limit: 20,
+        sort_by: 'date',
+        sort_order: 'ASC',
+        ...normalizedInitialFilters,
+      };
+      // Only update if actually changed to avoid infinite loops
+      if (JSON.stringify(currentFilters) !== JSON.stringify(newFilters)) {
+        return newFilters;
+      }
+      return currentFilters;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialFilters)]);
+
   const settingsOpen = Boolean(settingsAnchor);
   const handleOpenSettings = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -231,20 +250,9 @@ export function EventFilters({
     parseDate(initialFilters.to_date) ?? null,
   ]);
 
-  // Fetch countries and categories on mount
-  useEffect(() => {
-    // Fetch countries
-    fetch('/api/countries')
-      .then((res) => res.json())
-      .then((data) => setCountries(data.data || []))
-      .catch((err) => console.error('Failed to load countries:', err));
-
-    // Fetch categories
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then((data) => setCategories(data.data || []))
-      .catch((err) => console.error('Failed to load categories:', err));
-  }, []);
+  // Use metadata from context instead of fetching
+  const countries = metadataCountries;
+  const categories = metadataCategories;
 
   const handleInputChange = (
     field: keyof FilterValues,
@@ -253,8 +261,6 @@ export function EventFilters({
     const newFilters = {
       ...filters,
       [field]: normalizeFilterValue(value),
-      // Preserve search term from context
-      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -269,7 +275,7 @@ export function EventFilters({
     setFilters(resetFilters);
     onFilterChange(resetFilters);
     setDateRange([null, null]);
-    clearSearchTerms(); // Clear search chips
+    // No need to call clearSearchTerms() - search is already excluded from resetFilters
   };
 
   const [startDate, endDate] = dateRange;
@@ -323,8 +329,6 @@ export function EventFilters({
       ...filters,
       from_date: start ? formatDate(start) : undefined,
       to_date: normalizedEnd ? formatDate(normalizedEnd) : undefined,
-      // Preserve search term from context
-      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);

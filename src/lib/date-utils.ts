@@ -58,3 +58,45 @@ export function formatDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+/**
+ * Formats event date(s) for display
+ * Handles single day and multi-day events
+ *
+ * @param startDate - Event start date (YYYY-MM-DD)
+ * @param endDate - Optional event end date (YYYY-MM-DD)
+ * @returns Formatted date string (e.g., "15 Jun 2026" or "15-17 Jun 2026")
+ */
+export function formatEventDate(startDate: string, endDate?: string): string {
+  const start = parseDate(startDate);
+  if (!start) return 'Invalid date';
+
+  const startDay = start.getDate();
+  const startMonth = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(start);
+  const startYear = start.getFullYear();
+
+  // Single day event
+  if (!endDate || endDate === startDate) {
+    return `${startDay} ${startMonth} ${startYear}`;
+  }
+
+  const end = parseDate(endDate);
+  if (!end) return `${startDay} ${startMonth} ${startYear}`;
+
+  const endDay = end.getDate();
+  const endMonth = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(end);
+  const endYear = end.getFullYear();
+
+  // Same month and year
+  if (start.getMonth() === end.getMonth() && startYear === endYear) {
+    return `${startDay}-${endDay} ${startMonth} ${startYear}`;
+  }
+
+  // Same year, different months
+  if (startYear === endYear) {
+    return `${startDay} ${startMonth} - ${endDay} ${endMonth} ${startYear}`;
+  }
+
+  // Different years
+  return `${startDay} ${startMonth} ${startYear} - ${endDay} ${endMonth} ${endYear}`;
+}
