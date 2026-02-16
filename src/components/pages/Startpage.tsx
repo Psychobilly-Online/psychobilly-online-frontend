@@ -19,9 +19,9 @@ export function Startpage() {
 
             <h2>Current Development Status</h2>
             <p>
-              We&apos;re in <strong>Phase 2 of active development</strong> (~50% complete), building
-              the foundation for a comprehensive psychobilly platform. The new frontend is taking
-              shape, and we&apos;re working on core features week by week.
+              We&apos;re building <strong>the foundation for a comprehensive psychobilly platform</strong>.
+              The new frontend is taking shape, and we&apos;re actively working on the event database,
+              band directory, and user features week by week.
             </p>
 
             <h2>The Vision: What We&apos;re Building</h2>
@@ -86,7 +86,6 @@ export function Startpage() {
 
             <h2>Get Involved</h2>
             <p>
-              This is <em>your</em> community. Want to help shape its future?{' '}
               <a href="/about" className={styles.link}>
                 Learn about the project
               </a>{' '}

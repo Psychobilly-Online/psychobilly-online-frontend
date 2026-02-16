@@ -31,8 +31,6 @@ export default function AboutPage() {
               <strong>No data mining or tracking.</strong>
               <br />
               <strong>No algorithmic manipulation.</strong>
-              <br />
-              <em>Just real people, real stories, and real psychobilly.</em>
             </p>
 
             <h2>Technical Infrastructure</h2>
@@ -188,9 +186,11 @@ export default function AboutPage() {
 
             <h2>Project Roadmap</h2>
             <p>
-              We&apos;re currently in <strong>Phase 2 of development</strong> (~50% complete).
-              Here&apos;s what&apos;s done and what&apos;s coming:
+              We&apos;re actively building the core platform. Our target for the initial launch with
+              full event and band database, historical archives, and community features is{' '}
+              <strong>Q4 2026</strong>.
             </p>
+            <p>Here&apos;s what&apos;s done and what&apos;s coming:</p>
 
             <div className={styles.statusGrid}>
               <div className={styles.statusItem}>
@@ -246,7 +246,7 @@ export default function AboutPage() {
               <li>
                 <strong>Forum:</strong>{' '}
                 <a href={`${process.env.NEXT_PUBLIC_LEGACY_URL}/community`} className={styles.link}>
-                  community.psychobilly-online.de
+                  psychobilly-online.de/community
                 </a>{' '}
                 (private, existing users only)
               </li>
