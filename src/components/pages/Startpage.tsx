@@ -19,9 +19,10 @@ export function Startpage() {
 
             <h2>Current Development Status</h2>
             <p>
-              We&apos;re building <strong>the foundation for a comprehensive psychobilly platform</strong>.
-              The new frontend is taking shape, and we&apos;re actively working on the event database,
-              band directory, and user features week by week.
+              We&apos;re building{' '}
+              <strong>the foundation for a comprehensive psychobilly platform</strong>. The new
+              frontend is taking shape, and we&apos;re actively working on the event database, band
+              directory, and user features week by week.
             </p>
 
             <h2>The Vision: What We&apos;re Building</h2>
