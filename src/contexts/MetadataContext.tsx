@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import { parseDate } from '@/lib/date-utils';
 
 interface Country {
   id: number;
@@ -62,13 +63,20 @@ export function MetadataProvider({ children }: MetadataProviderProps) {
 
   useEffect(() => {
     // Fetch all metadata in parallel once on mount
-    Promise.all([
+    // Using Promise.allSettled for graceful handling of partial failures
+    Promise.allSettled([
       fetch('/api/countries').then((res) => res.json()),
       fetch('/api/categories').then((res) => res.json()),
       fetch('/api/genres').then((res) => res.json()),
       fetch('/api/events?dates=true').then((res) => res.json()),
     ])
-      .then(([countriesData, categoriesData, genresData, datesData]) => {
+      .then((results) => {
+        const [countriesResult, categoriesResult, genresResult, datesResult] = results;
+        
+        const countriesData = countriesResult.status === 'fulfilled' ? countriesResult.value : { data: [] };
+        const categoriesData = categoriesResult.status === 'fulfilled' ? categoriesResult.value : { data: [] };
+        const genresData = genresResult.status === 'fulfilled' ? genresResult.value : { data: [] };
+        const datesData = datesResult.status === 'fulfilled' ? datesResult.value : { success: false };
         // Set countries
         setCountries(countriesData.data || []);
 
@@ -94,19 +102,23 @@ export function MetadataProvider({ children }: MetadataProviderProps) {
         });
         setGenresMap(genMap);
 
-        // Set event dates
+        // Set event dates using parseDate to avoid timezone issues
         if (datesData.success && datesData.data) {
-          const dates = datesData.data.map((dateStr: string) => {
-            const date = new Date(dateStr);
-            date.setHours(0, 0, 0, 0);
-            return date.getTime();
-          });
+          const dates = datesData.data
+            .map((dateStr: string) => {
+              const date = parseDate(dateStr);
+              if (!date) return null;
+              date.setHours(0, 0, 0, 0);
+              return date.getTime();
+            })
+            .filter((timestamp: number | null): timestamp is number => timestamp !== null);
           setEventDates(new Set(dates));
         }
 
         setLoading(false);
       })
       .catch((err) => {
+        // This shouldn't happen with allSettled, but handle just in case
         console.error('Failed to fetch metadata:', err);
         setError(err.message || 'Failed to load metadata');
         setLoading(false);

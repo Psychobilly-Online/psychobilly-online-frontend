@@ -69,7 +69,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
     (newFilters: FilterValues) => {
       // Mark that user has interacted with filters
       sessionStorage.setItem('eventsFiltersInteracted', 'true');
-      
+
       const params = new URLSearchParams();
 
       // Only add params that have values - omitting params effectively clears them
@@ -120,7 +120,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
     (term: string) => {
       // Mark that user has interacted with filters
       sessionStorage.setItem('eventsFiltersInteracted', 'true');
-      
+
       const currentSearch = searchParams.get('search');
       const currentTerms = currentSearch ? currentSearch.split(',') : [];
       const newTerms = currentTerms.filter((t) => t !== term);
@@ -142,7 +142,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
   const clearSearchTerms = useCallback(() => {
     // Mark that user has interacted with filters
     sessionStorage.setItem('eventsFiltersInteracted', 'true');
-    
+
     const params = new URLSearchParams(searchParams.toString());
     params.delete('search');
 

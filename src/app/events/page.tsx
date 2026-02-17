@@ -55,37 +55,37 @@ export default function EventsPage() {
   // Once user interacts with filters, never auto-apply defaults again
   useEffect(() => {
     if (genres.length === 0) return;
-    
+
     // Check if user has ever interacted with filters in this session
     const hasInteracted = sessionStorage.getItem('eventsFiltersInteracted');
     if (hasInteracted) return;
-    
+
     const hasGenreParam = searchParams.get('genre_id');
-    const hasAnyFilter = 
+    const hasAnyFilter =
       searchParams.get('search') ||
       searchParams.get('country_id') ||
       searchParams.get('category_id') ||
       searchParams.get('from_date') ||
       searchParams.get('to_date');
-    
+
     // Only apply defaults if there are no filters at all (true first visit)
     if (!hasGenreParam && !hasAnyFilter) {
       // Find IDs for Psychobilly and Rockabilly
-      const psychobillyGenre = genres.find(g => g.name.toLowerCase() === 'psychobilly');
-      const rockabillyGenre = genres.find(g => g.name.toLowerCase() === 'rockabilly');
-      
+      const psychobillyGenre = genres.find((g) => g.name.toLowerCase() === 'psychobilly');
+      const rockabillyGenre = genres.find((g) => g.name.toLowerCase() === 'rockabilly');
+
       const defaultGenreIds: string[] = [];
       if (psychobillyGenre) defaultGenreIds.push(String(psychobillyGenre.id));
       if (rockabillyGenre) defaultGenreIds.push(String(rockabillyGenre.id));
-      
+
       if (defaultGenreIds.length > 0) {
         // Mark that we've set defaults (counts as interaction)
         sessionStorage.setItem('eventsFiltersInteracted', 'true');
-        
+
         // Build URL with default genres
         const params = new URLSearchParams(searchParams.toString());
         params.set('genre_id', defaultGenreIds.join(','));
-        
+
         // Use replace to avoid adding to browser history
         router.replace(`/events?${params.toString()}`, { scroll: false });
       }
@@ -111,7 +111,7 @@ export default function EventsPage() {
   const setFilters = (newFilters: FilterValues) => {
     // Mark that user has interacted with filters
     sessionStorage.setItem('eventsFiltersInteracted', 'true');
-    
+
     const params = new URLSearchParams();
 
     if (newFilters.search) params.set('search', newFilters.search);
@@ -163,19 +163,11 @@ export default function EventsPage() {
     }
   }, [searchTerms]);
 
-  const {
-    events,
-    loading,
-    error,
-    pagination,
-    categoryCounts,
-    genreCounts,
-    loadMore,
-    hasMore,
-  } = useEvents({
-    infiniteScroll: true,
-    ...filters,
-  });
+  const { events, loading, error, pagination, categoryCounts, genreCounts, loadMore, hasMore } =
+    useEvents({
+      infiniteScroll: true,
+      ...filters,
+    });
   const [lastTotalCount, setLastTotalCount] = useState<number | undefined>(undefined);
 
   // Restore scroll position when events are loaded from cache

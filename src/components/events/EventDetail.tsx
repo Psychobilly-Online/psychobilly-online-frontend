@@ -4,6 +4,7 @@ import { Event } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { ensureProtocol } from '@/lib/stringUtils';
 import { useState } from 'react';
 import { formatEventDate } from '@/lib/date-utils';
 import { decodeHtmlEntities } from '@/lib/stringUtils';
@@ -86,17 +87,6 @@ export function EventDetail({ event }: EventDetailProps) {
 
   const bandsList = formatBands(event.bands);
 
-  // Helper to ensure link has protocol
-  const ensureProtocol = (url: string | null | undefined): string | undefined => {
-    if (!url) return undefined;
-    const trimmed = url.trim();
-    if (!trimmed) return undefined;
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-      return trimmed;
-    }
-    return `https://${trimmed}`;
-  };
-
   return (
     <div className={styles.eventDetail}>
       {/* Navigation */}
@@ -105,6 +95,7 @@ export function EventDetail({ event }: EventDetailProps) {
           ← Back to Events
         </button>
 
+        {/* TODO: Add aria-label="Breadcrumb" for better accessibility when multiple nav regions exist */}
         <nav className={styles.breadcrumbs}>
           <Link href="/">Home</Link>
           <span className={styles.separator}>/</span>
@@ -271,6 +262,7 @@ export function EventDetail({ event }: EventDetailProps) {
       </div>
 
       {/* Image Modal */}
+      {/* TODO: Enhance accessibility - add role="dialog", aria-modal, focus trap, and Escape key handler */}
       {imageModalOpen && largeImageUrl && (
         <div className={styles.imageModal} onClick={() => setImageModalOpen(false)}>
           <div className={styles.imageModalContent} onClick={(e) => e.stopPropagation()}>

@@ -242,6 +242,9 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         fetchEvents(targetBatch, false);
       }
     }
+    // NOTE: filters dependency is intentional - we stringify it internally for comparison (line 184)
+    // to detect actual value changes vs reference changes. This is the standard pattern for
+    // complex filter objects in this codebase.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, infiniteScroll]);
 

@@ -28,12 +28,12 @@ export function decodeHtmlEntities(html: string | null | undefined): string {
 /**
  * Ensures a URL has a protocol prefix
  * @param url - URL string
- * @returns URL with protocol or null if invalid
+ * @returns URL with protocol or undefined if invalid
  */
-export function ensureProtocol(url: string | null | undefined): string | null {
-  if (!url) return null;
+export function ensureProtocol(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
   const trimmed = url.trim();
-  if (!trimmed) return null;
+  if (!trimmed) return undefined;
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     return trimmed;
   }

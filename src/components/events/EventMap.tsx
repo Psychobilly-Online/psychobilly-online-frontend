@@ -46,9 +46,15 @@ export function EventMap({ latitude, longitude, venueName, zoom = 15 }: EventMap
       // Add marker for venue
       const marker = L.marker([latitude, longitude]).addTo(map);
 
-      // Add popup with venue name
+      // Add popup with venue name (using textContent to prevent XSS)
       if (venueName) {
-        marker.bindPopup(`<strong>${venueName}</strong>`).openPopup();
+        const popup = L.popup();
+        const div = document.createElement('div');
+        const strong = document.createElement('strong');
+        strong.textContent = venueName; // Safe: uses textContent instead of innerHTML
+        div.appendChild(strong);
+        popup.setContent(div);
+        marker.bindPopup(popup).openPopup();
       }
 
       mapInstanceRef.current = map;

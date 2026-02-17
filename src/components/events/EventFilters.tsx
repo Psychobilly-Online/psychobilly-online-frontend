@@ -79,9 +79,11 @@ export function EventFilters({
   loading = false,
 }: EventFiltersProps) {
   const { filters: contextFilters, clearSearchTerms } = useSearchContext();
-  const { countries: metadataCountries, categories: metadataCategories, genres: metadataGenres } =
-    useMetadata();
-    useMetadata();
+  const {
+    countries: metadataCountries,
+    categories: metadataCategories,
+    genres: metadataGenres,
+  } = useMetadata();
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
@@ -196,6 +198,8 @@ export function EventFilters({
       }
       return currentFilters;
     });
+    // NOTE: JSON.stringify in dependency is intentional - we need deep comparison of filter values
+    // not object reference. This is acceptable here as initialFilters changes infrequently.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(initialFilters)]);
 

@@ -3,6 +3,7 @@
 import { Event } from '@/types';
 import { apiClient } from '@/lib/api-client';
 import { parseDate } from '@/lib/date-utils';
+import { ensureProtocol } from '@/lib/stringUtils';
 import Link from 'next/link';
 import styles from './EventCard.module.css';
 
@@ -27,17 +28,6 @@ export function EventCard({ event, categoryName }: EventCardProps) {
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
     return txt.value;
-  };
-
-  // Helper to ensure link has protocol
-  const ensureProtocol = (url: string | null | undefined): string | null => {
-    if (!url) return null;
-    const trimmed = url.trim();
-    if (!trimmed) return null;
-    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-      return trimmed;
-    }
-    return `https://${trimmed}`;
   };
 
   const eventDate = parseDate(event.date_start);
@@ -157,7 +147,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
             {ensureProtocol(event.link) && (
               <div className={styles.links}>
                 <a
-                  href={ensureProtocol(event.link)!}
+                  href={ensureProtocol(event.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.link}

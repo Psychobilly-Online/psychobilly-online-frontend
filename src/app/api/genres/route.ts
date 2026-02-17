@@ -17,13 +17,13 @@ export async function GET() {
     }
 
     const apiData = await response.json();
-    
+
     // The API returns {genres: [...]} but we need {data: [...]}
     // Filter for active genres only (backend should already do this, but double-check)
-    const allGenres = (apiData.genres || []).filter((genre: any) => 
-      genre.active === undefined || genre.active === 1 || genre.active === true
+    const allGenres = (apiData.genres || []).filter(
+      (genre: any) => genre.active === undefined || genre.active === 1 || genre.active === true,
     );
-    
+
     // Extract all sub-genre names from all genres to exclude them
     const subGenreNames = new Set<string>();
     allGenres.forEach((genre: any) => {
@@ -31,16 +31,13 @@ export async function GET() {
         genre.sub_genres.forEach((subGenre: string) => subGenreNames.add(subGenre));
       }
     });
-    
+
     // Filter to only include main genres (not listed as sub-genres)
     const mainGenres = allGenres.filter((genre: any) => !subGenreNames.has(genre.name));
-    
+
     return NextResponse.json({ data: mainGenres });
   } catch (error: any) {
     console.error('Genres API Error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch genres' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: error.message || 'Failed to fetch genres' }, { status: 500 });
   }
 }

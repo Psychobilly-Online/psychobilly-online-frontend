@@ -33,6 +33,9 @@ export function formatVenueAddress(venue: VenueAddress): string[] {
   }
 
   // City, State, Zip - format depends on country
+  // NOTE: Multi-line format checks more country variations than inline format intentionally.
+  // Multi-line is used for detailed address display, inline for compact space-constrained views.
+  // The extra checks here handle legacy data inconsistencies in the database.
   const isUSA =
     venue.country_id === 'US' ||
     venue.country_id === 'USA' ||

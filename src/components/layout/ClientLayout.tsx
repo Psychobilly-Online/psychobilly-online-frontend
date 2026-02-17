@@ -28,6 +28,10 @@ interface ClientLayoutProps {
 }
 
 export function ClientLayout({ children }: ClientLayoutProps) {
+  // NOTE: Broad Suspense boundary is intentional architectural decision.
+  // SearchProvider uses useSearchParams() which requires Suspense in React 19.
+  // We accept showing full-page loading for simplicity rather than complex granular boundaries.
+  // This only triggers during initial SSR/hydration, not during client-side navigation.
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>}>
       <MetadataProvider>
