@@ -1,0 +1,150 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-4);
+}
+
+.modal {
+  background-color: var(--color-box-background);
+  border: 1px solid var(--color-box-border);
+  border-radius: 6px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-5);
+  border-bottom: 1px solid var(--color-box-border);
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  transition: background-color 0.15s ease;
+}
+
+.closeButton:hover {
+  background-color: var(--color-hover-background);
+  color: var(--color-text);
+}
+
+.form {
+  padding: var(--spacing-5);
+}
+
+.error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+  padding: var(--spacing-3);
+  border-radius: 3px;
+  margin-bottom: var(--spacing-4);
+  font-size: 14px;
+}
+
+.field {
+  margin-bottom: var(--spacing-4);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--spacing-2);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.input {
+  width: 100%;
+  padding: var(--spacing-3);
+  font-size: 14px;
+  border: 1px solid var(--color-box-border);
+  border-radius: 3px;
+  background-color: var(--color-input-background);
+  color: var(--color-text);
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-link);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  width: 100%;
+  padding: var(--spacing-3);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--color-link);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-link-hover);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.footer {
+  margin-top: var(--spacing-4);
+  text-align: center;
+}
+
+.link {
+  color: var(--color-link);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .modal {
+    max-width: calc(100% - var(--spacing-6));
+  }
+}

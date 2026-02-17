@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { TopBar } from '../TopBar';
 import { SearchProvider } from '@/contexts/SearchContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // Mock Next.js navigation hooks
 vi.mock('next/navigation', () => ({
@@ -15,9 +16,13 @@ vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/events'),
 }));
 
-// Wrapper component to provide SearchContext
+// Wrapper component to provide SearchContext and AuthContext
 const renderWithProvider = (ui: React.ReactElement) => {
-  return render(<SearchProvider>{ui}</SearchProvider>);
+  return render(
+    <AuthProvider>
+      <SearchProvider>{ui}</SearchProvider>
+    </AuthProvider>
+  );
 };
 
 describe('TopBar', () => {
@@ -118,7 +123,8 @@ describe('TopBar', () => {
 
     it('renders user profile button', () => {
       renderWithProvider(<TopBar />);
-      expect(screen.getByRole('button', { name: /account/i })).toBeInTheDocument();
+      // When not logged in, button shows "Login"
+      expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
     });
   });
 

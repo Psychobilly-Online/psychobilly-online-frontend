@@ -4,6 +4,8 @@ import cx from 'classnames';
 import { useState } from 'react';
 import { IconButton } from '@/components/common/IconButton';
 import { useSearchContext } from '@/contexts/SearchContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { LoginModal } from '@/components/auth/LoginModal';
 import styles from './TopBar.module.css';
 
 interface TopBarProps {
@@ -15,7 +17,10 @@ interface TopBarProps {
 
 export function TopBar({ searchContext = 'default', hide = false }: TopBarProps) {
   const { addSearchTerm } = useSearchContext();
+  const { user, isAuthenticated, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +29,19 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
       addSearchTerm(trimmedQuery);
       setSearchQuery(''); // Clear input after adding term
     }
+  };
+
+  const handleAccountClick = () => {
+    if (isAuthenticated) {
+      setShowUserMenu(!showUserMenu);
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
   };
 
   if (hide) {
@@ -110,22 +128,44 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
             }
           />
 
-          <IconButton
-            size="small"
-            ariaLabel="Account"
-            title="Account"
-            onClick={() => {
-              /* TODO: Implement account menu */
-            }}
-            icon={
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-            }
-          />
+          <div className={styles.userMenuContainer}>
+            <IconButton
+              size="small"
+              ariaLabel={isAuthenticated ? `Account: ${user?.username}` : 'Login'}
+              title={isAuthenticated ? user?.username : 'Login'}
+              onClick={handleAccountClick}
+              icon={
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              }
+            />
+
+            {isAuthenticated && showUserMenu && (
+              <div className={styles.userMenu}>
+                <div className={styles.userMenuHeader}>
+                  <div className={styles.username}>{user?.username}</div>
+                  <div className={styles.userEmail}>{user?.email}</div>
+                </div>
+                <div className={styles.userMenuDivider} />
+                <button className={styles.userMenuItem} onClick={() => setShowUserMenu(false)}>
+                  Profile
+                </button>
+                <button className={styles.userMenuItem} onClick={() => setShowUserMenu(false)}>
+                  Settings
+                </button>
+                <div className={styles.userMenuDivider} />
+                <button className={styles.userMenuItem} onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </div>
   );
 }
