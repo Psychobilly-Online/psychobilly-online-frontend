@@ -21,7 +21,7 @@ const renderWithProvider = (ui: React.ReactElement) => {
   return render(
     <AuthProvider>
       <SearchProvider>{ui}</SearchProvider>
-    </AuthProvider>
+    </AuthProvider>,
   );
 };
 
@@ -116,9 +116,9 @@ describe('TopBar', () => {
       expect(screen.getByRole('button', { name: /open menu/i })).toBeInTheDocument();
     });
 
-    it('renders notification button', () => {
+    it('does not render notification button when logged out', () => {
       renderWithProvider(<TopBar />);
-      expect(screen.getByRole('button', { name: /notification/i })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /notification/i })).not.toBeInTheDocument();
     });
 
     it('renders user profile button', () => {
