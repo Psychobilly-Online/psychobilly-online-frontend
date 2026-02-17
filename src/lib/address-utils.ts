@@ -84,7 +84,7 @@ export function formatVenueAddressInline(venue: VenueAddress): string {
     if (venue.city) cityState.push(venue.city);
     if (venue.state) cityState.push(venue.state);
     if (cityState.length > 0) parts.push(cityState.join(', '));
-  // country_id = ISO2 code (e.g., "US"), country = print_name (e.g., "United States")
+    // country_id = ISO2 code (e.g., "US"), country = print_name (e.g., "United States")
     if (venue.zip) parts.push(venue.zip);
   } else {
     if (venue.zip && venue.city) {

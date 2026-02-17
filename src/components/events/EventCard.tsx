@@ -3,7 +3,7 @@
 import { Event } from '@/types';
 import { apiClient } from '@/lib/api-client';
 import { parseDate } from '@/lib/date-utils';
-import { ensureProtocol, decodeHtmlEntities  } from '@/lib/stringUtils';
+import { ensureProtocol, decodeHtmlEntities } from '@/lib/stringUtils';
 import Link from 'next/link';
 import styles from './EventCard.module.css';
 
@@ -118,7 +118,9 @@ export function EventCard({ event, categoryName }: EventCardProps) {
                 </div>
               )}
 
-              {event.bands && <div className={styles.metaItem}>🎸 {decodeHtmlEntities(event.bands)}</div>}
+              {event.bands && (
+                <div className={styles.metaItem}>🎸 {decodeHtmlEntities(event.bands)}</div>
+              )}
 
               {(categoryName || event.category_id) && (
                 <div className={styles.metaItem}>

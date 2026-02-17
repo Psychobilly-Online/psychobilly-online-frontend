@@ -277,7 +277,12 @@ export function EventDetail({ event }: EventDetailProps) {
       {/* TODO: Enhance accessibility - add role="dialog", aria-modal, focus trap, and Escape key handler */}
       {/* Project is still in development and not accessible for the public. The modal concept is still being worked on! */}
       {imageModalOpen && largeImageUrl && (
-        <div className={styles.imageModal} onClick={() => setImageModalOpen(false)} role="dialog" aria-modal="true">
+        <div
+          className={styles.imageModal}
+          onClick={() => setImageModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
           <div className={styles.imageModalContent} onClick={(e) => e.stopPropagation()}>
             <button className={styles.closeModal} onClick={() => setImageModalOpen(false)}>
               ✕
