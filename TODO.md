@@ -142,11 +142,37 @@
 
 #### Next Frontend Tasks
 
-- [ ] **Loading state in EventFilters** 🔨 IN PROGRESS
+- [x] **Loading state in EventFilters** - COMPLETED ✅
   - [x] Add loading prop to EventFilters component
   - [x] Display spinner icon and "Loading events..." text
-  - [ ] Test loading state display
-  - Estimated: 1 hour
+  - [x] Show spinner during search refinement (not just initial load)
+  - [x] Test loading state display
+  - Completed: February 17, 2026
+
+- [x] **Genre Filtering System** - COMPLETED ✅
+  - [x] Add genre filtering to API (with active filter and counts)
+  - [x] Add genre filtering to frontend (with disabled states)
+  - [x] Pre-select Psychobilly & Rockabilly as defaults
+  - [x] Smart user interaction tracking (sessionStorage)
+  - [x] Create EventFiltersGenres component
+  - Completed: February 17, 2026
+
+- [x] **Filter UX Improvements** - COMPLETED ✅
+  - [x] Make all filter headlines clickable to toggle sections
+  - [x] Add accessibility attributes (role, tabIndex, keyboard handlers)
+  - [x] Replace blocking alert() with toast feedback
+  - [x] Add country flags to event cards
+  - Completed: February 17, 2026
+
+- [x] **Code Quality & Security** - COMPLETED ✅
+  - [x] Fix timezone parsing with parseDate utility
+  - [x] Fix XSS vulnerability in EventMap
+  - [x] Remove duplicate code (hooks, functions, CSS)
+  - [x] Improve error handling (Promise.allSettled)
+  - [x] Remove unused dependencies (react-leaflet)
+  - [x] Prevent infinite loops in genre defaults
+  - [x] Consistent USA detection logic
+  - Completed: February 17, 2026
 
 - [ ] **Event Detail Page** 🎯 NEXT UP
   - Individual event page with full details
