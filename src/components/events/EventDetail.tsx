@@ -4,6 +4,8 @@ import { Event } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { Dialog, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { ensureProtocol } from '@/lib/stringUtils';
 import { useState, useEffect } from 'react';
 import { formatEventDate } from '@/lib/date-utils';
@@ -274,23 +276,46 @@ export function EventDetail({ event }: EventDetailProps) {
       </div>
 
       {/* Image Modal */}
-      {/* TODO: Enhance accessibility - add role="dialog", aria-modal, focus trap, and Escape key handler */}
-      {/* Project is still in development and not accessible for the public. The modal concept is still being worked on! */}
-      {imageModalOpen && largeImageUrl && (
-        <div
-          className={styles.imageModal}
-          onClick={() => setImageModalOpen(false)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className={styles.imageModalContent} onClick={(e) => e.stopPropagation()}>
-            <button className={styles.closeModal} onClick={() => setImageModalOpen(false)}>
-              ✕
-            </button>
-            <img src={largeImageUrl} alt={decodeHtmlEntities(event.headline)} />
-          </div>
+      <Dialog
+        open={imageModalOpen && !!largeImageUrl}
+        onClose={() => setImageModalOpen(false)}
+        maxWidth={false}
+        slotProps={{
+          paper: {
+            sx: {
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+              overflow: 'visible',
+            },
+          },
+        }}
+        sx={{
+          '& .MuiBackdrop-root': {
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          },
+        }}
+      >
+        <div className={styles.imageModalContent}>
+          <IconButton
+            onClick={() => setImageModalOpen(false)}
+            className={styles.closeModal}
+            aria-label="Close image"
+            sx={{
+              position: 'absolute',
+              top: -48,
+              right: 0,
+              color: 'white',
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.3)',
+              },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          {largeImageUrl && <img src={largeImageUrl} alt={decodeHtmlEntities(event.headline)} />}
         </div>
-      )}
+      </Dialog>
     </div>
   );
 }

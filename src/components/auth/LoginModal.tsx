@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { Dialog, DialogTitle, DialogContent, IconButton, Alert } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './LoginModal.module.css';
 
@@ -42,30 +44,56 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     onClose();
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
-    <div className={styles.overlay} onClick={handleClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>Login</h2>
-          <button
-            className={styles.closeButton}
-            onClick={handleClose}
-            aria-label="Close"
-            type="button"
-          >
-            ×
-          </button>
-        </div>
+    <Dialog
+      open={isOpen}
+      onClose={handleClose}
+      maxWidth="sm"
+      fullWidth
+      slotProps={{
+        paper: {
+          sx: {
+            backgroundColor: 'var(--color-bg-primary)',
+            border: '1px solid var(--color-border-default)',
+            borderRadius: '12px',
+            maxWidth: '400px',
+          },
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          color: 'var(--color-text-primary)',
+          fontSize: '20px',
+          fontWeight: 600,
+          padding: 'var(--spacing-6) var(--spacing-6) var(--spacing-4)',
+        }}
+      >
+        Login
+        <IconButton
+          onClick={handleClose}
+          size="small"
+          aria-label="Close"
+          sx={{
+            color: 'var(--color-text-muted)',
+            '&:hover': {
+              backgroundColor: 'var(--color-bg-hover)',
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
+      <DialogContent sx={{ padding: '0 var(--spacing-6) var(--spacing-6)' }}>
         <form onSubmit={handleSubmit} className={styles.form}>
           {error && (
-            <div className={styles.error} role="alert">
+            <Alert severity="error" sx={{ mb: 2 }}>
               {error}
-            </div>
+            </Alert>
           )}
 
           <div className={styles.field}>
@@ -116,7 +144,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </a>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

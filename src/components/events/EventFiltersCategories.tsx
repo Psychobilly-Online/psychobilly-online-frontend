@@ -69,7 +69,7 @@ export function EventFiltersCategories({
           container={popoverContainer ?? undefined}
           marginThreshold={16}
           disablePortal
-          PaperProps={{ sx: popoverPaperSx }}
+          slotProps={{ paper: { sx: popoverPaperSx } }}
         >
           <div className={styles.countryPopover}>
             <div className={styles.popoverHeader}>

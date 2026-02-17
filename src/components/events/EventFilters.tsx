@@ -581,7 +581,7 @@ export function EventFilters({
           container={filterContainerRef.current ?? undefined}
           marginThreshold={16}
           disablePortal
-          PaperProps={{ sx: settingsPopoverSx }}
+          slotProps={{ paper: { sx: settingsPopoverSx } }}
         >
           <div className={styles.settingsPopover}>
             <div className={styles.popoverHeader}>
@@ -614,7 +614,6 @@ export function EventFilters({
                   onChange={(e) => handleInputChange('sort_by', e.target.value)}
                 >
                   <MenuItem value="date">Date</MenuItem>
-                  <MenuItem value="headline">Headline</MenuItem>
                   <MenuItem value="city">City</MenuItem>
                   <MenuItem value="category">Category</MenuItem>
                 </Select>
