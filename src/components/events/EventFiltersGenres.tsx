@@ -78,7 +78,18 @@ export function EventFiltersGenres({
         >
           <div className={styles.countryPopover}>
             <div className={styles.popoverHeader}>
-              <Typography className={styles.sectionTitle} onClick={onClose}>
+              <Typography
+                className={styles.sectionTitle}
+                onClick={onClose}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onClose();
+                  }
+                }}
+              >
                 Genres
               </Typography>
               <IconButton

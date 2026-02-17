@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { ensureProtocol } from '@/lib/stringUtils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatEventDate } from '@/lib/date-utils';
 import { decodeHtmlEntities } from '@/lib/stringUtils';
 import { formatVenueAddress } from '@/lib/address-utils';
@@ -28,6 +28,7 @@ interface EventDetailProps {
 
 export function EventDetail({ event }: EventDetailProps) {
   const router = useRouter();
+  const [shareSuccess, setShareSuccess] = useState(false);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const hasMultipleDays = event.days && event.days.length > 1;
 
@@ -52,9 +53,17 @@ export function EventDetail({ event }: EventDetailProps) {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      alert('Link copied to clipboard!');
+      setShareSuccess(true);
     });
   };
+
+  // Auto-hide share success message after 3 seconds
+  useEffect(() => {
+    if (shareSuccess) {
+      const timeout = setTimeout(() => setShareSuccess(false), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [shareSuccess]);
 
   // Construct image URL
   const imageUrl = event.image
@@ -115,9 +124,12 @@ export function EventDetail({ event }: EventDetailProps) {
           <div className={styles.rightColumn}>
             <div className={styles.header}>
               <h1 className={styles.headline}>{decodeHtmlEntities(event.headline)}</h1>
-              <button onClick={handleShare} className={styles.shareButton} title="Share event">
-                🔗 Share
-              </button>
+              <div className={styles.shareContainer}>
+                <button onClick={handleShare} className={styles.shareButton} title="Share event">
+                  🔗 Share
+                </button>
+                {shareSuccess && <span className={styles.shareSuccess}>✓ Copied!</span>}
+              </div>
             </div>
 
             {/* Category and Genres */}

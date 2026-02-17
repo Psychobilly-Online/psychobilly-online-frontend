@@ -55,6 +55,8 @@ export default function EventsPage() {
   // unless user has explicitly modified genre filters in this session
   useEffect(() => {
     if (genres.length === 0) return;
+    // Prevent infinite loop - only apply defaults once per component lifecycle
+    if (defaultGenresApplied.current) return;
 
     const hasGenreParam = searchParams.get('genre_id');
     const userModifiedGenres = sessionStorage.getItem('genresUserModified');
@@ -72,6 +74,7 @@ export default function EventsPage() {
       if (rockabillyGenre) defaultGenreIds.push(String(rockabillyGenre.id));
 
       if (defaultGenreIds.length > 0) {
+        defaultGenresApplied.current = true;
         // Build URL with default genres
         const params = new URLSearchParams(searchParams.toString());
         params.set('genre_id', defaultGenreIds.join(','));
@@ -91,6 +94,7 @@ export default function EventsPage() {
   const previousSearchTerms = useRef<string[]>([]);
   const isInitialMount = useRef(true);
   const scrollRestored = useRef(false);
+  const defaultGenresApplied = useRef(false);
 
   // Handle filter changes by updating URL
   // Note: Only add params that have values - omitting params effectively clears them from URL

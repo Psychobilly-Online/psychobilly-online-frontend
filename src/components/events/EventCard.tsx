@@ -112,6 +112,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
               {event.venue && (event.venue.city || event.venue.name) && (
                 <div className={styles.metaItem}>
                   {event.venue.country_id ? (
+                    // NOTE: country_id is validated ISO code from DB - safe for path construction
                     <img
                       src={`/images/flags/16x12/${event.venue.country_id.toLowerCase()}.png`}
                       alt={event.venue.country || ''}
