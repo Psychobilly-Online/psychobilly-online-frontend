@@ -3,7 +3,7 @@
 import { Event } from '@/types';
 import { apiClient } from '@/lib/api-client';
 import { parseDate } from '@/lib/date-utils';
-import { ensureProtocol } from '@/lib/stringUtils';
+import { ensureProtocol, decodeHtmlEntities  } from '@/lib/stringUtils';
 import Link from 'next/link';
 import styles from './EventCard.module.css';
 
@@ -20,14 +20,6 @@ export function EventCard({ event, categoryName }: EventCardProps) {
   const handleClick = () => {
     // Save scroll position when navigating away
     sessionStorage.setItem('eventsScrollPosition', window.scrollY.toString());
-  };
-
-  // Helper to decode HTML entities
-  const decodeHtml = (html: string | null | undefined): string => {
-    if (!html) return '';
-    const txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    return txt.value;
   };
 
   const eventDate = parseDate(event.date_start);
@@ -106,7 +98,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
         <div className={styles.cardContent}>
           {/* Event Details */}
           <div className={styles.details}>
-            <h3 className={styles.headline}>{decodeHtml(event.headline)}</h3>
+            <h3 className={styles.headline}>{decodeHtmlEntities(event.headline)}</h3>
 
             <div className={styles.meta}>
               {event.venue && (event.venue.city || event.venue.name) && (
@@ -126,7 +118,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
                 </div>
               )}
 
-              {event.bands && <div className={styles.metaItem}>🎸 {decodeHtml(event.bands)}</div>}
+              {event.bands && <div className={styles.metaItem}>🎸 {decodeHtmlEntities(event.bands)}</div>}
 
               {(categoryName || event.category_id) && (
                 <div className={styles.metaItem}>
@@ -138,7 +130,7 @@ export function EventCard({ event, categoryName }: EventCardProps) {
             {event.text && (
               <p className={styles.description}>
                 {(() => {
-                  const decoded = decodeHtml(event.text);
+                  const decoded = decodeHtmlEntities(event.text);
                   return decoded.length > 150 ? `${decoded.substring(0, 150)}...` : decoded;
                 })()}
               </p>
