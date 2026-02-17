@@ -51,25 +51,18 @@ export default function EventsPage() {
     return search ? search.split(',') : [];
   }, [searchParams]);
 
-  // Set default genres (Psychobilly & Rockabilly) only on true first visit
-  // Once user interacts with filters, never auto-apply defaults again
+  // Set default genres (Psychobilly & Rockabilly) when visiting the page
+  // unless user has explicitly modified genre filters in this session
   useEffect(() => {
     if (genres.length === 0) return;
 
-    // Check if user has ever interacted with filters in this session
-    const hasInteracted = sessionStorage.getItem('eventsFiltersInteracted');
-    if (hasInteracted) return;
-
     const hasGenreParam = searchParams.get('genre_id');
-    const hasAnyFilter =
-      searchParams.get('search') ||
-      searchParams.get('country_id') ||
-      searchParams.get('category_id') ||
-      searchParams.get('from_date') ||
-      searchParams.get('to_date');
+    const userModifiedGenres = sessionStorage.getItem('genresUserModified');
 
-    // Only apply defaults if there are no filters at all (true first visit)
-    if (!hasGenreParam && !hasAnyFilter) {
+    // Apply defaults only if:
+    // 1. No genre_id in URL (user hasn't set specific genres)
+    // 2. User hasn't explicitly modified genres in this session
+    if (!hasGenreParam && !userModifiedGenres) {
       // Find IDs for Psychobilly and Rockabilly
       const psychobillyGenre = genres.find((g) => g.name.toLowerCase() === 'psychobilly');
       const rockabillyGenre = genres.find((g) => g.name.toLowerCase() === 'rockabilly');
@@ -79,9 +72,6 @@ export default function EventsPage() {
       if (rockabillyGenre) defaultGenreIds.push(String(rockabillyGenre.id));
 
       if (defaultGenreIds.length > 0) {
-        // Mark that we've set defaults (counts as interaction)
-        sessionStorage.setItem('eventsFiltersInteracted', 'true');
-
         // Build URL with default genres
         const params = new URLSearchParams(searchParams.toString());
         params.set('genre_id', defaultGenreIds.join(','));
@@ -89,10 +79,6 @@ export default function EventsPage() {
         // Use replace to avoid adding to browser history
         router.replace(`/events?${params.toString()}`, { scroll: false });
       }
-    } else if (hasGenreParam || hasAnyFilter) {
-      // User has filters in URL (from bookmark, share, or previous interaction)
-      // Mark as interacted so we don't override their choice
-      sessionStorage.setItem('eventsFiltersInteracted', 'true');
     }
   }, [genres, searchParams, router]);
 
@@ -109,8 +95,8 @@ export default function EventsPage() {
   // Handle filter changes by updating URL
   // Note: Only add params that have values - omitting params effectively clears them from URL
   const setFilters = (newFilters: FilterValues) => {
-    // Mark that user has interacted with filters
-    sessionStorage.setItem('eventsFiltersInteracted', 'true');
+    // Mark that user has modified genres - prevents auto-applying defaults after user has made a choice
+    sessionStorage.setItem('genresUserModified', 'true');
 
     const params = new URLSearchParams();
 

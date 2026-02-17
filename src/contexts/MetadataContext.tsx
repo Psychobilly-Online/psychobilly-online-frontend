@@ -72,11 +72,14 @@ export function MetadataProvider({ children }: MetadataProviderProps) {
     ])
       .then((results) => {
         const [countriesResult, categoriesResult, genresResult, datesResult] = results;
-        
-        const countriesData = countriesResult.status === 'fulfilled' ? countriesResult.value : { data: [] };
-        const categoriesData = categoriesResult.status === 'fulfilled' ? categoriesResult.value : { data: [] };
+
+        const countriesData =
+          countriesResult.status === 'fulfilled' ? countriesResult.value : { data: [] };
+        const categoriesData =
+          categoriesResult.status === 'fulfilled' ? categoriesResult.value : { data: [] };
         const genresData = genresResult.status === 'fulfilled' ? genresResult.value : { data: [] };
-        const datesData = datesResult.status === 'fulfilled' ? datesResult.value : { success: false };
+        const datesData =
+          datesResult.status === 'fulfilled' ? datesResult.value : { success: false };
         // Set countries
         setCountries(countriesData.data || []);
 
