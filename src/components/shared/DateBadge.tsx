@@ -10,9 +10,9 @@ interface DateBadgeProps {
 export function DateBadge({ dateStart, dateEnd, size = 'medium' }: DateBadgeProps) {
   const eventDate = parseDate(dateStart);
   const endDate = dateEnd ? parseDate(dateEnd) : null;
-  
+
   if (!eventDate) return null;
-  
+
   const isMultiDay = !!endDate && eventDate.getTime() !== endDate.getTime();
   const isDifferentMonth = isMultiDay && endDate && eventDate.getMonth() !== endDate.getMonth();
 

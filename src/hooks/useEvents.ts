@@ -9,6 +9,7 @@ interface UseEventsResult {
   error: string | null;
   pagination: PaginatedResponse<Event>['pagination'] | null;
   categoryCounts: Record<number, number> | null;
+  genreCounts: Record<number, number> | null;
   refetch: () => void;
   loadMore: () => void;
   hasMore: boolean;
@@ -30,6 +31,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginatedResponse<Event>['pagination'] | null>(null);
   const [categoryCounts, setCategoryCounts] = useState<Record<number, number> | null>(null);
+  const [genreCounts, setGenreCounts] = useState<Record<number, number> | null>(null);
   const [currentBatch, setCurrentBatch] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const filtersRef = useRef<string>('');
@@ -129,6 +131,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
           pages: totalBatches,
         });
         setCategoryCounts(data.meta.category_counts || null);
+        setGenreCounts(data.meta.genre_counts || null);
 
         // Check if there are more batches to load
         setHasMore(responseBatch < totalBatches);
@@ -140,6 +143,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       } else {
         setPagination(null);
         setCategoryCounts(null);
+        setGenreCounts(null);
         setHasMore(false);
       }
     } catch (err: any) {
@@ -192,10 +196,12 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
             events: cachedEvents,
             pagination: cachedPagination,
             categoryCounts: cachedCounts,
+            genreCounts: cachedGenreCounts,
           } = JSON.parse(cached);
           setEvents(cachedEvents);
           setPagination(cachedPagination);
           setCategoryCounts(cachedCounts);
+          setGenreCounts(cachedGenreCounts || null);
           setCurrentBatch(Math.ceil(cachedEvents.length / (filters.limit || 25)));
           setHasMore(cachedPagination.total > cachedEvents.length);
           setLoading(false);
@@ -249,6 +255,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
             events,
             pagination,
             categoryCounts,
+            genreCounts,
           }),
         );
         sessionStorage.setItem('eventsCacheFilters', JSON.stringify(filters));
@@ -256,7 +263,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         console.error('[useEvents] Failed to cache:', err);
       }
     }
-  }, [events, pagination, categoryCounts, loading, filters]);
+  }, [events, pagination, categoryCounts, genreCounts, loading, filters]);
 
   // Cleanup on unmount - removed abort as it was interfering with navigation
   // The abort controller in fetchEvents already handles cancelling stale requests
@@ -272,6 +279,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
     error,
     pagination,
     categoryCounts,
+    genreCounts,
     refetch: () => {
       if (infiniteScroll) {
         setCurrentBatch(1);

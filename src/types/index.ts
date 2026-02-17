@@ -15,8 +15,8 @@ export interface Event {
     city?: string;
     city_variation?: string;
     state?: string;
-    country_id?: string;
-    country?: string;
+    country_id?: string; // ISO2 country code (e.g., "DE", "US")
+    country?: string; // Full country name
     latitude?: string;
     longitude?: string;
   };
@@ -91,6 +91,7 @@ export interface EventFilters {
   country_id?: string[];
   city?: string;
   category_id?: string[];
+  genre_id?: string[];
   from_date?: string; // YYYY-MM-DD
   to_date?: string; // YYYY-MM-DD
   sort_by?: string;

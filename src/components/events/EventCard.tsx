@@ -121,7 +121,17 @@ export function EventCard({ event, categoryName }: EventCardProps) {
             <div className={styles.meta}>
               {event.venue && (event.venue.city || event.venue.name) && (
                 <div className={styles.metaItem}>
-                  📍 {[event.venue.city, event.venue.name].filter(Boolean).join(', ')}
+                  {event.venue.country_id ? (
+                    <img
+                      src={`/images/flags/16x12/${event.venue.country_id.toLowerCase()}.png`}
+                      alt={event.venue.country || ''}
+                      className={styles.flagIcon}
+                      title={event.venue.country}
+                    />
+                  ) : (
+                    '📍'
+                  )}{' '}
+                  {[event.venue.city, event.venue.name].filter(Boolean).join(', ')}
                 </div>
               )}
 

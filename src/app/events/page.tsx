@@ -14,7 +14,7 @@ import styles from './page.module.css';
 export default function EventsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { categoriesMap, eventDates } = useMetadata();
+  const { categoriesMap, eventDates, genres } = useMetadata();
   const [isPending, startTransition] = useTransition();
 
   // Derive filters directly from URL params - single source of truth
@@ -28,14 +28,20 @@ export default function EventsPage() {
     const search = searchParams.get('search');
     const country_id = searchParams.get('country_id');
     const category_id = searchParams.get('category_id');
+    const genre_id = searchParams.get('genre_id');
     const from_date = searchParams.get('from_date');
     const to_date = searchParams.get('to_date');
+    const sort_by = searchParams.get('sort_by');
+    const sort_order = searchParams.get('sort_order');
 
     if (search) baseFilters.search = search;
     if (country_id) baseFilters.country_id = country_id.split(',');
     if (category_id) baseFilters.category_id = category_id.split(',');
+    if (genre_id) baseFilters.genre_id = genre_id.split(',');
     if (from_date) baseFilters.from_date = from_date;
     if (to_date) baseFilters.to_date = to_date;
+    if (sort_by) baseFilters.sort_by = sort_by;
+    if (sort_order) baseFilters.sort_order = sort_order;
 
     return baseFilters;
   }, [searchParams]);
@@ -44,6 +50,52 @@ export default function EventsPage() {
     const search = searchParams.get('search');
     return search ? search.split(',') : [];
   }, [searchParams]);
+
+  // Set default genres (Psychobilly & Rockabilly) only on true first visit
+  // Once user interacts with filters, never auto-apply defaults again
+  useEffect(() => {
+    if (genres.length === 0) return;
+    
+    // Check if user has ever interacted with filters in this session
+    const hasInteracted = sessionStorage.getItem('eventsFiltersInteracted');
+    if (hasInteracted) return;
+    
+    const hasGenreParam = searchParams.get('genre_id');
+    const hasAnyFilter = 
+      searchParams.get('search') ||
+      searchParams.get('country_id') ||
+      searchParams.get('category_id') ||
+      searchParams.get('from_date') ||
+      searchParams.get('to_date');
+    
+    // Only apply defaults if there are no filters at all (true first visit)
+    if (!hasGenreParam && !hasAnyFilter) {
+      // Find IDs for Psychobilly and Rockabilly
+      const psychobillyGenre = genres.find(g => g.name.toLowerCase() === 'psychobilly');
+      const rockabillyGenre = genres.find(g => g.name.toLowerCase() === 'rockabilly');
+      
+      const defaultGenreIds: string[] = [];
+      if (psychobillyGenre) defaultGenreIds.push(String(psychobillyGenre.id));
+      if (rockabillyGenre) defaultGenreIds.push(String(rockabillyGenre.id));
+      
+      if (defaultGenreIds.length > 0) {
+        // Mark that we've set defaults (counts as interaction)
+        sessionStorage.setItem('eventsFiltersInteracted', 'true');
+        
+        // Build URL with default genres
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('genre_id', defaultGenreIds.join(','));
+        
+        // Use replace to avoid adding to browser history
+        router.replace(`/events?${params.toString()}`, { scroll: false });
+      }
+    } else if (hasGenreParam || hasAnyFilter) {
+      // User has filters in URL (from bookmark, share, or previous interaction)
+      // Mark as interacted so we don't override their choice
+      sessionStorage.setItem('eventsFiltersInteracted', 'true');
+    }
+  }, [genres, searchParams, router]);
+
   const [shouldCollapseFilters, setShouldCollapseFilters] = useState(false);
   const [shouldExpandFilters, setShouldExpandFilters] = useState(false);
   const [isFilterSticky, setIsFilterSticky] = useState(false);
@@ -57,13 +109,21 @@ export default function EventsPage() {
   // Handle filter changes by updating URL
   // Note: Only add params that have values - omitting params effectively clears them from URL
   const setFilters = (newFilters: FilterValues) => {
+    // Mark that user has interacted with filters
+    sessionStorage.setItem('eventsFiltersInteracted', 'true');
+    
     const params = new URLSearchParams();
 
     if (newFilters.search) params.set('search', newFilters.search);
     if (newFilters.country_id?.length) params.set('country_id', newFilters.country_id.join(','));
     if (newFilters.category_id?.length) params.set('category_id', newFilters.category_id.join(','));
+    if (newFilters.genre_id?.length) params.set('genre_id', newFilters.genre_id.join(','));
     if (newFilters.from_date) params.set('from_date', newFilters.from_date);
     if (newFilters.to_date) params.set('to_date', newFilters.to_date);
+    if (newFilters.sort_by && newFilters.sort_by !== 'date')
+      params.set('sort_by', newFilters.sort_by);
+    if (newFilters.sort_order && newFilters.sort_order !== 'ASC')
+      params.set('sort_order', newFilters.sort_order);
 
     const newUrl = params.toString() ? `/events?${params.toString()}` : '/events';
 
@@ -103,7 +163,16 @@ export default function EventsPage() {
     }
   }, [searchTerms]);
 
-  const { events, loading, error, pagination, categoryCounts, loadMore, hasMore } = useEvents({
+  const {
+    events,
+    loading,
+    error,
+    pagination,
+    categoryCounts,
+    genreCounts,
+    loadMore,
+    hasMore,
+  } = useEvents({
     infiniteScroll: true,
     ...filters,
   });
@@ -193,6 +262,7 @@ export default function EventsPage() {
             initialFilters={filters}
             totalCount={loading ? lastTotalCount : pagination?.total}
             categoryCounts={categoryCounts || undefined}
+            genreCounts={genreCounts || undefined}
             eventDates={eventDates}
             shouldCollapse={shouldCollapseFilters}
             shouldExpand={shouldExpandFilters}

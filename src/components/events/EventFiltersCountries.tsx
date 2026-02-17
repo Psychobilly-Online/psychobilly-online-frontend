@@ -96,7 +96,9 @@ export function EventFiltersCountries({
       >
         <div className={styles.countryPopover}>
           <div className={styles.popoverHeader}>
-            <Typography className={styles.sectionTitle}>Countries</Typography>
+            <Typography className={styles.sectionTitle} onClick={onClose}>
+              Countries
+            </Typography>
             <IconButton
               size="small"
               className={styles.popoverCloseButton}
