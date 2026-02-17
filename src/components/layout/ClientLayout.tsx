@@ -2,8 +2,9 @@
 
 import { TopBar } from './TopBar';
 import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { SearchProvider } from '@/contexts/SearchContext';
+import { MetadataProvider } from '@/contexts/MetadataContext';
 import styles from './ClientLayout.module.css';
 
 function TopBarWrapper() {
@@ -27,16 +28,24 @@ interface ClientLayoutProps {
 }
 
 export function ClientLayout({ children }: ClientLayoutProps) {
+  // NOTE: Broad Suspense boundary is intentional architectural decision.
+  // SearchProvider uses useSearchParams() which requires Suspense in React 19.
+  // We accept showing full-page loading for simplicity rather than complex granular boundaries.
+  // This only triggers during initial SSR/hydration, not during client-side navigation.
   return (
-    <SearchProvider>
-      <TopBarWrapper />
-      <div id="container" className={styles.container}>
-        <div id="header" className={styles.header} />
-        {children}
-        <div id="pageBottom" className={styles.pageBottom}>
-          &copy; Psychobilly Online 2008 / 2026
-        </div>
-      </div>
-    </SearchProvider>
+    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>}>
+      <MetadataProvider>
+        <SearchProvider>
+          <TopBarWrapper />
+          <div id="container" className={styles.container}>
+            <div id="header" className={styles.header} />
+            {children}
+            <div id="pageBottom" className={styles.pageBottom}>
+              &copy; Psychobilly Online 2008 / 2026
+            </div>
+          </div>
+        </SearchProvider>
+      </MetadataProvider>
+    </Suspense>
   );
 }

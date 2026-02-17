@@ -1,3 +1,9 @@
+.eventCardLink {
+  color: inherit;
+  display: block;
+  text-decoration: none !important;
+}
+
 .eventCard {
   display: flex;
   gap: var(--spacing-6);
@@ -17,9 +23,9 @@
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-.eventCard:hover {
+.eventCardLink:hover .eventCard {
   border-color: var(--color-border-medium);
-  transform: translateY(-3px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -128,6 +134,15 @@
   gap: var(--spacing-2);
 }
 
+.flagIcon {
+  display: inline-block;
+  width: 16px;
+  height: 12px;
+  vertical-align: middle;
+  border-radius: 1px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
 .description {
   margin: var(--spacing-3) 0;
   font-size: 14px;
@@ -175,7 +190,7 @@
 .image {
   flex-shrink: 0;
   width: 126px;
-  height: 126px;
+  height: auto;
   border-radius: var(--spacing-3);
   overflow: hidden;
   border: 1px solid var(--color-border-subtle);

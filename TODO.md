@@ -1,0 +1,441 @@
+# Psychobilly Online - Master TODO List
+
+## 🔴 Critical (Must Fix Before Production)
+
+- [x] **Update server `.env` files with CORS configuration** ✅ DONE
+  - Location: HostEurope server
+  - Files: `psychobilly-online-api/.env` and `psychobilly-online-images/.env`
+  - Add: `CORS_ALLOWED_ORIGINS=https://app.psychobilly-online.de`
+  - Instructions: See `UPDATE_API_CORS.md`
+
+- [x] **Remove debug console.log statements** ✅ DONE
+  - Files: `src/hooks/useEvents.ts`, `src/app/events/page.tsx`
+
+- [x] **Add production date filtering** ✅ DONE
+  - Now shows upcoming events by default (from today)
+
+- [x] **Image Field Handling** ✅ RESOLVED
+  - **Decision**: Keep `legacy_image` for old events, use new `image` field for new events
+  - **Status**: Already implemented in API
+  - **Priority**: Not critical, no migration needed
+
+## 🟡 High Priority (Current Sprint)
+
+### Backend/API/Database Changes (NEXT) 🎯
+
+> **Note**: The user plans to work on API and database changes before continuing with frontend features.
+
+#### API Enhancements
+
+- [ ] **Fix image field in events endpoint**
+  - **IMPORTANT**: Verify field name (`legacy_image` vs `image` vs `19_image`)
+  - Current endpoint may return wrong image field
+  - Affects: GET /api/v1/events and GET /api/v1/events/{id}
+  - Check API README for field mappings
+  - Estimated: 1-2 hours
+
+- [ ] **Add venue data to events endpoint**
+  - Include venue name, address, website in event response
+  - Use JOIN query on venue_id
+  - Reduces frontend API calls
+  - Estimated: 2-3 hours
+
+- [ ] **Add country/state name lookups**
+  - Include country_name and state_name in event response
+  - Use JOIN or lookup tables
+  - Frontend displays human-readable names
+  - Estimated: 2-3 hours
+
+- [ ] **Optimize event queries**
+  - Add indexes on date_start, country_id, approved
+  - Implement caching (Redis) - optional
+  - Pagination optimization
+  - Estimated: 2-4 hours
+
+#### Database Schema Changes
+
+- [ ] **Add tags and genre fields to events table**
+
+  ```sql
+  -- Add tags field for comma-separated tags (keywords, style descriptors)
+  ALTER TABLE psycho_events ADD COLUMN tags TEXT NULL COMMENT 'Comma-separated tags';
+
+  -- Add genre field
+  ALTER TABLE psycho_events ADD COLUMN genre VARCHAR(100) NULL;
+  ```
+
+  - **Note**: `bands`, `tags`, and `genre` are three separate fields:
+    - `bands`: Performing bands/artists (comma-separated)
+    - `tags`: Additional keywords/tags (comma-separated)
+    - `genre`: Primary music genre
+  - Estimated: 1-2 hours
+
+- [ ] **Add database indexes for performance**
+
+  ```sql
+  CREATE INDEX idx_date_start ON events(date_start);
+  CREATE INDEX idx_approved ON events(approved);
+  CREATE INDEX idx_country ON events(country_id);
+  ```
+
+  - Estimated: 1 hour
+
+- [ ] **Update API to handle new fields**
+  - Include `tags` and `genre` in event responses
+  - Add filtering by tags and genre
+  - Update validation rules
+  - Estimated: 2-3 hours
+
+### Frontend Features
+
+#### Recently Completed ✅
+
+- [x] **Top Navigation Bar** - COMPLETED ✅
+  - [x] Create TopBar component with hamburger menu, centered search, notification/account icons
+  - [x] Integrate TopBar into layout (sticky, 45px height)
+  - [x] Connect search to events filter
+  - [x] Remove search field from EventFilters, display "x events found" instead
+  - [x] Implement SearchContext for shared filter state
+  - [x] Fix sticky filter border-radius detection
+  - [x] Standardize spacing to 3px scale
+  - [x] Consolidate colors and create CSS variables
+  - [x] Create reusable IconButton component (3 sizes, 3 variants)
+  - [x] Replace Material-UI IconButton with custom IconButton
+  - [x] Clean up legacy CSS files (deleted 1,830 lines)
+  - [x] Migrate to CSS modules (ClientLayout, Startpage)
+  - [x] Fix responsive layout issues
+  - [x] Add comprehensive test coverage
+  - [x] Fix mobile chip wrapping
+  - [x] Fix search term preservation when changing filters
+  - [x] Fix race condition in SearchContext
+
+- [x] **Search Chips Feature** - COMPLETED ✅
+  - [x] Display search terms as removable chips
+  - [x] Implement chip removal (x button)
+  - [x] AND logic for multiple terms
+  - [x] Persist chips when switching filters
+  - [x] Test coverage
+  - [x] Scroll to top on search/filter changes
+
+- [x] **Event filtering system** - COMPLETED ✅
+  - [x] Country dropdown (ordered by event count)
+  - [x] City dropdown (from venue table)
+  - [x] Category dropdown
+  - [x] Date range filters
+  - [x] Search functionality
+  - [x] Backend sorting
+  - [x] Clear filters with count badge
+
+- [x] **Event display improvements** - COMPLETED ✅
+  - [x] Display year and category name
+  - [x] Show venue location
+  - [x] Decode HTML entities
+  - [x] Auto-add https:// to links
+  - [x] Multi-day date display
+  - [x] Auto-collapse filters on scroll
+
+- [x] **Infinite scroll** - COMPLETED ✅
+  - [x] Intersection Observer implementation
+  - [x] Event deduplication
+  - [x] Race condition handling
+  - [x] Timezone-safe date parsing
+
+#### Next Frontend Tasks
+
+- [ ] **Loading state in EventFilters** 🔨 IN PROGRESS
+  - [x] Add loading prop to EventFilters component
+  - [x] Display spinner icon and "Loading events..." text
+  - [ ] Test loading state display
+  - Estimated: 1 hour
+
+- [ ] **Event Detail Page** 🎯 NEXT UP
+  - Individual event page with full details
+  - Shareable URLs (/events/[id])
+  - Full event information (all fields)
+  - Larger image display
+  - Formatted text with line breaks
+  - Venue information
+  - Edit button (for owners/admins)
+  - Share functionality
+  - Back to list button
+  - Estimated: 4-6 hours
+
+## 🟢 Medium Priority (After Backend Changes)
+
+### Phase 2: Authentication & User Features
+
+- [ ] **Authentication system**
+  - JWT integration with backend
+  - Login/Logout components
+  - Session management
+  - Protected routes
+  - Remember me functionality
+  - Estimated: 1-2 days
+
+- [ ] **User dashboard**
+  - My events (created by user)
+  - Edit/Delete own events
+  - Profile settings
+  - Change password
+  - Estimated: 1-2 days
+
+### Phase 3: Content Management
+
+- [ ] **Event creation form**
+  - Multi-step form wizard
+  - Date picker (start and end date)
+  - Venue selection
+  - Create new venue inline
+  - Bands field
+  - Text editor with preview
+  - Image upload integration
+  - Link field with validation
+  - Form validation
+  - Estimated: 2-3 days
+
+- [ ] **Event editing**
+  - Pre-populated form
+  - Permission checks (owner/admin only)
+  - Update API integration
+  - Show edit history
+  - Estimated: 4-6 hours
+
+- [ ] **Venue management**
+  - List all venues
+  - Add new venue form
+  - Edit existing venue
+  - Venue detail page
+  - Search/filter venues
+  - Estimated: 2-3 days
+
+- [ ] **Admin dashboard**
+  - Event approval queue
+  - Approve/Reject events
+  - User management
+  - Venue management
+  - Statistics and analytics
+  - Bulk actions
+  - Estimated: 3-4 days
+
+### UX Improvements
+
+- [ ] **Loading states**
+  - Skeleton screens for EventCard
+  - Better loading animations
+  - Progressive enhancement
+  - Estimated: 4-6 hours
+
+- [ ] **Error boundaries**
+  - Graceful error handling
+  - User-friendly error messages
+  - Retry mechanisms
+  - Estimated: 4 hours
+
+- [ ] **Responsive improvements**
+  - Mobile navigation
+  - Touch-friendly controls
+  - Tablet optimization
+  - Estimated: 1 day
+
+## 🔵 Low Priority (Future)
+
+### Advanced Features
+
+- [ ] **Map view**
+  - Google Maps / Mapbox integration
+  - Cluster markers
+  - Filter events by region
+  - Estimated: 2-3 days
+
+- [ ] **Calendar view**
+  - Month/Week/Day views
+  - Event calendar component
+  - iCal export
+  - Estimated: 2-3 days
+
+- [ ] **Social sharing**
+  - Share to Facebook, Twitter
+  - WhatsApp share
+  - Copy link functionality
+  - Estimated: 4 hours
+
+- [ ] **Email notifications**
+  - Event reminders
+  - New events in your area
+  - Subscription management
+  - Backend: Email service integration
+  - Estimated: 2-3 days
+
+- [ ] **User profiles**
+  - My events
+  - Favorite venues
+  - Event history
+  - Estimated: 1-2 days
+
+### Performance & Optimization
+
+- [ ] **Image optimization**
+  - Lazy loading
+  - WebP format support
+  - Responsive images
+  - CDN integration
+  - Estimated: 1 day
+
+- [ ] **Code splitting**
+  - Route-based splitting (already done by Next.js)
+  - Component lazy loading
+  - Bundle size optimization
+  - Estimated: 4-6 hours
+
+- [ ] **SEO optimization**
+  - Meta tags per page
+  - OpenGraph tags
+  - Structured data (JSON-LD)
+  - Sitemap generation
+  - Estimated: 1 day
+
+## 📋 Backend Tasks (psychobilly-online-api & psychobilly-online-images)
+
+> **Note**: These tasks are tracked separately in their respective repositories.
+> Listed here for reference and coordination with frontend work.
+
+### Data Cleanup & Migrations
+
+- [ ] **Archive old events**
+  - Move events older than 2 years to archive table
+  - Keep database performant
+  - Estimated: 4-6 hours
+
+- [ ] **Validate data integrity**
+  - Check for orphaned venue_ids
+  - Validate date formats
+  - Clean up invalid country_ids
+  - Estimated: 1 day
+
+## 📚 Documentation Tasks
+
+- [ ] **Backend API documentation**
+  - Document all endpoints
+  - Request/Response examples
+  - Error codes
+  - File: `docs/API_REFERENCE.md`
+  - Estimated: 1 day
+
+- [ ] **Architecture documentation**
+  - System overview diagram
+  - Data flow diagrams
+  - Technology stack
+  - File: `docs/ARCHITECTURE.md`
+  - Estimated: 4-6 hours
+
+- [ ] **Backend integration guide**
+  - Data structure reference
+  - Field name mappings
+  - Known quirks/gotchas
+  - File: `docs/BACKEND_INTEGRATION.md`
+  - Estimated: 2-3 hours
+
+- [ ] **Deployment guide**
+  - Frontend deployment (Vercel)
+  - Backend deployment (HostEurope)
+  - Environment variables
+  - DNS configuration
+  - File: `docs/DEPLOYMENT.md` (expand existing)
+  - Estimated: 2-3 hours
+
+## 🧪 Testing Tasks
+
+- [ ] **Unit tests**
+  - Component tests (React Testing Library)
+  - Hook tests
+  - API client tests
+  - Target: 80% coverage
+  - Estimated: 2-3 days
+
+- [ ] **Integration tests**
+  - API route tests
+  - End-to-end flows
+  - Cypress or Playwright
+  - Estimated: 2-3 days
+
+- [ ] **Manual testing checklist**
+  - Browser compatibility (Chrome, Firefox, Safari, Edge)
+  - Mobile responsiveness (iOS, Android)
+  - Performance testing (Lighthouse)
+  - Estimated: 1 day
+
+## 🔧 DevOps Tasks
+
+- [ ] **CI/CD Pipeline**
+  - GitHub Actions for tests
+  - Automated deployment
+  - Preview deployments for PRs
+  - Estimated: 1-2 days
+
+- [ ] **Monitoring**
+  - Error tracking (Sentry)
+  - Analytics (Google Analytics / Plausible)
+  - Performance monitoring (Vercel Analytics)
+  - Estimated: 4-6 hours
+
+- [ ] **Backup strategy**
+  - Database backups
+  - Image backups
+  - Backup restoration testing
+  - Estimated: 1 day
+
+## ⚠️ Development Guidelines
+
+### Always Verify API Field Names!
+
+**CRITICAL**: Do not assume API field names, structures, or behaviors.
+
+**Before implementing any API integration:**
+
+1. ✅ Check the API README in `psychobilly-online-api` repo
+2. ✅ Test the actual endpoint with curl or Postman
+3. ✅ Log the response in console to see actual structure
+4. ✅ Document any discoveries in `docs/BACKEND_INTEGRATION.md`
+
+**Legacy field naming conventions:**
+
+- Dates: `date_start`, `date_end`, `create_date`, `edit_date`
+- Text: `text` not `description`
+- Links: `link` (singular) not `event_link` or `ticket_link`
+- IDs: `country_id`, `state_id`, `venue_id` (foreign keys)
+
+### Database Schema Reference
+
+All database table structures are documented in `docs/DATABASE_SCHEMA.md`.
+
+## 📝 Notes
+
+### Dependencies Between Tasks
+
+- Event detail page requires venue/country lookups
+- Event creation requires authentication
+- Admin dashboard requires authentication
+- Search requires backend endpoint (or use existing search parameter)
+
+### Prioritization Strategy
+
+1. ✅ Complete Top Navigation Bar (DONE)
+2. 🔧 Backend/API/Database improvements (CURRENT)
+3. 🎯 Event Detail Page
+4. 🔐 Authentication system
+5. ✏️ Content management (create/edit events)
+6. 👑 Admin features
+7. 🚀 Optimization and enhancements
+
+### Time Estimates
+
+- **Backend/Database changes**: 1-2 days
+- **Event detail page**: 4-6 hours
+- **Authentication**: 1-2 days
+- **Content management**: 3-4 days
+- **Total MVP**: ~2-3 weeks
+
+---
+
+**Last Updated**: February 13, 2026  
+**Next Sprint**: Backend/API/Database improvements

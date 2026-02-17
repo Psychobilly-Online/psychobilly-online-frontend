@@ -1,0 +1,113 @@
+.dateBadge {
+  flex-shrink: 0;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-primary-dark),
+    var(--color-accent-primary)
+  );
+  border-radius: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-primary);
+  font-weight: bold;
+  box-shadow: var(--shadow-inset);
+}
+
+.dateBadge.small {
+  width: 60px;
+  height: 60px;
+}
+
+.dateBadge.medium {
+  width: 72px;
+  height: 72px;
+}
+
+.dateBadge.large {
+  width: 96px;
+  height: 96px;
+}
+
+.dateDay {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.large .dateDay {
+  font-size: 32px;
+}
+
+.dateRange {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.large .dateRange {
+  font-size: 24px;
+}
+
+.dateRangeStart,
+.dateRangeEnd {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.large .dateRangeStart,
+.large .dateRangeEnd {
+  font-size: 24px;
+}
+
+.dateRangeSeparator {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.large .dateRangeSeparator {
+  font-size: 18px;
+}
+
+.dateMonth {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.large .dateMonth {
+  font-size: 14px;
+}
+
+.dateMonthRange {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  text-transform: uppercase;
+  gap: var(--spacing-1);
+}
+
+.large .dateMonthRange {
+  font-size: 12px;
+}
+
+.monthStart,
+.monthEnd {
+  font-weight: bold;
+}
+
+.monthSeparator {
+  opacity: 0.6;
+}
+
+.dateYear {
+  font-size: 10px;
+  color: var(--color-text-primary);
+  margin-top: var(--spacing-1);
+}
+
+.large .dateYear {
+  font-size: 12px;
+}

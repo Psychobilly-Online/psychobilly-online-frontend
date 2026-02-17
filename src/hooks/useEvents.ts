@@ -9,6 +9,7 @@ interface UseEventsResult {
   error: string | null;
   pagination: PaginatedResponse<Event>['pagination'] | null;
   categoryCounts: Record<number, number> | null;
+  genreCounts: Record<number, number> | null;
   refetch: () => void;
   loadMore: () => void;
   hasMore: boolean;
@@ -30,18 +31,23 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginatedResponse<Event>['pagination'] | null>(null);
   const [categoryCounts, setCategoryCounts] = useState<Record<number, number> | null>(null);
+  const [genreCounts, setGenreCounts] = useState<Record<number, number> | null>(null);
   const [currentBatch, setCurrentBatch] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const filtersRef = useRef<string>('');
   const abortControllerRef = useRef<AbortController | null>(null);
   const eventIdsRef = useRef<Set<number>>(new Set());
   const requestIdRef = useRef(0);
+  const isInitialFetch = useRef(true);
+  const hasRestoredCache = useRef(false);
 
   const fetchEvents = async (pageToFetch: number, append: boolean = false) => {
-    // Cancel any in-flight request
-    if (abortControllerRef.current) {
+    // Only cancel if this is a filter change (not initial or loadMore)
+    // Don't cancel on initial fetch or when appending for infinite scroll
+    if (abortControllerRef.current && !append && !isInitialFetch.current) {
       abortControllerRef.current.abort();
     }
+    isInitialFetch.current = false;
 
     // Create new abort controller for this request
     const abortController = new AbortController();
@@ -125,6 +131,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
           pages: totalBatches,
         });
         setCategoryCounts(data.meta.category_counts || null);
+        setGenreCounts(data.meta.genre_counts || null);
 
         // Check if there are more batches to load
         setHasMore(responseBatch < totalBatches);
@@ -136,6 +143,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
       } else {
         setPagination(null);
         setCategoryCounts(null);
+        setGenreCounts(null);
         setHasMore(false);
       }
     } catch (err: any) {
@@ -175,9 +183,50 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
   useEffect(() => {
     const newFiltersKey = JSON.stringify(filters);
 
+    // Check if we have cached data to restore (only on first run when filtersRef is empty)
+    if (filtersRef.current === '' && !hasRestoredCache.current) {
+      hasRestoredCache.current = true;
+
+      try {
+        const cached = sessionStorage.getItem('eventsCache');
+        const cachedFilters = sessionStorage.getItem('eventsCacheFilters');
+
+        if (cached && cachedFilters === newFiltersKey) {
+          const {
+            events: cachedEvents,
+            pagination: cachedPagination,
+            categoryCounts: cachedCounts,
+            genreCounts: cachedGenreCounts,
+          } = JSON.parse(cached);
+          setEvents(cachedEvents);
+          setPagination(cachedPagination);
+          setCategoryCounts(cachedCounts);
+          setGenreCounts(cachedGenreCounts || null);
+          setCurrentBatch(Math.ceil(cachedEvents.length / (filters.limit || 25)));
+          setHasMore(cachedPagination.total > cachedEvents.length);
+          setLoading(false);
+          filtersRef.current = newFiltersKey;
+
+          // Update eventIdsRef
+          eventIdsRef.current.clear();
+          cachedEvents.forEach((e: Event) => eventIdsRef.current.add(e.id));
+
+          return;
+        }
+      } catch (err) {
+        console.error('[useEvents] Failed to restore cache:', err);
+      }
+    }
+
     // If filters changed, reset and fetch
     if (newFiltersKey !== filtersRef.current) {
       filtersRef.current = newFiltersKey;
+      isInitialFetch.current = true; // Reset so we don't abort the new filter's first request
+
+      // Clear cache when filters change
+      sessionStorage.removeItem('eventsCache');
+      sessionStorage.removeItem('eventsCacheFilters');
+      sessionStorage.removeItem('eventsScrollPosition');
 
       if (infiniteScroll) {
         // In infinite scroll mode, always reset to batch 1
@@ -193,14 +242,37 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
         fetchEvents(targetBatch, false);
       }
     }
-  }, [JSON.stringify(filters), infiniteScroll]);
+    // NOTE: filters dependency is intentional - we stringify it internally for comparison (line 184)
+    // to detect actual value changes vs reference changes. This is the standard pattern for
+    // complex filter objects in this codebase.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, infiniteScroll]);
 
-  // Cleanup on unmount
+  // Cache events whenever they change (after successful fetch)
+  useEffect(() => {
+    if (events.length > 0 && pagination && !loading) {
+      try {
+        sessionStorage.setItem(
+          'eventsCache',
+          JSON.stringify({
+            events,
+            pagination,
+            categoryCounts,
+            genreCounts,
+          }),
+        );
+        sessionStorage.setItem('eventsCacheFilters', JSON.stringify(filters));
+      } catch (err) {
+        console.error('[useEvents] Failed to cache:', err);
+      }
+    }
+  }, [events, pagination, categoryCounts, genreCounts, loading, filters]);
+
+  // Cleanup on unmount - removed abort as it was interfering with navigation
+  // The abort controller in fetchEvents already handles cancelling stale requests
   useEffect(() => {
     return () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
+      // Cleanup if needed
     };
   }, []);
 
@@ -210,6 +282,7 @@ export function useEvents(options: UseEventsOptions = {}): UseEventsResult {
     error,
     pagination,
     categoryCounts,
+    genreCounts,
     refetch: () => {
       if (infiniteScroll) {
         setCurrentBatch(1);

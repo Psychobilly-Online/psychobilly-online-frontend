@@ -71,7 +71,7 @@
   --panel-border: #2d2d30;
   --text-primary: #f5f5f5;
   --text-muted: #b5b5b5;
-  --link: var(--color-accent-primary-light);
+  --link: #b5b5b5;
   --link-hover: #ffffff;
   --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 
@@ -99,13 +99,12 @@ body {
   color: var(--foreground);
   font-family: Verdana, Geneva, Tahoma, sans-serif, Helvetica, sans-serif;
 }
-:root {
-  a {
-    color: var(--link);
-    text-decoration: underline;
-  }
 
-  a:hover {
-    color: var(--link-hover);
-  }
+a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--link-hover);
 }

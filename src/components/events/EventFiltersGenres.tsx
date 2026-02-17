@@ -4,54 +4,59 @@ import type { MouseEvent } from 'react';
 import { Chip, Popover, Stack, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './EventFilters.module.css';
-import type { Category } from './EventFilters.types';
 
-interface EventFiltersCategoriesProps {
-  categories: Category[];
-  selectedCategoryIds: string[];
-  categoryCounts?: Record<number, number>;
-  categoryOpen: boolean;
-  categoryAnchor: HTMLElement | null;
+interface Genre {
+  id: number;
+  name: string;
+  slug?: string;
+}
+
+interface EventFiltersGenresProps {
+  genres: Genre[];
+  selectedGenreIds: string[];
+  genreCounts?: Record<number, number>;
+  genreOpen: boolean;
+  genreAnchor: HTMLElement | null;
   onOpen: (event: MouseEvent<any>) => void;
   onClose: () => void;
-  onToggleCategory: (categoryId: string) => void;
-  onClearCategories: () => void;
+  onToggleGenre: (genreId: string) => void;
+  onClearGenres: () => void;
   popoverPaperSx: object;
   popoverContainer?: HTMLElement | null;
 }
 
-export function EventFiltersCategories({
-  categories,
-  selectedCategoryIds,
-  categoryCounts,
-  categoryOpen,
-  categoryAnchor,
+export function EventFiltersGenres({
+  genres,
+  selectedGenreIds,
+  genreCounts,
+  genreOpen,
+  genreAnchor,
   onOpen,
   onClose,
-  onToggleCategory,
-  onClearCategories,
+  onToggleGenre,
+  onClearGenres,
   popoverPaperSx,
   popoverContainer,
-}: EventFiltersCategoriesProps) {
+}: EventFiltersGenresProps) {
   return (
     <div className={styles.chipSection}>
       <div className={`${styles.formGroup} ${styles.categoryGroup}`}>
         <div className={styles.chipTriggerWrapper}>
           <Stack className={styles.chipGroup} direction="row" flexWrap="wrap" onClick={onOpen}>
-            {selectedCategoryIds.length === 0 && (
-              <Chip label="All categories" variant="outlined" onClick={onOpen} />
+            {selectedGenreIds.length === 0 && (
+              <Chip label="All genres" variant="outlined" onClick={onOpen} />
             )}
-            {selectedCategoryIds.length > 0 &&
-              selectedCategoryIds.map((id) => {
-                const category = categories.find((item) => String(item.id) === id);
-                if (!category) return null;
+            {selectedGenreIds.length > 0 &&
+              selectedGenreIds.map((id) => {
+                const genre = genres.find((item) => String(item.id) === id);
+                if (!genre) return null;
                 return (
                   <Chip
                     key={id}
-                    label={category.name}
+                    label={genre.name}
                     onDelete={(e) => {
                       e.stopPropagation();
-                      onToggleCategory(id);
+                      onToggleGenre(id);
                     }}
                     onClick={onOpen}
                     variant="outlined"
@@ -61,8 +66,8 @@ export function EventFiltersCategories({
           </Stack>
         </div>
         <Popover
-          open={categoryOpen}
-          anchorEl={categoryAnchor}
+          open={genreOpen}
+          anchorEl={genreAnchor}
           onClose={onClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
@@ -85,35 +90,35 @@ export function EventFiltersCategories({
                   }
                 }}
               >
-                Categories
+                Genres
               </Typography>
               <IconButton
                 size="small"
                 className={styles.popoverCloseButton}
                 onClick={onClose}
-                aria-label="Close categories"
+                aria-label="Close genres"
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
             </div>
             <Stack className={styles.chipGroup} direction="row" flexWrap="wrap">
               <Chip
-                label="All categories"
-                variant={selectedCategoryIds.length === 0 ? 'filled' : 'outlined'}
-                onClick={onClearCategories}
+                label="All genres"
+                variant={selectedGenreIds.length === 0 ? 'filled' : 'outlined'}
+                onClick={onClearGenres}
               />
-              {categories.map((category) => {
-                const categoryId = String(category.id);
-                const isSelected = selectedCategoryIds.includes(categoryId);
-                const count = categoryCounts ? categoryCounts[category.id] || 0 : 0;
-                const isDisabled = !!categoryCounts && count === 0 && !isSelected;
+              {genres.map((genre) => {
+                const genreId = String(genre.id);
+                const isSelected = selectedGenreIds.includes(genreId);
+                const count = genreCounts ? genreCounts[genre.id] || 0 : 0;
+                const isDisabled = !!genreCounts && count === 0 && !isSelected;
                 return (
                   <Chip
-                    key={category.id}
-                    label={category.name}
+                    key={genre.id}
+                    label={genre.name}
                     variant={isSelected ? 'filled' : 'outlined'}
                     disabled={isDisabled}
-                    onClick={() => onToggleCategory(categoryId)}
+                    onClick={() => onToggleGenre(genreId)}
                   />
                 );
               })}

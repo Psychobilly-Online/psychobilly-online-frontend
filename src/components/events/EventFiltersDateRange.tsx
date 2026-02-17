@@ -91,7 +91,20 @@ export function EventFiltersDateRange({
         slotProps={{ paper: { sx: popoverPaperSx } }}
       >
         <div className={styles.popoverHeader}>
-          <Typography className={styles.sectionTitle}>Date range</Typography>
+          <Typography
+            className={styles.sectionTitle}
+            onClick={onClose}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClose();
+              }
+            }}
+          >
+            Date range
+          </Typography>
           <IconButton
             size="small"
             className={styles.popoverCloseButton}

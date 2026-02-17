@@ -56,6 +56,8 @@
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
+  cursor: pointer;
+  user-select: none;
 }
 
 .headerLeft {
@@ -116,6 +118,8 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
+  cursor: pointer;
+  user-select: none;
 }
 
 .clearLink {

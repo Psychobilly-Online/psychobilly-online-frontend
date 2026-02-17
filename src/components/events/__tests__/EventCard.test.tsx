@@ -119,16 +119,22 @@ describe('EventCard', () => {
       const event = { ...mockBaseEvent, link: 'example.com' };
       render(<EventCard event={event} />);
 
-      const link = screen.getByRole('link', { name: /more info/i });
-      expect(link).toHaveAttribute('href', 'https://example.com');
+      const links = screen.getAllByRole('link');
+      const moreInfoLink = links.find((link) =>
+        (link as HTMLAnchorElement).href?.includes('example.com'),
+      );
+      expect(moreInfoLink).toHaveAttribute('href', 'https://example.com');
     });
 
     it('preserves existing protocol in links', () => {
       const event = { ...mockBaseEvent, link: 'http://example.com' };
       render(<EventCard event={event} />);
 
-      const link = screen.getByRole('link', { name: /more info/i });
-      expect(link).toHaveAttribute('href', 'http://example.com');
+      const links = screen.getAllByRole('link');
+      const moreInfoLink = links.find((link) =>
+        (link as HTMLAnchorElement).href?.includes('example.com'),
+      );
+      expect(moreInfoLink).toHaveAttribute('href', 'http://example.com');
     });
   });
 

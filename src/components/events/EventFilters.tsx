@@ -16,9 +16,11 @@ import { isSameDay, isWithinInterval } from 'date-fns';
 import { IconButton } from '@/components/common/IconButton';
 import { SearchChips } from '@/components/common/SearchChips';
 import { useSearchContext } from '@/contexts/SearchContext';
+import { useMetadata } from '@/contexts/MetadataContext';
 import { EventFiltersCountries } from './EventFiltersCountries';
 import { EventFiltersDateRange } from './EventFiltersDateRange';
 import { EventFiltersCategories } from './EventFiltersCategories';
+import { EventFiltersGenres } from './EventFiltersGenres';
 import {
   countryPopoverSx,
   datePopoverSx,
@@ -43,6 +45,7 @@ export interface FilterValues {
   from_date?: string;
   to_date?: string;
   category_id?: string[];
+  genre_id?: string[];
   sort_by?: string;
   sort_order?: string;
   limit?: number;
@@ -53,6 +56,7 @@ interface EventFiltersProps {
   initialFilters?: FilterValues;
   totalCount?: number;
   categoryCounts?: Record<number, number>;
+  genreCounts?: Record<number, number>;
   eventDates?: Set<number>;
   shouldCollapse?: boolean;
   shouldExpand?: boolean;
@@ -66,6 +70,7 @@ export function EventFilters({
   initialFilters = {},
   totalCount,
   categoryCounts,
+  genreCounts,
   eventDates,
   shouldCollapse = false,
   shouldExpand = false,
@@ -74,6 +79,11 @@ export function EventFilters({
   loading = false,
 }: EventFiltersProps) {
   const { filters: contextFilters, clearSearchTerms } = useSearchContext();
+  const {
+    countries: metadataCountries,
+    categories: metadataCategories,
+    genres: metadataGenres,
+  } = useMetadata();
   useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
@@ -81,6 +91,11 @@ export function EventFilters({
       ? initialFilters.category_id.map(String)
       : initialFilters.category_id
         ? [String(initialFilters.category_id)]
+        : [],
+    genre_id: Array.isArray(initialFilters.genre_id)
+      ? initialFilters.genre_id.map(String)
+      : initialFilters.genre_id
+        ? [String(initialFilters.genre_id)]
         : [],
     country_id: Array.isArray(initialFilters.country_id)
       ? initialFilters.country_id.map(String)
@@ -93,6 +108,7 @@ export function EventFilters({
   const [dateAnchor, setDateAnchor] = useState<HTMLElement | null>(null);
   const [countryAnchor, setCountryAnchor] = useState<HTMLElement | null>(null);
   const [categoryAnchor, setCategoryAnchor] = useState<HTMLElement | null>(null);
+  const [genreAnchor, setGenreAnchor] = useState<HTMLElement | null>(null);
 
   const prevShouldCollapseRef = useRef<boolean>(false);
   const prevShouldExpandRef = useRef<boolean>(false);
@@ -116,6 +132,7 @@ export function EventFilters({
       setDateAnchor(null);
       setCountryAnchor(null);
       setCategoryAnchor(null);
+      setGenreAnchor(null);
       // Reset completion flag for this collapse cycle
       collapseCompleteRef.current = false;
     }
@@ -130,7 +147,12 @@ export function EventFilters({
       return;
     }
     const allClosed =
-      !isExpanded && !settingsAnchor && !dateAnchor && !countryAnchor && !categoryAnchor;
+      !isExpanded &&
+      !settingsAnchor &&
+      !dateAnchor &&
+      !countryAnchor &&
+      !categoryAnchor &&
+      !genreAnchor;
     if (allClosed && !collapseCompleteRef.current) {
       collapseCompleteRef.current = true;
       onCollapseComplete?.();
@@ -142,6 +164,7 @@ export function EventFilters({
     dateAnchor,
     countryAnchor,
     categoryAnchor,
+    genreAnchor,
     onCollapseComplete,
   ]);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
@@ -153,14 +176,33 @@ export function EventFilters({
   const [loadingRegion, setLoadingRegion] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const filterContainerRef = useRef<HTMLDivElement>(null);
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [filters, setFilters] = useState<FilterValues>({
     limit: 20,
     sort_by: 'date',
     sort_order: 'ASC',
     ...normalizedInitialFilters,
   });
+
+  // Sync local filters state when initialFilters prop changes (e.g., URL params change from reset/navigation)
+  useEffect(() => {
+    setFilters((currentFilters) => {
+      const newFilters = {
+        limit: 20,
+        sort_by: 'date',
+        sort_order: 'ASC',
+        ...normalizedInitialFilters,
+      };
+      // Only update if actually changed to avoid infinite loops
+      if (JSON.stringify(currentFilters) !== JSON.stringify(newFilters)) {
+        return newFilters;
+      }
+      return currentFilters;
+    });
+    // NOTE: JSON.stringify in dependency is intentional - we need deep comparison of filter values
+    // not object reference. This is acceptable here as initialFilters changes infrequently.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialFilters)]);
+
   const settingsOpen = Boolean(settingsAnchor);
   const handleOpenSettings = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -225,26 +267,21 @@ export function EventFilters({
     setCategoryAnchor(event.currentTarget);
   };
   const handleCloseCategories = () => setCategoryAnchor(null);
+  const genreOpen = Boolean(genreAnchor);
+  const handleOpenGenres = (event: MouseEvent<any>) => {
+    setGenreAnchor(event.currentTarget);
+  };
+  const handleCloseGenres = () => setGenreAnchor(null);
 
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
     parseDate(initialFilters.from_date) ?? null,
     parseDate(initialFilters.to_date) ?? null,
   ]);
 
-  // Fetch countries and categories on mount
-  useEffect(() => {
-    // Fetch countries
-    fetch('/api/countries')
-      .then((res) => res.json())
-      .then((data) => setCountries(data.data || []))
-      .catch((err) => console.error('Failed to load countries:', err));
-
-    // Fetch categories
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then((data) => setCategories(data.data || []))
-      .catch((err) => console.error('Failed to load categories:', err));
-  }, []);
+  // Use metadata from context instead of fetching
+  const countries = metadataCountries;
+  const categories = metadataCategories;
+  const genres = metadataGenres;
 
   const handleInputChange = (
     field: keyof FilterValues,
@@ -253,8 +290,6 @@ export function EventFilters({
     const newFilters = {
       ...filters,
       [field]: normalizeFilterValue(value),
-      // Preserve search term from context
-      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -269,12 +304,13 @@ export function EventFilters({
     setFilters(resetFilters);
     onFilterChange(resetFilters);
     setDateRange([null, null]);
-    clearSearchTerms(); // Clear search chips
+    // No need to call clearSearchTerms() - search is already excluded from resetFilters
   };
 
   const [startDate, endDate] = dateRange;
 
   const selectedCategoryIds = Array.isArray(filters.category_id) ? filters.category_id : [];
+  const selectedGenreIds = Array.isArray(filters.genre_id) ? filters.genre_id : [];
   const selectedCountryIds = Array.isArray(filters.country_id) ? filters.country_id : [];
 
   const renderCountryLabel = (country: Country) => {
@@ -323,8 +359,6 @@ export function EventFilters({
       ...filters,
       from_date: start ? formatDate(start) : undefined,
       to_date: normalizedEnd ? formatDate(normalizedEnd) : undefined,
-      // Preserve search term from context
-      search: contextFilters.search,
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -440,7 +474,8 @@ export function EventFilters({
     (filters.search ? 1 : 0) +
     (selectedCountryIds.length > 0 ? selectedCountryIds.length : 0) +
     (filters.from_date || filters.to_date ? 1 : 0) +
-    (selectedCategoryIds.length > 0 ? selectedCategoryIds.length : 0);
+    (selectedCategoryIds.length > 0 ? selectedCategoryIds.length : 0) +
+    (selectedGenreIds.length > 0 ? selectedGenreIds.length : 0);
 
   return (
     <ThemeProvider theme={filterTheme}>
@@ -449,9 +484,9 @@ export function EventFilters({
         className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''} ${isSticky ? styles.sticky : ''}`}
       >
         <div className={styles.filterHeader}>
-          <div className={styles.headerMain}>
+          <div className={styles.headerMain} onClick={() => setIsExpanded((prev) => !prev)}>
             <div className={styles.headerLeft}>
-              {loading && typeof totalCount !== 'number' ? (
+              {loading ? (
                 <h2 className={styles.eventsTitle}>
                   <svg
                     className={styles.loadingSpinner}
@@ -659,6 +694,25 @@ export function EventFilters({
                   handleInputChange('category_id', nextSelected);
                 }}
                 onClearCategories={() => handleInputChange('category_id', [])}
+                popoverPaperSx={countryPopoverSx}
+                popoverContainer={filterContainerRef.current}
+              />
+              <EventFiltersGenres
+                genres={genres}
+                selectedGenreIds={selectedGenreIds}
+                genreCounts={genreCounts}
+                genreOpen={genreOpen}
+                genreAnchor={genreAnchor}
+                onOpen={handleOpenGenres}
+                onClose={handleCloseGenres}
+                onToggleGenre={(genreId) => {
+                  const isSelected = selectedGenreIds.includes(genreId);
+                  const nextSelected = isSelected
+                    ? selectedGenreIds.filter((id) => id !== genreId)
+                    : [...selectedGenreIds, genreId];
+                  handleInputChange('genre_id', nextSelected);
+                }}
+                onClearGenres={() => handleInputChange('genre_id', [])}
                 popoverPaperSx={countryPopoverSx}
                 popoverContainer={filterContainerRef.current}
               />

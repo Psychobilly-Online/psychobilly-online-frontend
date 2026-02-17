@@ -1,8 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { TopBar } from '../TopBar';
 import { SearchProvider } from '@/contexts/SearchContext';
+
+// Mock Next.js navigation hooks
+vi.mock('next/navigation', () => ({
+  useSearchParams: vi.fn(() => new URLSearchParams()),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+  usePathname: vi.fn(() => '/events'),
+}));
 
 // Wrapper component to provide SearchContext
 const renderWithProvider = (ui: React.ReactElement) => {
