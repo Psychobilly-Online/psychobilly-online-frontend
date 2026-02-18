@@ -67,10 +67,10 @@ describe('EventDetail', () => {
       expect(screen.getByText('Demented Are Go')).toBeInTheDocument();
     });
 
-    it('handles bands as array', () => {
+    it('handles bands as comma-separated string', () => {
       const event = {
         ...mockBaseEvent,
-        bands: ['Band One', 'Band Two'],
+        bands: 'Band One, Band Two',
       };
       render(<EventDetail event={event} />);
       expect(screen.getByText('Band One')).toBeInTheDocument();
@@ -181,8 +181,8 @@ describe('EventDetail', () => {
       expect(screen.getByText('Rockabilly')).toBeInTheDocument();
     });
 
-    it('handles genres as array', () => {
-      const event = { ...mockBaseEvent, genres: ['Psychobilly', 'Punk'] };
+    it('handles genres as comma-separated string', () => {
+      const event = { ...mockBaseEvent, genres: 'Psychobilly, Punk' };
       render(<EventDetail event={event} />);
       expect(screen.getByText('Psychobilly')).toBeInTheDocument();
       expect(screen.getByText('Punk')).toBeInTheDocument();

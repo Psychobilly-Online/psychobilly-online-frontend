@@ -21,71 +21,6 @@
 
 ## 🟡 High Priority (Current Sprint)
 
-### Backend/API/Database Changes (NEXT) 🎯
-
-> **Note**: The user plans to work on API and database changes before continuing with frontend features.
-
-#### API Enhancements
-
-- [ ] **Fix image field in events endpoint**
-  - **IMPORTANT**: Verify field name (`legacy_image` vs `image` vs `19_image`)
-  - Current endpoint may return wrong image field
-  - Affects: GET /api/v1/events and GET /api/v1/events/{id}
-  - Check API README for field mappings
-  - Estimated: 1-2 hours
-
-- [ ] **Add venue data to events endpoint**
-  - Include venue name, address, website in event response
-  - Use JOIN query on venue_id
-  - Reduces frontend API calls
-  - Estimated: 2-3 hours
-
-- [ ] **Add country/state name lookups**
-  - Include country_name and state_name in event response
-  - Use JOIN or lookup tables
-  - Frontend displays human-readable names
-  - Estimated: 2-3 hours
-
-- [ ] **Optimize event queries**
-  - Add indexes on date_start, country_id, approved
-  - Implement caching (Redis) - optional
-  - Pagination optimization
-  - Estimated: 2-4 hours
-
-#### Database Schema Changes
-
-- [ ] **Add tags and genre fields to events table**
-
-  ```sql
-  -- Add tags field for comma-separated tags (keywords, style descriptors)
-  ALTER TABLE psycho_events ADD COLUMN tags TEXT NULL COMMENT 'Comma-separated tags';
-
-  -- Add genre field
-  ALTER TABLE psycho_events ADD COLUMN genre VARCHAR(100) NULL;
-  ```
-
-  - **Note**: `bands`, `tags`, and `genre` are three separate fields:
-    - `bands`: Performing bands/artists (comma-separated)
-    - `tags`: Additional keywords/tags (comma-separated)
-    - `genre`: Primary music genre
-  - Estimated: 1-2 hours
-
-- [ ] **Add database indexes for performance**
-
-  ```sql
-  CREATE INDEX idx_date_start ON events(date_start);
-  CREATE INDEX idx_approved ON events(approved);
-  CREATE INDEX idx_country ON events(country_id);
-  ```
-
-  - Estimated: 1 hour
-
-- [ ] **Update API to handle new fields**
-  - Include `tags` and `genre` in event responses
-  - Add filtering by tags and genre
-  - Update validation rules
-  - Estimated: 2-3 hours
-
 ### Frontend Features
 
 #### Recently Completed ✅
@@ -174,29 +109,51 @@
   - [x] Consistent USA detection logic
   - Completed: February 17, 2026
 
-- [ ] **Event Detail Page** 🎯 NEXT UP
-  - Individual event page with full details
-  - Shareable URLs (/events/[id])
-  - Full event information (all fields)
-  - Larger image display
-  - Formatted text with line breaks
-  - Venue information
-  - Edit button (for owners/admins)
-  - Share functionality
-  - Back to list button
-  - Estimated: 4-6 hours
+- [x] **CSS Modules Migration** - COMPLETED ✅
+  - [x] Remove all .styles.ts files
+  - [x] Migrate all components to .module.css
+  - [x] Replace all inline styles (sx props) with CSS classes
+  - [x] Replace hardcoded values with CSS variables
+  - [x] Style MUI components with :global() selectors
+  - [x] Remove ThemeProvider overhead
+  - Completed: February 18, 2026
 
-## 🟢 Medium Priority (After Backend Changes)
+- [x] **Event Detail Page** - COMPLETED ✅
+  - [x] Individual event page with full details
+  - [x] Shareable URLs (/events/[id])
+  - [x] Full event information (all fields)
+  - [x] Image display with alignment
+  - [x] Formatted text with line breaks (white-space: pre-line)
+  - [x] Venue information display
+  - [x] Multi-day date display with formatLongDate()
+  - [x] Share functionality
+  - [x] Breadcrumb navigation
+  - [x] Comprehensive test coverage (29 tests)
+  - Completed: February 18, 2026
 
-### Phase 2: Authentication & User Features
+- [x] **Backend/API Enhancements** - COMPLETED ✅
+  - [x] Image field handling (legacy_image + new image field)
+  - [x] Venue data included in event responses (JOIN query)
+  - [x] Country/state name lookups working
+  - [x] Tags and genre fields implemented
+  - [x] Genre filtering with counts
+  - Completed: February 15-17, 2026
 
-- [ ] **Authentication system**
-  - JWT integration with backend
-  - Login/Logout components
-  - Session management
-  - Protected routes
-  - Remember me functionality
-  - Estimated: 1-2 days
+- [x] **TypeScript Errors** - COMPLETED ✅
+  - [x] Fixed EventDetail.test.tsx type mismatches
+  - [x] Changed test mocks from arrays to comma-separated strings
+  - Completed: February 18, 2026
+
+- [x] **Authentication System** - COMPLETED ✅
+  - [x] JWT integration with backend
+  - [x] Login/Logout components (LoginModal)
+  - [x] Session management (AuthContext)
+  - [x] User menu with profile/logout
+  - Completed: February 2026
+
+## 🟢 Medium Priority (Next Sprint)
+
+### Phase 3: Content Management
 
 - [ ] **User dashboard**
   - My events (created by user)
