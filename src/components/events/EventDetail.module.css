@@ -489,7 +489,7 @@
     gap: var(--spacing-3);
   }
 
-  .bandsWithImage {
+  .bandListing {
     flex-direction: column-reverse;
   }
 
