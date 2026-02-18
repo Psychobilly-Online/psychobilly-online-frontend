@@ -49,7 +49,7 @@ export function UserMenu() {
           showAvatar ? (
             <img
               src={getAvatarUrl(user.avatar) || ''}
-              alt={user.username}
+              alt={user?.username ? decodeHtmlEntities(user.username) : 'User Avatar'}
               className={styles.avatar}
               onError={() => setAvatarError(true)}
               loading="lazy"
