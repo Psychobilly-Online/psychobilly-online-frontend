@@ -391,23 +391,23 @@
 }
 
 .inputField :global(.MuiInputLabel-root) {
-  color: #fff !important;
+  color: var(--color-text-primary) !important;
 }
 
 .inputField :global(.MuiInputLabel-root.Mui-focused) {
-  color: #fff !important;
+  color: var(--color-text-primary) !important;
 }
 
 .inputField :global(.MuiOutlinedInput-notchedOutline) {
-  border-color: #3a3a3d !important;
+  border-color: var(--color-border-medium) !important;
 }
 
 .inputField:hover :global(.MuiOutlinedInput-notchedOutline) {
-  border-color: #3a3a3d !important;
+  border-color: var(--color-border-medium) !important;
 }
 
 .inputField :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
-  border-color: #3a3a3d !important;
+  border-color: var(--color-border-medium) !important;
   box-shadow: none !important;
 }
 

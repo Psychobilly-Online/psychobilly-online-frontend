@@ -9,5 +9,5 @@
  */
 export function getAvatarUrl(avatar: string | undefined): string | null {
   if (!avatar) return null;
-  return `https://www.psychobilly-online.de/community/download/file.php?avatar=${avatar}`;
+  return `https://www.psychobilly-online.de/community/download/file.php?avatar=${encodeURIComponent(avatar)}`;
 }
