@@ -181,7 +181,7 @@ describe('EventDetail', () => {
       expect(screen.getByText('Rockabilly')).toBeInTheDocument();
     });
 
-    it('handles genres as array', () => {
+    it('handles genres as comma-separated string', () => {
       const event = { ...mockBaseEvent, genres: 'Psychobilly, Punk' };
       render(<EventDetail event={event} />);
       expect(screen.getByText('Psychobilly')).toBeInTheDocument();
