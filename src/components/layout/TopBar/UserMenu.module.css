@@ -1,9 +1,5 @@
-/* User Menu Container */
-.userMenuContainer {
-  position: relative;
-}
+/* Avatar styling for UserMenu using MUI Menu component */
 
-/* Avatar styling */
 .avatar {
   width: 30px;
   height: 30px;
@@ -20,79 +16,81 @@
   background-color: var(--color-accent-primary) !important;
 }
 
-/* User Menu Dropdown */
-.userMenu {
-  position: absolute;
-  top: calc(100% + var(--spacing-2));
-  right: 0;
-  min-width: 200px;
-  background-color: var(--color-bg-primary);
-  border: 1px solid var(--color-border-default);
-  border-radius: 6px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  z-index: 1001;
+/* Menu styles - applied to the Paper component */
+.menuPaper {
+  background-color: var(--color-bg-primary) !important;
+  border: 1px solid var(--color-border-default) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3) !important;
+  min-width: 200px !important;
+  margin-top: var(--spacing-3) !important;
 }
-
-/* Mobile: Full-width menu */
-@media (max-width: 768px) {
-  .userMenu {
-    position: fixed;
-    top: var(--spacing-15); /* Below TopBar */
-    left: 0;
-    right: 0;
-    min-width: 100%;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-  }
+.menuPaper ul {
+  padding: 0 !important;
 }
-
-.userMenuHeader {
+/* Menu header */
+.menuHeader {
   padding: var(--spacing-4);
   border-bottom: 1px solid var(--color-border-default);
 }
 
+/* Username text */
 .username {
-  font-weight: 600;
-  color: var(--color-text-primary);
-  font-size: 14px;
-  margin-bottom: var(--spacing-1);
+  font-weight: 600 !important;
+  color: var(--color-text-primary) !important;
+  font-size: 14px !important;
+  margin-bottom: var(--spacing-1) !important;
 }
 
-.userEmail {
-  font-size: 12px;
-  color: var(--color-text-muted);
+/* Email text */
+.email {
+  font-size: 12px !important;
+  color: var(--color-text-muted) !important;
 }
 
-.userMenuDivider {
-  height: 1px;
-  background-color: var(--color-border-default);
+/* Menu items */
+.menuItem {
+  padding: var(--spacing-3) var(--spacing-4) !important;
+  color: var(--color-text-primary) !important;
+  font-size: 14px !important;
 }
 
-.userMenuItem {
-  display: block;
-  width: 100%;
-  padding: var(--spacing-3) var(--spacing-4);
-  text-align: left;
-  background: none;
-  border: none;
-  color: var(--color-text-primary);
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
+.menuItem:hover {
+  background-color: var(--color-bg-hover) !important;
 }
 
-.userMenuItem:hover {
-  background-color: var(--color-bg-hover);
+/* Divider */
+.divider {
+  margin: 0 !important;
+  border-color: var(--color-border-default) !important;
 }
 
-.userMenuItem:first-child {
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .menuPaper {
+    width: auto !important;
+    max-width: 100vw !important;
+    position: absolute;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 5px 0 0 0 !important;
+    border-radius: 0 !important;
+  }
 
-.userMenuItem:last-child {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+  .menuHeader {
+    padding: var(--spacing-3);
+  }
+
+  .username {
+    font-size: 13px !important;
+  }
+
+  .email {
+    font-size: 11px !important;
+  }
+
+  .menuItem {
+    padding: var(--spacing-2) var(--spacing-3) !important;
+    font-size: 13px !important;
+  }
 }

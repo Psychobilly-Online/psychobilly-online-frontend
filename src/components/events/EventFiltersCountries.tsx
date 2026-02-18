@@ -22,7 +22,7 @@ interface EventFiltersCountriesProps {
   showAllCountries: boolean;
   onShowAll: () => void;
   renderCountryLabel: (country: Country) => ReactNode;
-  popoverPaperSx: object;
+  popoverPaperClassName: string;
   popoverContainer?: HTMLElement | null;
 }
 
@@ -42,7 +42,7 @@ export function EventFiltersCountries({
   showAllCountries,
   onShowAll,
   renderCountryLabel,
-  popoverPaperSx,
+  popoverPaperClassName,
   popoverContainer,
 }: EventFiltersCountriesProps) {
   return (
@@ -92,7 +92,7 @@ export function EventFiltersCountries({
         container={popoverContainer ?? undefined}
         marginThreshold={16}
         disablePortal
-        slotProps={{ paper: { sx: popoverPaperSx } }}
+        slotProps={{ paper: { className: popoverPaperClassName } }}
       >
         <div className={styles.countryPopover}>
           <div className={styles.popoverHeader}>

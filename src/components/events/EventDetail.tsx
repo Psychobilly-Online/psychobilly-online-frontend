@@ -8,7 +8,7 @@ import { Dialog, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ensureProtocol } from '@/lib/stringUtils';
 import { useState, useEffect } from 'react';
-import { formatEventDate } from '@/lib/date-utils';
+import { formatEventDate, formatLongDate } from '@/lib/date-utils';
 import { decodeHtmlEntities } from '@/lib/stringUtils';
 import { formatVenueAddress } from '@/lib/address-utils';
 import { DateBadge } from '@/components/shared/DateBadge';
@@ -149,35 +149,9 @@ export function EventDetail({ event }: EventDetailProps) {
               </div>
             )}
 
-            {/* Venue */}
-            {event.venue && (
-              <div className={styles.section}>
-                <div className={styles.venueInfo}>
-                  {formatVenueAddress(event.venue).map((line, idx) => (
-                    <div
-                      key={idx}
-                      className={idx === 0 ? styles.venueName : styles.venueAddressLine}
-                    >
-                      {decodeHtmlEntities(line)}
-                    </div>
-                  ))}
-                  {event.venue.url && (
-                    <a
-                      href={ensureProtocol(event.venue.url)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.venueLink}
-                    >
-                      Venue Website
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Bands with Image */}
+            {/* Bands */}
             <div className={styles.section}>
-              <div className={styles.bandsWithImage}>
+              <div className={styles.bandListing}>
                 <div className={styles.bandsContainer}>
                   {hasMultipleDays && event.days && event.days.length > 1 ? (
                     <>
@@ -187,7 +161,7 @@ export function EventDetail({ event }: EventDetailProps) {
 
                         return (
                           <div key={day.id} className={styles.daySection}>
-                            <h3 className={styles.dayTitle}>{day.label}</h3>
+                            <h3 className={styles.dayTitle}>{formatLongDate(day.date)}</h3>
                             <div className={styles.bandsList}>
                               {dayBands.map((band, idx) => (
                                 <span key={idx} className={styles.bandChip}>
@@ -208,31 +182,91 @@ export function EventDetail({ event }: EventDetailProps) {
                       ))}
                     </div>
                   ) : null}
-
-                  {/* Additional Info */}
-                  {event.text && (
-                    <div className={styles.additionalInfoContainer}>
-                      <p className={styles.additionalInfo}>{decodeHtmlEntities(event.text)}</p>
-                    </div>
-                  )}
                 </div>
-
-                {imageUrl && (
-                  <div className={styles.imageContainer} onClick={() => setImageModalOpen(true)}>
-                    <img src={imageUrl} alt={decodeHtmlEntities(event.headline)} />
-                    <div className={styles.imageOverlay}>
-                      <span>🔍 Click to enlarge</span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* Event Info */}
-            {(event.url || event.ticket_price || event.ticket_url) && (
+            {/* Additional Info */}
+            {(event.text || event.ticket_price || imageUrl) && (
               <div className={styles.section}>
-                <div className={styles.eventInfo}>
-                  {event.url && (
+                <div className={styles.additionalInfoWrapper}>
+                  <div className={styles.additionalInfoContent}>
+                    {event.text && (
+                      <div className={styles.additionalInfoContainer}>
+                        <strong>Additional Information:</strong>
+                        <p className={styles.additionalInfo} data-testid="event-text">
+                          {decodeHtmlEntities(event.text)}
+                        </p>
+                      </div>
+                    )}
+
+                    {event.ticket_price && (
+                      <div className={styles.additionalInfoContainer}>
+                        <strong>Ticket Price:</strong>
+                        <p className={styles.additionalInfo}>
+                          {decodeHtmlEntities(event.ticket_price)}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {imageUrl && (
+                    <div
+                      className={styles.imageContainer}
+                      onClick={() => setImageModalOpen(true)}
+                      data-testid="event-image-container"
+                    >
+                      <img src={imageUrl} alt={decodeHtmlEntities(event.headline)} />
+                      <div className={styles.imageOverlay} />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Venue */}
+            {event.venue && (
+              <div className={styles.section}>
+                <div className={styles.venueInfo}>
+                  {formatVenueAddress(event.venue).map((line, idx) => (
+                    <div
+                      key={idx}
+                      className={idx === 0 ? styles.venueName : styles.venueAddressLine}
+                    >
+                      {decodeHtmlEntities(line)}
+                    </div>
+                  ))}
+                  {/* Map */}
+                  {event.venue?.latitude && event.venue?.longitude && (
+                    <div className={styles.mapSection}>
+                      <EventMap
+                        latitude={parseFloat(event.venue.latitude)}
+                        longitude={parseFloat(event.venue.longitude)}
+                        venueName={event.venue.name || 'Event Venue'}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            {/* Event Info */}
+            {(event.url || event.ticket_price || event.ticket_url || event.venue?.url) && (
+              <div className={styles.section}>
+                <strong>Links</strong>
+                {event.venue?.url && (
+                  <div className={styles.eventInfo}>
+                    <a
+                      href={ensureProtocol(event.venue.url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.venueLink}
+                    >
+                      Venue Website
+                    </a>
+                  </div>
+                )}
+                {event.url && (
+                  <div className={styles.eventInfo}>
                     <a
                       href={ensureProtocol(event.url)}
                       target="_blank"
@@ -241,13 +275,10 @@ export function EventDetail({ event }: EventDetailProps) {
                     >
                       Event Website
                     </a>
-                  )}
-                  {event.ticket_price && (
-                    <div className={styles.ticketPrice}>
-                      {decodeHtmlEntities(event.ticket_price)}
-                    </div>
-                  )}
-                  {event.ticket_url && (
+                  </div>
+                )}
+                {event.ticket_url && (
+                  <div className={styles.eventInfo}>
                     <a
                       href={ensureProtocol(event.ticket_url)}
                       target="_blank"
@@ -256,23 +287,12 @@ export function EventDetail({ event }: EventDetailProps) {
                     >
                       Buy Tickets
                     </a>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
-
-        {/* Map */}
-        {event.venue?.latitude && event.venue?.longitude && (
-          <div className={styles.mapSection}>
-            <EventMap
-              latitude={parseFloat(event.venue.latitude)}
-              longitude={parseFloat(event.venue.longitude)}
-              venueName={event.venue.name || 'Event Venue'}
-            />
-          </div>
-        )}
       </div>
 
       {/* Image Modal */}
@@ -281,35 +301,15 @@ export function EventDetail({ event }: EventDetailProps) {
         onClose={() => setImageModalOpen(false)}
         maxWidth={false}
         slotProps={{
-          paper: {
-            sx: {
-              backgroundColor: 'transparent',
-              boxShadow: 'none',
-              overflow: 'visible',
-            },
-          },
+          paper: { className: styles.imageDialogPaper },
         }}
-        sx={{
-          '& .MuiBackdrop-root': {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-          },
-        }}
+        className={styles.imageDialog}
       >
         <div className={styles.imageModalContent}>
           <IconButton
             onClick={() => setImageModalOpen(false)}
-            className={styles.closeModal}
+            className={`${styles.closeModal} ${styles.closeModalButton}`}
             aria-label="Close image"
-            sx={{
-              position: 'absolute',
-              top: -48,
-              right: 0,
-              color: 'white',
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              },
-            }}
           >
             <CloseIcon />
           </IconButton>

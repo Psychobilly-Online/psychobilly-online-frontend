@@ -189,13 +189,14 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
 }
 
 .popoverCloseButton {
   color: var(--color-text-tertiary) !important;
 }
 
-.countryPopover {
+.refinePopover {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
@@ -205,6 +206,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
 }
 
 .countryChipLabel {
@@ -374,4 +376,113 @@
     flex-wrap: wrap;
     align-items: flex-start;
   }
+}
+
+/* MUI Component Styles */
+
+/* Input field styling for FormControl/Select */
+.inputField :global(.MuiInputBase-root) {
+  background-color: #262629 !important;
+  color: #fff !important;
+}
+
+.inputField :global(.MuiOutlinedInput-root) {
+  border-radius: 16px !important;
+}
+
+.inputField :global(.MuiInputLabel-root) {
+  color: #fff !important;
+}
+
+.inputField :global(.MuiInputLabel-root.Mui-focused) {
+  color: #fff !important;
+}
+
+.inputField :global(.MuiOutlinedInput-notchedOutline) {
+  border-color: #3a3a3d !important;
+}
+
+.inputField:hover :global(.MuiOutlinedInput-notchedOutline) {
+  border-color: #3a3a3d !important;
+}
+
+.inputField :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
+  border-color: #3a3a3d !important;
+  box-shadow: none !important;
+}
+
+/* Settings popover */
+.settingsPopover {
+  background-color: var(--color-bg-tertiary) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  color: var(--color-text-primary) !important;
+  padding: var(--spacing-2) !important;
+  min-width: 260px !important;
+  max-width: min(100vw - 32px, 1200px) !important;
+}
+
+/* Refine popover */
+.refinePopoverPaper {
+  background-color: var(--color-bg-elevated) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4) !important;
+  padding: var(--spacing-4) !important;
+  margin-top: var(--spacing-2) !important;
+  min-width: 320px !important;
+  max-width: min(100vw - 32px, 800px) !important;
+  border-radius: var(--spacing-3) !important;
+}
+
+/* Date popover */
+.datePopoverPaper {
+  background-color: var(--color-bg-elevated) !important;
+  border: 1px solid var(--color-border-subtle) !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4) !important;
+  padding: var(--spacing-4) !important;
+  margin-top: var(--spacing-2) !important;
+  max-width: min(100vw - 32px, 800px) !important;
+  border-radius: var(--spacing-3) !important;
+}
+
+/* MUI Component Global Styles within EventFilters - using CSS variables */
+.filterContainer :global(.MuiChip-root) {
+  background-color: transparent !important;
+  border-color: var(--color-border-emphasis) !important;
+  color: var(--color-text-primary) !important;
+  border-radius: var(--spacing-5) !important;
+}
+
+.filterContainer :global(.MuiChip-filled) {
+  background-color: var(--color-bg-hover) !important;
+  border-color: var(--color-bg-hover) !important;
+}
+
+.filterContainer :global(.MuiChip-root:hover) {
+  background-color: var(--color-bg-hover) !important;
+}
+
+.filterContainer :global(.MuiChip-deleteIcon) {
+  color: var(--color-text-muted) !important;
+}
+
+.filterContainer :global(.MuiChip-deleteIcon:hover) {
+  color: var(--color-text-primary) !important;
+}
+
+.filterContainer :global(.MuiMenuItem-root) {
+  color: var(--color-text-primary) !important;
+}
+
+.filterContainer :global(.MuiMenuItem-root:hover) {
+  background-color: var(--color-bg-hover) !important;
+}
+
+.filterContainer :global(.MuiSelect-icon) {
+  color: var(--color-text-muted) !important;
+}
+
+.filterContainer :global(.MuiTypography-root) {
+  color: var(--color-text-primary) !important;
 }

@@ -73,6 +73,7 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
                   window.open(
                     'https://www.psychobilly-online.de/community/ucp.php?i=pm&folder=inbox',
                     '_blank',
+                    'noopener,noreferrer',
                   );
                 }}
                 icon={

@@ -26,7 +26,7 @@ interface EventFiltersDateRangeProps {
   onViewChange: (view: 'day' | 'month' | 'year') => void;
   rangeDay: (props: PickersDayProps) => JSX.Element;
   formatDateLabel: (date: Date) => string;
-  popoverPaperSx: object;
+  popoverPaperClassName: string;
   popoverContainer?: HTMLElement | null;
   eventDates?: Set<number>;
 }
@@ -46,7 +46,7 @@ export function EventFiltersDateRange({
   onViewChange,
   rangeDay,
   formatDateLabel,
-  popoverPaperSx,
+  popoverPaperClassName,
   popoverContainer,
 }: EventFiltersDateRangeProps) {
   // Determine display label
@@ -88,7 +88,7 @@ export function EventFiltersDateRange({
         container={popoverContainer ?? undefined}
         marginThreshold={16}
         disablePortal
-        slotProps={{ paper: { sx: popoverPaperSx } }}
+        slotProps={{ paper: { className: popoverPaperClassName } }}
       >
         <div className={styles.popoverHeader}>
           <Typography

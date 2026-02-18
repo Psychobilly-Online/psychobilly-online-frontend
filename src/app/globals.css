@@ -25,6 +25,7 @@
   --color-bg-elevated-alt: #2a2a2d;
   --color-bg-hover: #35353a;
   --color-bg-active: #262629;
+  --color-bg-tertiary: #2d2d30;
 
   /* Borders */
   --color-border-subtle: #2d2d30;
@@ -98,6 +99,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Verdana, Geneva, Tahoma, sans-serif, Helvetica, sans-serif;
+  min-height: 100.01vh;
 }
 
 a {

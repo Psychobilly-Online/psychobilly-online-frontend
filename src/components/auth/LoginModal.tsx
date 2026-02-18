@@ -51,47 +51,25 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
       maxWidth="sm"
       fullWidth
       slotProps={{
-        paper: {
-          sx: {
-            backgroundColor: 'var(--color-bg-primary)',
-            border: '1px solid var(--color-border-default)',
-            borderRadius: '12px',
-            maxWidth: '400px',
-          },
-        },
+        paper: { className: styles.dialogPaper },
       }}
     >
-      <DialogTitle
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          color: 'var(--color-text-primary)',
-          fontSize: '20px',
-          fontWeight: 600,
-          padding: 'var(--spacing-6) var(--spacing-6) var(--spacing-4)',
-        }}
-      >
+      <DialogTitle className={styles.dialogTitle}>
         Login
         <IconButton
           onClick={handleClose}
           size="small"
           aria-label="Close"
-          sx={{
-            color: 'var(--color-text-muted)',
-            '&:hover': {
-              backgroundColor: 'var(--color-bg-hover)',
-            },
-          }}
+          className={styles.closeButton}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ padding: '0 var(--spacing-6) var(--spacing-6)' }}>
+      <DialogContent className={styles.dialogContent}>
         <form onSubmit={handleSubmit} className={styles.form}>
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert severity="error" className={styles.alert}>
               {error}
             </Alert>
           )}
@@ -139,7 +117,12 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </button>
 
           <div className={styles.footer}>
-            <a href="/forgot-password" className={styles.link}>
+            <a
+              href="https://www.psychobilly-online.de/community/ucp.php?mode=sendpassword"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
               Forgot password?
             </a>
           </div>
