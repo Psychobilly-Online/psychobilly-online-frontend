@@ -70,7 +70,7 @@ describe('EventDetail', () => {
     it('handles bands as array', () => {
       const event = {
         ...mockBaseEvent,
-        bands: ['Band One', 'Band Two'],
+        bands: 'Band One, Band Two',
       };
       render(<EventDetail event={event} />);
       expect(screen.getByText('Band One')).toBeInTheDocument();
@@ -182,7 +182,7 @@ describe('EventDetail', () => {
     });
 
     it('handles genres as array', () => {
-      const event = { ...mockBaseEvent, genres: ['Psychobilly', 'Punk'] };
+      const event = { ...mockBaseEvent, genres: 'Psychobilly, Punk' };
       render(<EventDetail event={event} />);
       expect(screen.getByText('Psychobilly')).toBeInTheDocument();
       expect(screen.getByText('Punk')).toBeInTheDocument();
