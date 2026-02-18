@@ -167,17 +167,40 @@
   background: var(--color-accent-primary);
   color: var(--color-text-primary);
   padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--spacing-2);
+  border-radius: var(--spacing-5);
   font-size: 13px;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  font-weight: 500;
+}
+
+.categoryChip:hover {
+  background: var(--color-accent-primary-dark);
 }
 
 .genreChip {
-  background: var(--color-bg-tertiary);
+  background: transparent;
   padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--spacing-2);
+  border-radius: var(--spacing-5);
   font-size: 13px;
-  color: var(--color-text-muted);
-  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-emphasis);
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  font-weight: 500;
+}
+
+.genreChip:hover {
+  background: var(--color-bg-hover);
 }
 
 /* Sections */
@@ -264,8 +287,8 @@
   color: var(--color-text-primary);
 }
 
-/* Bands with Image */
-.bandsWithImage {
+/* Bands */
+.bandListing {
   display: flex;
   gap: var(--spacing-6);
   align-items: flex-start;
@@ -284,6 +307,7 @@
   width: 200px;
   height: auto;
   flex-shrink: 0;
+  margin-left: auto;
   background: var(--color-bg-tertiary);
 }
 
@@ -295,7 +319,7 @@
 }
 
 .imageContainer:hover img {
-  transform: scale(1.05);
+  transform: scale(1.01);
 }
 
 .imageOverlay {
@@ -318,8 +342,15 @@
 }
 
 /* Bands */
+.bandsContainer {
+  display: flex;
+  gap: var(--spacing-6);
+  align-items: flex-start;
+}
+
 .daySection {
-  margin-bottom: var(--spacing-4);
+  flex: 1;
+  min-width: 0;
 }
 
 .daySection:last-child {
@@ -335,26 +366,48 @@
 
 .bandsList {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-2);
+  flex-direction: column;
+  gap: var(--spacing-4);
 }
 
 .bandChip {
-  background: var(--color-bg-tertiary);
+  background: transparent;
   padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--spacing-2);
-  font-size: 14px;
+  border-radius: var(--spacing-5);
+  font-size: 15px;
   color: var(--color-text-primary);
-  transition: background-color 0.2s;
+  border: 1px solid var(--color-border-emphasis);
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  font-weight: 500;
+  width: fit-content;
 }
 
 .bandChip:hover {
-  background: var(--color-border-subtle);
+  background: var(--color-bg-hover);
 }
 
 /* Additional Info */
+.additionalInfoWrapper {
+  display: flex;
+  gap: var(--spacing-6);
+  align-items: flex-start;
+}
+
+.additionalInfoContent {
+  flex: 1;
+  min-width: 0;
+}
+
 .additionalInfoContainer {
-  margin-top: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+}
+.additionalInfoContainer:last-child {
+  margin-bottom: 0;
 }
 
 .additionalInfo {
@@ -363,13 +416,32 @@
   line-height: 1.6;
   margin: 0;
   font-size: 14px;
+  white-space: pre-line;
+}
+
+@media (max-width: 768px) {
+  .additionalInfoWrapper {
+    flex-direction: column;
+  }
+
+  .imageContainer {
+    margin-left: 0;
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+.ticketInfo {
+  padding: 0;
+  line-height: 1.6;
+  margin-top: var(--spacing-12);
+  font-size: 14px;
 }
 
 /* Map */
 .mapSection {
   padding-top: var(--spacing-6);
   margin-top: var(--spacing-6);
-  border-top: 1px solid var(--color-border-subtle);
 }
 
 .mapPlaceholder {
@@ -380,24 +452,11 @@
   color: var(--color-text-muted);
 }
 
-/* Image Modal */
-.imageModal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: var(--spacing-6);
-  cursor: pointer;
-}
-
+/* Image Modal Content (inside MUI Dialog) */
 .imageModalContent {
   position: relative;
   max-width: 90vw;
   max-height: 90vh;
-  cursor: default;
 }
 
 .imageModalContent img {
@@ -405,28 +464,6 @@
   max-height: 90vh;
   object-fit: contain;
   border-radius: var(--spacing-3);
-}
-
-.closeModal {
-  position: absolute;
-  top: calc(-1 * var(--spacing-12));
-  right: 0;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-primary);
-  font-size: 24px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.closeModal:hover {
-  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Mobile */
@@ -452,14 +489,19 @@
     gap: var(--spacing-3);
   }
 
-  .bandsWithImage {
+  .bandListing {
     flex-direction: column-reverse;
+  }
+
+  .bandsContainer {
+    flex-direction: column;
+    gap: var(--spacing-4);
   }
 
   .imageContainer {
     width: 100%;
     max-width: 200px;
-    margin: 0 auto;
+    margin-left: auto;
   }
 
   .headline {
@@ -469,4 +511,27 @@
   .current {
     display: none;
   }
+}
+
+/* MUI Dialog styles for image modal */
+.imageDialogPaper {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.imageDialog :global(.MuiBackdrop-root) {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+.closeModalButton {
+  position: absolute !important;
+  top: -48px !important;
+  right: 0 !important;
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.closeModalButton:hover {
+  background-color: rgba(255, 255, 255, 0.3) !important;
 }

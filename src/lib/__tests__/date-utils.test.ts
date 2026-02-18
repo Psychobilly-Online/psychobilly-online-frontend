@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseDate, formatDate } from '../date-utils';
+import { parseDate, formatDate, formatEventDate, formatLongDate } from '../date-utils';
 
 describe('date-utils', () => {
   describe('parseDate', () => {
@@ -105,6 +105,117 @@ describe('date-utils', () => {
         expect(parsed).toBeInstanceOf(Date);
         expect(formatDate(parsed!)).toBe(dateStr);
       });
+    });
+  });
+
+  describe('formatEventDate', () => {
+    it('formats single day event', () => {
+      expect(formatEventDate('2026-06-15')).toBe('15 Jun 2026');
+      expect(formatEventDate('2026-06-15', '2026-06-15')).toBe('15 Jun 2026');
+    });
+
+    it('formats multi-day event in same month', () => {
+      expect(formatEventDate('2026-06-15', '2026-06-17')).toBe('15-17 Jun 2026');
+    });
+
+    it('formats multi-day event across months in same year', () => {
+      expect(formatEventDate('2026-04-30', '2026-05-01')).toBe('30 Apr - 1 May 2026');
+    });
+
+    it('formats multi-day event across years', () => {
+      expect(formatEventDate('2025-12-31', '2026-01-01')).toBe('31 Dec 2025 - 1 Jan 2026');
+    });
+
+    it('handles invalid start date', () => {
+      expect(formatEventDate('invalid-date')).toBe('Invalid date');
+    });
+
+    it('handles invalid end date', () => {
+      expect(formatEventDate('2026-06-15', 'invalid-date')).toBe('15 Jun 2026');
+    });
+
+    it('formats dates with single-digit days correctly', () => {
+      expect(formatEventDate('2026-03-01')).toBe('1 Mar 2026');
+      expect(formatEventDate('2026-03-01', '2026-03-09')).toBe('1-9 Mar 2026');
+    });
+
+    it('handles all months correctly', () => {
+      const months = [
+        { date: '2026-01-15', expected: 'Jan' },
+        { date: '2026-02-15', expected: 'Feb' },
+        { date: '2026-03-15', expected: 'Mar' },
+        { date: '2026-04-15', expected: 'Apr' },
+        { date: '2026-05-15', expected: 'May' },
+        { date: '2026-06-15', expected: 'Jun' },
+        { date: '2026-07-15', expected: 'Jul' },
+        { date: '2026-08-15', expected: 'Aug' },
+        { date: '2026-09-15', expected: 'Sep' },
+        { date: '2026-10-15', expected: 'Oct' },
+        { date: '2026-11-15', expected: 'Nov' },
+        { date: '2026-12-15', expected: 'Dec' },
+      ];
+
+      months.forEach(({ date, expected }) => {
+        const result = formatEventDate(date);
+        expect(result).toContain(expected);
+      });
+    });
+  });
+
+  describe('formatLongDate', () => {
+    it('formats date with weekday, month, ordinal day, and year', () => {
+      // 2026-05-23 is a Saturday
+      expect(formatLongDate('2026-05-23')).toBe('Saturday, May 23rd 2026');
+    });
+
+    it('uses correct ordinal suffixes', () => {
+      expect(formatLongDate('2026-05-01')).toContain('1st');
+      expect(formatLongDate('2026-05-02')).toContain('2nd');
+      expect(formatLongDate('2026-05-03')).toContain('3rd');
+      expect(formatLongDate('2026-05-04')).toContain('4th');
+      expect(formatLongDate('2026-05-11')).toContain('11th');
+      expect(formatLongDate('2026-05-12')).toContain('12th');
+      expect(formatLongDate('2026-05-13')).toContain('13th');
+      expect(formatLongDate('2026-05-21')).toContain('21st');
+      expect(formatLongDate('2026-05-22')).toContain('22nd');
+      expect(formatLongDate('2026-05-23')).toContain('23rd');
+      expect(formatLongDate('2026-05-30')).toContain('30th');
+      expect(formatLongDate('2026-05-31')).toContain('31st');
+    });
+
+    it('formats all weekdays correctly', () => {
+      // Known dates for 2026
+      expect(formatLongDate('2026-02-16')).toContain('Monday'); // Monday
+      expect(formatLongDate('2026-02-17')).toContain('Tuesday'); // Tuesday
+      expect(formatLongDate('2026-02-18')).toContain('Wednesday'); // Wednesday
+      expect(formatLongDate('2026-02-19')).toContain('Thursday'); // Thursday
+      expect(formatLongDate('2026-02-20')).toContain('Friday'); // Friday
+      expect(formatLongDate('2026-02-21')).toContain('Saturday'); // Saturday
+      expect(formatLongDate('2026-02-22')).toContain('Sunday'); // Sunday
+    });
+
+    it('formats all months correctly', () => {
+      expect(formatLongDate('2026-01-15')).toContain('January');
+      expect(formatLongDate('2026-02-15')).toContain('February');
+      expect(formatLongDate('2026-03-15')).toContain('March');
+      expect(formatLongDate('2026-04-15')).toContain('April');
+      expect(formatLongDate('2026-05-15')).toContain('May');
+      expect(formatLongDate('2026-06-15')).toContain('June');
+      expect(formatLongDate('2026-07-15')).toContain('July');
+      expect(formatLongDate('2026-08-15')).toContain('August');
+      expect(formatLongDate('2026-09-15')).toContain('September');
+      expect(formatLongDate('2026-10-15')).toContain('October');
+      expect(formatLongDate('2026-11-15')).toContain('November');
+      expect(formatLongDate('2026-12-15')).toContain('December');
+    });
+
+    it('handles invalid date', () => {
+      expect(formatLongDate('invalid-date')).toBe('Invalid date');
+    });
+
+    it('formats edge dates correctly', () => {
+      expect(formatLongDate('2026-01-01')).toContain('January 1st');
+      expect(formatLongDate('2026-12-31')).toContain('December 31st');
     });
   });
 });

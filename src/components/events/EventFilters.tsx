@@ -8,7 +8,6 @@ import {
   Popover,
   Select,
   Stack,
-  ThemeProvider,
   Typography,
 } from '@mui/material';
 import { PickersDay, type PickersDayProps } from '@mui/x-date-pickers/PickersDay';
@@ -21,13 +20,6 @@ import { EventFiltersCountries } from './EventFiltersCountries';
 import { EventFiltersDateRange } from './EventFiltersDateRange';
 import { EventFiltersCategories } from './EventFiltersCategories';
 import { EventFiltersGenres } from './EventFiltersGenres';
-import {
-  countryPopoverSx,
-  datePopoverSx,
-  filterTheme,
-  inputSx,
-  settingsPopoverSx,
-} from './EventFilters.styles';
 import { REGION_ISO_MAP } from './EventFilters.constants';
 import {
   formatDate,
@@ -84,7 +76,6 @@ export function EventFilters({
     categories: metadataCategories,
     genres: metadataGenres,
   } = useMetadata();
-  useMemo(() => filterTheme, []);
   const normalizedInitialFilters: FilterValues = {
     ...initialFilters,
     category_id: Array.isArray(initialFilters.category_id)
@@ -478,72 +469,52 @@ export function EventFilters({
     (selectedGenreIds.length > 0 ? selectedGenreIds.length : 0);
 
   return (
-    <ThemeProvider theme={filterTheme}>
-      <div
-        ref={filterContainerRef}
-        className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''} ${isSticky ? styles.sticky : ''}`}
-      >
-        <div className={styles.filterHeader}>
-          <div className={styles.headerMain} onClick={() => setIsExpanded((prev) => !prev)}>
-            <div className={styles.headerLeft}>
-              {loading ? (
-                <h2 className={styles.eventsTitle}>
-                  <svg
-                    className={styles.loadingSpinner}
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeDasharray="31.4 31.4"
-                      strokeDashoffset="0"
-                    />
-                  </svg>
-                  Loading events...
-                </h2>
-              ) : (
-                typeof totalCount === 'number' && (
-                  <h2 className={styles.eventsTitle}>
-                    {totalCount} event{totalCount !== 1 ? 's' : ''} found
-                  </h2>
-                )
-              )}
-            </div>
-          </div>
-          <div className={styles.headerActions}>
-            {activeFilterCount > 0 && (
-              <IconButton
-                size="small"
-                onClick={handleReset}
-                ariaLabel="Clear search"
-                title="Clear search"
-                icon={
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
+    <div
+      ref={filterContainerRef}
+      className={`${styles.filterContainer} ${!isExpanded ? styles.collapsed : ''} ${isSticky ? styles.sticky : ''}`}
+    >
+      <div className={styles.filterHeader}>
+        <div className={styles.headerMain} onClick={() => setIsExpanded((prev) => !prev)}>
+          <div className={styles.headerLeft}>
+            {loading ? (
+              <h2 className={styles.eventsTitle}>
+                <svg
+                  className={styles.loadingSpinner}
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
                     stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                }
-              />
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeDasharray="31.4 31.4"
+                    strokeDashoffset="0"
+                  />
+                </svg>
+                Loading events...
+              </h2>
+            ) : (
+              typeof totalCount === 'number' && (
+                <h2 className={styles.eventsTitle}>
+                  {totalCount} event{totalCount !== 1 ? 's' : ''} found
+                </h2>
+              )
             )}
+          </div>
+        </div>
+        <div className={styles.headerActions}>
+          {activeFilterCount > 0 && (
             <IconButton
               size="small"
-              onClick={handleOpenSettings}
-              ariaLabel="Open search settings"
-              title="Search settings"
+              onClick={handleReset}
+              ariaLabel="Clear search"
+              title="Clear search"
               icon={
                 <svg
                   width="18"
@@ -553,173 +524,190 @@ export function EventFilters({
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                  <circle cx="12" cy="12" r="3" />
+                  <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
               }
             />
+          )}
+          <IconButton
+            size="small"
+            onClick={handleOpenSettings}
+            ariaLabel="Open search settings"
+            title="Search settings"
+            icon={
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            }
+          />
+          <IconButton
+            size="small"
+            ariaLabel={isExpanded ? 'Collapse filters' : 'Expand filters'}
+            title={isExpanded ? 'Collapse filters' : 'Expand filters'}
+            onClick={() => setIsExpanded((prev) => !prev)}
+            icon={
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                {isExpanded ? <path d="M7 10l5 5 5-5z" /> : <path d="M10 17l5-5-5-5z" />}
+              </svg>
+            }
+          />
+        </div>
+      </div>
+
+      <Popover
+        open={settingsOpen}
+        anchorEl={settingsAnchor}
+        onClose={handleCloseSettings}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        container={filterContainerRef.current ?? undefined}
+        marginThreshold={16}
+        disablePortal
+        slotProps={{ paper: { className: styles.settingsPopover } }}
+      >
+        <div className={styles.settingsPopoverInner}>
+          <div className={styles.popoverHeader}>
+            <Typography className={styles.sectionTitle}>Search settings</Typography>
             <IconButton
               size="small"
-              ariaLabel={isExpanded ? 'Collapse filters' : 'Expand filters'}
-              title={isExpanded ? 'Collapse filters' : 'Expand filters'}
-              onClick={() => setIsExpanded((prev) => !prev)}
+              onClick={handleCloseSettings}
+              ariaLabel="Close settings"
               icon={
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  {isExpanded ? <path d="M7 10l5 5 5-5z" /> : <path d="M10 17l5-5-5-5z" />}
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
               }
             />
           </div>
+          <Stack spacing={2}>
+            <FormControl fullWidth size="small" className={styles.inputField}>
+              <InputLabel id="sort-by-label">Sort by</InputLabel>
+              <Select
+                labelId="sort-by-label"
+                label="Sort by"
+                value={filters.sort_by || 'date'}
+                onChange={(e) => handleInputChange('sort_by', e.target.value)}
+              >
+                <MenuItem value="date">Date</MenuItem>
+                <MenuItem value="city">City</MenuItem>
+                <MenuItem value="category">Category</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth size="small" className={styles.inputField}>
+              <InputLabel id="sort-order-label">Order</InputLabel>
+              <Select
+                labelId="sort-order-label"
+                label="Order"
+                value={filters.sort_order || 'ASC'}
+                onChange={(e) => handleInputChange('sort_order', e.target.value)}
+              >
+                <MenuItem value="ASC">Ascending</MenuItem>
+                <MenuItem value="DESC">Descending</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
         </div>
+      </Popover>
 
-        <Popover
-          open={settingsOpen}
-          anchorEl={settingsAnchor}
-          onClose={handleCloseSettings}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-          container={filterContainerRef.current ?? undefined}
-          marginThreshold={16}
-          disablePortal
-          PaperProps={{ sx: settingsPopoverSx }}
-        >
-          <div className={styles.settingsPopover}>
-            <div className={styles.popoverHeader}>
-              <Typography className={styles.sectionTitle}>Search settings</Typography>
-              <IconButton
-                size="small"
-                onClick={handleCloseSettings}
-                ariaLabel="Close settings"
-                icon={
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                }
-              />
-            </div>
-            <Stack spacing={2}>
-              <FormControl fullWidth size="small" sx={inputSx}>
-                <InputLabel id="sort-by-label">Sort by</InputLabel>
-                <Select
-                  labelId="sort-by-label"
-                  label="Sort by"
-                  value={filters.sort_by || 'date'}
-                  onChange={(e) => handleInputChange('sort_by', e.target.value)}
-                >
-                  <MenuItem value="date">Date</MenuItem>
-                  <MenuItem value="headline">Headline</MenuItem>
-                  <MenuItem value="city">City</MenuItem>
-                  <MenuItem value="category">Category</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth size="small" sx={inputSx}>
-                <InputLabel id="sort-order-label">Order</InputLabel>
-                <Select
-                  labelId="sort-order-label"
-                  label="Order"
-                  value={filters.sort_order || 'ASC'}
-                  onChange={(e) => handleInputChange('sort_order', e.target.value)}
-                >
-                  <MenuItem value="ASC">Ascending</MenuItem>
-                  <MenuItem value="DESC">Descending</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
+      {isExpanded && (
+        <form className={styles.filterForm} onSubmit={(e) => e.preventDefault()}>
+          <div className={styles.filterRows}>
+            <SearchChips />
+            <EventFiltersDateRange
+              startDate={startDate}
+              endDate={endDate}
+              dateOpen={dateOpen}
+              dateAnchor={dateAnchor}
+              onOpen={handleOpenDateRange}
+              onClose={handleCloseDateRange}
+              onUpdateDateRange={updateDateRange}
+              onCalendarChange={handleCalendarChange}
+              onPresetChange={handleDatePresetChange}
+              selectedPreset={datePreset}
+              calendarView={calendarView}
+              onViewChange={setCalendarView}
+              rangeDay={RangeDay}
+              formatDateLabel={formatDateLabel}
+              popoverPaperClassName={styles.datePopoverPaper}
+              popoverContainer={filterContainerRef.current}
+              eventDates={eventDates}
+            />
+            <EventFiltersCountries
+              countries={countries}
+              selectedCountryIds={selectedCountryIds}
+              selectedRegion={selectedRegionLabel}
+              countryLookup={countryLookup}
+              countryOpen={countryOpen}
+              countryAnchor={countryAnchor}
+              onOpen={handleOpenCountries}
+              onClose={handleCloseCountries}
+              onToggleCountry={toggleCountry}
+              onApplyCountries={applyCountries}
+              onFetchRegion={fetchRegionCountries}
+              loadingRegion={loadingRegion}
+              showAllCountries={showAllCountries}
+              onShowAll={() => setShowAllCountries(true)}
+              renderCountryLabel={renderCountryLabel}
+              popoverPaperClassName={styles.refinePopoverPaper}
+              popoverContainer={filterContainerRef.current}
+            />
+            <EventFiltersCategories
+              categories={categories}
+              selectedCategoryIds={selectedCategoryIds}
+              categoryCounts={categoryCounts}
+              categoryOpen={categoryOpen}
+              categoryAnchor={categoryAnchor}
+              onOpen={handleOpenCategories}
+              onClose={handleCloseCategories}
+              onToggleCategory={(categoryId) => {
+                const isSelected = selectedCategoryIds.includes(categoryId);
+                const nextSelected = isSelected
+                  ? selectedCategoryIds.filter((id) => id !== categoryId)
+                  : [...selectedCategoryIds, categoryId];
+                handleInputChange('category_id', nextSelected);
+              }}
+              onClearCategories={() => handleInputChange('category_id', [])}
+              popoverPaperClassName={styles.refinePopoverPaper}
+              popoverContainer={filterContainerRef.current}
+            />
+            <EventFiltersGenres
+              genres={genres}
+              selectedGenreIds={selectedGenreIds}
+              genreCounts={genreCounts}
+              genreOpen={genreOpen}
+              genreAnchor={genreAnchor}
+              onOpen={handleOpenGenres}
+              onClose={handleCloseGenres}
+              onToggleGenre={(genreId) => {
+                const isSelected = selectedGenreIds.includes(genreId);
+                const nextSelected = isSelected
+                  ? selectedGenreIds.filter((id) => id !== genreId)
+                  : [...selectedGenreIds, genreId];
+                handleInputChange('genre_id', nextSelected);
+              }}
+              onClearGenres={() => handleInputChange('genre_id', [])}
+              popoverPaperClassName={styles.refinePopoverPaper}
+              popoverContainer={filterContainerRef.current}
+            />
           </div>
-        </Popover>
-
-        {isExpanded && (
-          <form className={styles.filterForm} onSubmit={(e) => e.preventDefault()}>
-            <div className={styles.filterRows}>
-              <SearchChips />
-              <EventFiltersDateRange
-                startDate={startDate}
-                endDate={endDate}
-                dateOpen={dateOpen}
-                dateAnchor={dateAnchor}
-                onOpen={handleOpenDateRange}
-                onClose={handleCloseDateRange}
-                onUpdateDateRange={updateDateRange}
-                onCalendarChange={handleCalendarChange}
-                onPresetChange={handleDatePresetChange}
-                selectedPreset={datePreset}
-                calendarView={calendarView}
-                onViewChange={setCalendarView}
-                rangeDay={RangeDay}
-                formatDateLabel={formatDateLabel}
-                popoverPaperSx={datePopoverSx}
-                popoverContainer={filterContainerRef.current}
-                eventDates={eventDates}
-              />
-              <EventFiltersCountries
-                countries={countries}
-                selectedCountryIds={selectedCountryIds}
-                selectedRegion={selectedRegionLabel}
-                countryLookup={countryLookup}
-                countryOpen={countryOpen}
-                countryAnchor={countryAnchor}
-                onOpen={handleOpenCountries}
-                onClose={handleCloseCountries}
-                onToggleCountry={toggleCountry}
-                onApplyCountries={applyCountries}
-                onFetchRegion={fetchRegionCountries}
-                loadingRegion={loadingRegion}
-                showAllCountries={showAllCountries}
-                onShowAll={() => setShowAllCountries(true)}
-                renderCountryLabel={renderCountryLabel}
-                popoverPaperSx={countryPopoverSx}
-                popoverContainer={filterContainerRef.current}
-              />
-              <EventFiltersCategories
-                categories={categories}
-                selectedCategoryIds={selectedCategoryIds}
-                categoryCounts={categoryCounts}
-                categoryOpen={categoryOpen}
-                categoryAnchor={categoryAnchor}
-                onOpen={handleOpenCategories}
-                onClose={handleCloseCategories}
-                onToggleCategory={(categoryId) => {
-                  const isSelected = selectedCategoryIds.includes(categoryId);
-                  const nextSelected = isSelected
-                    ? selectedCategoryIds.filter((id) => id !== categoryId)
-                    : [...selectedCategoryIds, categoryId];
-                  handleInputChange('category_id', nextSelected);
-                }}
-                onClearCategories={() => handleInputChange('category_id', [])}
-                popoverPaperSx={countryPopoverSx}
-                popoverContainer={filterContainerRef.current}
-              />
-              <EventFiltersGenres
-                genres={genres}
-                selectedGenreIds={selectedGenreIds}
-                genreCounts={genreCounts}
-                genreOpen={genreOpen}
-                genreAnchor={genreAnchor}
-                onOpen={handleOpenGenres}
-                onClose={handleCloseGenres}
-                onToggleGenre={(genreId) => {
-                  const isSelected = selectedGenreIds.includes(genreId);
-                  const nextSelected = isSelected
-                    ? selectedGenreIds.filter((id) => id !== genreId)
-                    : [...selectedGenreIds, genreId];
-                  handleInputChange('genre_id', nextSelected);
-                }}
-                onClearGenres={() => handleInputChange('genre_id', [])}
-                popoverPaperSx={countryPopoverSx}
-                popoverContainer={filterContainerRef.current}
-              />
-            </div>
-          </form>
-        )}
-      </div>
-    </ThemeProvider>
+        </form>
+      )}
+    </div>
   );
 }

@@ -16,7 +16,7 @@ interface EventFiltersCategoriesProps {
   onClose: () => void;
   onToggleCategory: (categoryId: string) => void;
   onClearCategories: () => void;
-  popoverPaperSx: object;
+  popoverPaperClassName: string;
   popoverContainer?: HTMLElement | null;
 }
 
@@ -30,7 +30,7 @@ export function EventFiltersCategories({
   onClose,
   onToggleCategory,
   onClearCategories,
-  popoverPaperSx,
+  popoverPaperClassName,
   popoverContainer,
 }: EventFiltersCategoriesProps) {
   return (
@@ -69,9 +69,9 @@ export function EventFiltersCategories({
           container={popoverContainer ?? undefined}
           marginThreshold={16}
           disablePortal
-          PaperProps={{ sx: popoverPaperSx }}
+          slotProps={{ paper: { className: popoverPaperClassName } }}
         >
-          <div className={styles.countryPopover}>
+          <div className={styles.refinePopover}>
             <div className={styles.popoverHeader}>
               <Typography
                 className={styles.sectionTitle}

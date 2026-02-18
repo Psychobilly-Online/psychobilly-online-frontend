@@ -1,0 +1,115 @@
+/* Form styles for LoginModal using MUI Dialog */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  margin-bottom: var(--spacing-2);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.input {
+  width: 100%;
+  padding: var(--spacing-3);
+  font-size: 14px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 3px;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-border-emphasis);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  width: 100%;
+  padding: var(--spacing-3);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--color-accent-primary);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  margin-top: var(--spacing-2);
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-accent-primary-light);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.footer {
+  margin-top: var(--spacing-4);
+  text-align: center;
+  font-size: 14px;
+}
+
+.link {
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.link:hover {
+  color: var(--color-accent-primary-light);
+  text-decoration: underline;
+}
+
+/* MUI Dialog Component Styles */
+.dialogPaper {
+  background-color: var(--color-bg-primary) !important;
+  border: 1px solid var(--color-border-default) !important;
+  border-radius: 12px !important;
+  max-width: 400px !important;
+}
+
+.dialogTitle {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  color: var(--color-text-primary) !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  padding: var(--spacing-6) var(--spacing-6) var(--spacing-4) !important;
+}
+
+.closeButton {
+  color: var(--color-text-muted) !important;
+}
+
+.closeButton:hover {
+  background-color: var(--color-bg-hover) !important;
+}
+
+.dialogContent {
+  padding: 0 var(--spacing-6) var(--spacing-6) !important;
+}
+
+.alert {
+  margin-bottom: 16px !important;
+}

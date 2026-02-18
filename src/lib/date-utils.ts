@@ -100,3 +100,43 @@ export function formatEventDate(startDate: string, endDate?: string): string {
   // Different years
   return `${startDay} ${startMonth} ${startYear} - ${endDay} ${endMonth} ${endYear}`;
 }
+
+/**
+ * Returns the ordinal suffix for a day (1st, 2nd, 3rd, 4th, etc.)
+ *
+ * @param day - Day of the month (1-31)
+ * @returns Ordinal suffix ('st', 'nd', 'rd', or 'th')
+ */
+function getOrdinalSuffix(day: number): string {
+  if (day > 3 && day < 21) return 'th';
+  switch (day % 10) {
+    case 1:
+      return 'st';
+    case 2:
+      return 'nd';
+    case 3:
+      return 'rd';
+    default:
+      return 'th';
+  }
+}
+
+/**
+ * Formats a date string to a full date with day of week and ordinal suffix
+ * Example: "Saturday, May 23rd 2026"
+ *
+ * @param dateString - ISO date string in YYYY-MM-DD format
+ * @returns Formatted date string with day of week and ordinal
+ */
+export function formatLongDate(dateString: string): string {
+  const date = parseDate(dateString);
+  if (!date) return 'Invalid date';
+
+  const dayOfWeek = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+  const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date);
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const ordinal = getOrdinalSuffix(day);
+
+  return `${dayOfWeek}, ${month} ${day}${ordinal} ${year}`;
+}
