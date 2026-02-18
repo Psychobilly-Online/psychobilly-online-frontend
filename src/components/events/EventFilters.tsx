@@ -573,7 +573,7 @@ export function EventFilters({
         disablePortal
         slotProps={{ paper: { className: styles.settingsPopover } }}
       >
-        <div className={styles.settingsPopover}>
+        <div className={styles.settingsPopoverInner}>
           <div className={styles.popoverHeader}>
             <Typography className={styles.sectionTitle}>Search settings</Typography>
             <IconButton

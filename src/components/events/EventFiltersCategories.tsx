@@ -71,7 +71,7 @@ export function EventFiltersCategories({
           disablePortal
           slotProps={{ paper: { className: popoverPaperClassName } }}
         >
-          <div className={styles.countryPopover}>
+          <div className={styles.refinePopover}>
             <div className={styles.popoverHeader}>
               <Typography
                 className={styles.sectionTitle}

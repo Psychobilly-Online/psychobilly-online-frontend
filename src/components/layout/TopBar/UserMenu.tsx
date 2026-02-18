@@ -46,7 +46,7 @@ export function UserMenu() {
         aria-haspopup="true"
         aria-expanded={open}
         icon={
-          showAvatar ? (
+          showAvatar && user ? (
             <img
               src={getAvatarUrl(user.avatar) || ''}
               alt={user?.username ? decodeHtmlEntities(user.username) : 'User Avatar'}

@@ -315,7 +315,7 @@ export function EventDetail({ event }: EventDetailProps) {
         <div className={styles.imageModalContent}>
           <IconButton
             onClick={() => setImageModalOpen(false)}
-            className={`${styles.closeModal} ${styles.closeModalButton}`}
+            className={styles.closeModalButton}
             aria-label="Close image"
           >
             <CloseIcon />

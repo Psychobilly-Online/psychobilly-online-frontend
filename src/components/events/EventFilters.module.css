@@ -97,6 +97,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
+
 }
 
 .dateRow {
@@ -419,6 +420,13 @@
   padding: var(--spacing-2) !important;
   min-width: 260px !important;
   max-width: min(100vw - 32px, 1200px) !important;
+}
+
+.settingsPopoverInner {
+  margin: var(--spacing-1);
+  & .popoverHeader {
+    margin-bottom: var(--spacing-4);
+  }
 }
 
 /* Refine popover */

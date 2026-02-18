@@ -59,7 +59,7 @@ export function SearchBar({ searchContext = 'default' }: SearchBarProps) {
       />
       <button
         type="submit"
-        className={cx(styles.submitButton, !searchQuery && styles.disabled)}
+        className={cx(styles.submitButton, !searchQuery.trim() && styles.disabled)}
         aria-label="Submit search"
         disabled={!searchQuery.trim()}
       >
