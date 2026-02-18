@@ -214,7 +214,14 @@ export function EventDetail({ event }: EventDetailProps) {
                     <div
                       className={styles.imageContainer}
                       onClick={() => setImageModalOpen(true)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setImageModalOpen(true);
+                        }
+                      }}
                       data-testid="event-image-container"
+                      role="button"
+                      tabIndex={0}
                     >
                       <img src={imageUrl} alt={decodeHtmlEntities(event.headline)} />
                       <div className={styles.imageOverlay} />
