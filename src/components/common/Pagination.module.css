@@ -1,0 +1,213 @@
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) 0;
+  width: 100%;
+}
+
+.paginationLeft,
+.paginationRight {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.paginationLeft {
+  justify-content: flex-start;
+}
+
+.paginationRight {
+  justify-content: flex-end;
+}
+
+.navButton {
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-primary);
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  min-width: auto;
+}
+
+.navButton:hover:not(:disabled) {
+  background-color: var(--color-bg-hover);
+  border-color: var(--color-accent-primary);
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageNumbers {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.pageNumberButton {
+  min-width: 36px;
+  height: 36px;
+  padding: var(--spacing-2);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-primary);
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pageNumberButton:hover:not(:disabled) {
+  background-color: var(--color-bg-hover);
+  border-color: var(--color-accent-primary);
+  transform: translateY(-1px);
+}
+
+.pageNumberButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageNumberButton.active {
+  background-color: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: white;
+  font-weight: 600;
+}
+
+.ellipsis {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  padding: 0 var(--spacing-1);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.pageInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) 0 var(--spacing-4) 0;
+  width: 100%;
+}
+
+.pageInputLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pageInput {
+  width: 70px;
+  padding: var(--spacing-2);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  text-align: center;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  transition: all 0.2s;
+}
+
+.pageInput:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-bg-primary);
+}
+
+.pageInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hide number input spinners */
+.pageInput::-webkit-outer-spin-button,
+.pageInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pageInput[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.goButton {
+  padding: var(--spacing-2) var(--spacing-4);
+  background-color: var(--color-accent-primary);
+  border: 1px solid var(--color-accent-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.goButton:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.goButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    gap: var(--spacing-3);
+    align-items: stretch;
+  }
+
+  .paginationLeft,
+  .paginationRight {
+    width: 100%;
+  }
+
+  .paginationLeft {
+    order: 1;
+  }
+
+  .pageNumbers {
+    order: 2;
+  }
+
+  .paginationRight {
+    order: 3;
+  }
+
+  .navButton {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .pageNumbers {
+    flex-wrap: wrap;
+  }
+
+  .pageNumberButton {
+    min-width: 32px;
+    height: 32px;
+    font-size: 0.8125rem;
+  }
+}

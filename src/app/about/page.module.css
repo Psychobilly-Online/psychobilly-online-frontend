@@ -13,7 +13,7 @@
 
 .bigBox {
   border: 1px solid var(--panel-border);
-  background: var(--panel-bg);
+  background: var(--color-bg-secondary);
   border-radius: var(--spacing-4);
   box-shadow: var(--shadow);
   margin: 0 0 var(--spacing-7) 0;
@@ -42,7 +42,7 @@
 .bigBox h3 {
   font-size: var(--spacing-5);
   margin: var(--spacing-4) 0 var(--spacing-3) 0;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .bigBox p {

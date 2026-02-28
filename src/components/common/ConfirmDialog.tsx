@@ -1,6 +1,13 @@
 'use client';
 
-import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Button } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Button,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './ConfirmDialog.module.css';
 
@@ -25,7 +32,7 @@ export default function ConfirmDialog({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   confirmColor = 'primary',
-  isLoading = false
+  isLoading = false,
 }: ConfirmDialogProps) {
   const handleConfirm = () => {
     onConfirm();
@@ -61,11 +68,7 @@ export default function ConfirmDialog({
       </DialogContent>
 
       <DialogActions className={styles.dialogActions}>
-        <Button
-          onClick={onClose}
-          disabled={isLoading}
-          className={styles.cancelButton}
-        >
+        <Button onClick={onClose} disabled={isLoading} className={styles.cancelButton}>
           {cancelText}
         </Button>
         <Button

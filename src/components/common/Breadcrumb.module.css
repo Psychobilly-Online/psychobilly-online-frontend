@@ -1,0 +1,23 @@
+.breadcrumb {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-4);
+  font-size: 0.9rem;
+}
+
+.breadcrumb a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+.separator {
+  color: var(--color-text-secondary);
+}
+
+.current {
+  color: var(--color-text-secondary);
+}

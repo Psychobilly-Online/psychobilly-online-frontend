@@ -41,9 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# admin interface (local only for security)
-/src/app/admin
-/src/components/admin
-/src/app/api/admin
-/src/app/api/bands/merge
-/src/app/api/bands/search
+# internal documentation
+TODO.md
+docs/ADMIN_UI_GUIDELINES.md

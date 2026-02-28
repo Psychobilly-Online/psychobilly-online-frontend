@@ -1,0 +1,27 @@
+.genreTag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.genreTag.primary {
+  background-color: var(--color-accent-overlay);
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
+  font-weight: 600;
+}
+
+.primaryIndicator {
+  color: var(--color-accent-primary);
+  font-size: 10px;
+  line-height: 1;
+}

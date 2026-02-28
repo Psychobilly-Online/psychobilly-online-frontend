@@ -1,0 +1,13 @@
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,160 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.searchSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.searchInputWrapper {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: flex-start;
+}
+
+.searchInputWrapper > :first-child {
+  flex: 1;
+}
+
+.clearButton {
+  padding: var(--spacing-3) var(--spacing-4) !important;
+  white-space: nowrap;
+}
+
+.quickFilters {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.quickFilterButton {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.quickFilterButton:hover {
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-bg-secondary);
+}
+
+.quickFilterButton.active {
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-accent-primary);
+  color: white;
+}
+
+.count {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.genreFilter {
+  padding: var(--spacing-3);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+}
+
+.filterLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.filterSelect {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 200px;
+}
+
+.filterSelect:hover {
+  border-color: var(--color-accent-primary);
+}
+
+.filterSelect:focus {
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 2px rgba(177, 50, 42, 0.2);
+}
+
+.filterSelect optgroup {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.filterSelect option {
+  padding: var(--spacing-2);
+}
+
+.bandList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--list-item-gap);
+  min-height: 200px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .searchInputWrapper {
+    flex-direction: column;
+  }
+
+  .quickFilters {
+    flex-direction: column;
+  }
+
+  .quickFilterButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filterSelect {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .resultsInfo {
+    flex-direction: column;
+    gap: var(--spacing-2);
+    align-items: stretch;
+  }
+}
+
+.highlightBand {
+  animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+  0%, 100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(139, 92, 246, 0.2);
+  }
+}

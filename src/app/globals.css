@@ -15,6 +15,15 @@
   --spacing-12: 36px;
   --spacing-15: 45px;
 
+  /* ===== FONT SIZES ===== */
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+
   /* ===== COLOR PALETTE (Dark Theme) ===== */
 
   /* Backgrounds */
@@ -45,6 +54,10 @@
   --color-text-placeholder: #888;
   --color-text-faint: #666;
 
+  /* Links */
+  --color-link: #b5b5b5;
+  --color-link-hover: #ffffff;
+
   /* Brand / Accent Colors */
   --color-accent-primary: #b1322a;
   --color-accent-primary-dark: #7d2923;
@@ -52,11 +65,34 @@
   --color-accent-primary-light: #c1483f;
   --color-accent-primary-lighter: #d05a50;
   --color-accent-secondary: #e94e1b;
-  --color-error: #d32f2f;
+
+  /* Status Colors */
+  --color-error: #dc2626;
+  --color-error-light: #ef4444;
+  --color-error-bg: rgba(220, 38, 38, 0.1);
+  --color-error-border: rgba(220, 38, 38, 0.3);
+
+  --color-warning: #f59e0b;
+  --color-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-warning-border: rgba(245, 158, 11, 0.3);
+
+  --color-success: #22c55e;
+  --color-success-dark: #16a34a;
+  --color-success-bg: rgba(34, 197, 94, 0.1);
+  --color-success-border: rgba(34, 197, 94, 0.3);
 
   /* Interactive States */
   --color-hover-overlay: rgba(255, 255, 255, 0.1);
   --color-accent-overlay: rgba(125, 41, 35, 0.18);
+  --color-overlay-light: rgba(255, 255, 255, 0.5);
+  --color-overlay-dark: rgba(0, 0, 0, 0.1);
+
+  /* Border Radius */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
 
   /* Shadows */
   --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.25);
@@ -65,20 +101,23 @@
   --shadow-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   --shadow-subtle: 0 0 0 1px rgba(0, 0, 0, 0.2);
 
-  /* Legacy variables (for compatibility) */
-  --page-bg: #0f0f10;
-  --content-bg: transparent;
-  --panel-bg: #1b1b1d;
-  --panel-border: #2d2d30;
-  --text-primary: #f5f5f5;
-  --text-muted: #b5b5b5;
-  --link: #b5b5b5;
-  --link-hover: #ffffff;
-  --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  /* Standardized Hover States */
+  --hover-border-color: var(--color-accent-primary);
+  --hover-bg-color: var(--color-bg-hover);
+  --hover-transition: all 0.2s ease;
 
-  /* Legacy Tailwind Compatibility */
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* List Containers */
+  --list-item-gap: var(--spacing-3);
+  --list-container-max-height: 600px;
+
+  /* Compatibility aliases (to be phased out) */
+  --color-primary: var(--color-accent-primary);
+  --color-primary-dark: var(--color-accent-primary-dark);
+  --link: var(--color-link);
+  --link-hover: var(--color-link-hover);
+  --panel-bg: var(--color-bg-secondary);
+  --text-primary: var(--color-text-primary);
+  --text-muted: var(--color-text-muted);
 }
 
 @theme inline {
@@ -96,17 +135,17 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
   font-family: Verdana, Geneva, Tahoma, sans-serif, Helvetica, sans-serif;
   min-height: 100dvh;
 }
 
 a {
-  color: var(--link);
+  color: var(--color-link);
   text-decoration: underline;
 }
 
 a:hover {
-  color: var(--link-hover);
+  color: var(--color-link-hover);
 }
