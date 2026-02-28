@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import styles from './InfoBar.module.css';
 
 interface InfoBarProps {
@@ -21,7 +21,7 @@ interface ActionProps {
   children: ReactNode;
 }
 
-function InfoBar({ children, variant = 'default' }: InfoBarProps) {
+function InfoBarRoot({ children, variant = 'default' }: InfoBarProps) {
   return <div className={`${styles.infoBar} ${styles[variant]}`}>{children}</div>;
 }
 
@@ -54,6 +54,16 @@ function Action({ children }: ActionProps) {
   return <div className={styles.action}>{children}</div>;
 }
 
+// Define the component type with static properties
+interface InfoBarComponent {
+  (props: InfoBarProps): React.ReactElement;
+  Count: typeof Count;
+  Status: typeof Status;
+  Action: typeof Action;
+}
+
+// Cast to the proper type and assign static properties
+const InfoBar = InfoBarRoot as InfoBarComponent;
 InfoBar.Count = Count;
 InfoBar.Status = Status;
 InfoBar.Action = Action;

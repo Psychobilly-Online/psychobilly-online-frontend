@@ -161,7 +161,9 @@ export default function BandOverview() {
   };
 
   const handleSelectAll = () => {
-    setSelectedBands(bands);
+    // In search mode, only select the bands displayed on the current page
+    // Otherwise, selecting "all" could select hundreds of search results
+    setSelectedBands(displayedBands);
   };
 
   const handleEditBand = () => {

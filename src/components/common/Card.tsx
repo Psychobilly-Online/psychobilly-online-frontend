@@ -72,10 +72,22 @@ function Actions({ children }: ActionsProps) {
   return <div className={styles.actions}>{children}</div>;
 }
 
-Card.Header = Header;
-Card.Title = Title;
-Card.Meta = Meta;
-Card.Content = Content;
-Card.Actions = Actions;
+// Define the component type with static properties
+interface CardComponent {
+  (props: CardProps): React.JSX.Element;
+  Header: typeof Header;
+  Title: typeof Title;
+  Meta: typeof Meta;
+  Content: typeof Content;
+  Actions: typeof Actions;
+}
 
-export default Card;
+// Cast to the proper type and assign static properties
+const CardWithSubComponents = Card as CardComponent;
+CardWithSubComponents.Header = Header;
+CardWithSubComponents.Title = Title;
+CardWithSubComponents.Meta = Meta;
+CardWithSubComponents.Content = Content;
+CardWithSubComponents.Actions = Actions;
+
+export default CardWithSubComponents;

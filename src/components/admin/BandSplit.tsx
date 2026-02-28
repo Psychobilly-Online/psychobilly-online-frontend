@@ -99,7 +99,7 @@ export default function BandSplit({ band, onCancel, onSplitComplete }: BandSplit
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Split failed');
+        throw new Error(data.error || data.message || 'Split failed');
       }
 
       setSplitSummary(data);

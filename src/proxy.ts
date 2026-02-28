@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
 /**
  * Proxy for protecting routes based on authentication and authorization
@@ -9,8 +10,12 @@ import type { NextRequest } from 'next/server';
  * unauthenticated or unauthorized users appropriately.
  */
 
-interface JWTPayload {
-  user_id: number;
+/**
+ * JWT payload structure from PHP backend
+ * Note: PHP backend uses 'sub' (subject) for user ID, which is JWT standard
+ */
+interface UserJWTPayload {
+  sub: number; // User ID (JWT standard field)
   username: string;
   email: string;
   group_id: number;
@@ -19,28 +24,49 @@ interface JWTPayload {
 }
 
 /**
- * Verify and decode JWT token
- * Note: In production, this should verify the signature using the secret key
- * For now, we do basic decoding and expiry check
+ * Verify JWT token signature and decode payload
+ * Uses jose library to properly verify the JWT signature with the secret key
  */
-function verifyToken(token: string): JWTPayload | null {
+async function verifyToken(token: string): Promise<UserJWTPayload | null> {
   try {
-    // JWT format: header.payload.signature
-    const parts = token.split('.');
-    if (parts.length !== 3) {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error('JWT_SECRET is not configured');
       return null;
     }
 
-    // Decode payload (base64url)
-    const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf-8'));
+    // Verify JWT signature and decode payload
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
 
-    // Check expiration
-    const now = Math.floor(Date.now() / 1000);
-    if (payload.exp && payload.exp < now) {
-      return null; // Token expired
+    // Validate required fields (PHP backend uses 'sub' for user ID per JWT standard)
+    if (
+      typeof payload.sub !== 'number' ||
+      typeof payload.username !== 'string' ||
+      typeof payload.email !== 'string' ||
+      typeof payload.group_id !== 'number' ||
+      typeof payload.iat !== 'number' ||
+      typeof payload.exp !== 'number'
+    ) {
+      console.error('Invalid JWT payload structure:', {
+        sub: typeof payload.sub,
+        username: typeof payload.username,
+        email: typeof payload.email,
+        group_id: typeof payload.group_id,
+        iat: typeof payload.iat,
+        exp: typeof payload.exp,
+      });
+      return null;
     }
 
-    return payload as JWTPayload;
+    // Return validated and typed payload
+    return {
+      sub: payload.sub,
+      username: payload.username,
+      email: payload.email,
+      group_id: payload.group_id,
+      iat: payload.iat,
+      exp: payload.exp,
+    };
   } catch (error) {
     console.error('Token verification failed:', error);
     return null;
@@ -50,7 +76,7 @@ function verifyToken(token: string): JWTPayload | null {
 /**
  * Check if user is an admin (group_id === 5)
  */
-function isAdmin(payload: JWTPayload): boolean {
+function isAdmin(payload: UserJWTPayload): boolean {
   return payload.group_id === 5;
 }
 
@@ -64,7 +90,7 @@ const PROTECTED_ROUTES = {
   user: ['/dashboard'],
 };
 
-export default function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check if this is a protected route
@@ -86,8 +112,8 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Verify token
-  const payload = verifyToken(token);
+  // Verify token (this now properly verifies the signature)
+  const payload = await verifyToken(token);
 
   // Invalid or expired token - redirect to login
   if (!payload) {

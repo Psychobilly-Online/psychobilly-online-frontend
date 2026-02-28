@@ -29,8 +29,8 @@ export function UserMenu() {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     handleClose();
     // Redirect to login page with logout message
     router.push('/login?logout=true');
