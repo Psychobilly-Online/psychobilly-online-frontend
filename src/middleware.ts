@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 /**
  * Middleware for protecting routes based on authentication and authorization
- * 
+ *
  * This runs on the Edge runtime before requests reach the page.
  * It checks JWT tokens stored in httpOnly cookies and redirects
  * unauthenticated or unauthorized users appropriately.
@@ -32,9 +32,7 @@ function verifyToken(token: string): JWTPayload | null {
     }
 
     // Decode payload (base64url)
-    const payload = JSON.parse(
-      Buffer.from(parts[1], 'base64url').toString('utf-8')
-    );
+    const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf-8'));
 
     // Check expiration
     const now = Math.floor(Date.now() / 1000);
@@ -70,8 +68,8 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check if this is a protected route
-  const isAdminRoute = PROTECTED_ROUTES.admin.some(route => pathname.startsWith(route));
-  const isUserRoute = PROTECTED_ROUTES.user.some(route => pathname.startsWith(route));
+  const isAdminRoute = PROTECTED_ROUTES.admin.some((route) => pathname.startsWith(route));
+  const isUserRoute = PROTECTED_ROUTES.user.some((route) => pathname.startsWith(route));
 
   // If not a protected route, allow access
   if (!isAdminRoute && !isUserRoute) {
@@ -90,16 +88,16 @@ export function middleware(request: NextRequest) {
 
   // Verify token
   const payload = verifyToken(token);
-  
+
   // Invalid or expired token - redirect to login
   if (!payload) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
-    
+
     // Clear invalid token
     const response = NextResponse.redirect(loginUrl);
     response.cookies.delete('auth_token');
-    
+
     return response;
   }
 
@@ -117,11 +115,11 @@ export function middleware(request: NextRequest) {
 
 /**
  * Configure which routes the middleware should run on
- * 
+ *
  * We match:
  * - /admin/* (all admin routes)
  * - /dashboard/* (all user dashboard routes)
- * 
+ *
  * We exclude:
  * - /api/* (API routes handle their own auth)
  * - /_next/* (Next.js internals)

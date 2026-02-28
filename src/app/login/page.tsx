@@ -39,7 +39,7 @@ export default function LoginPage() {
 
     try {
       await login(username, password);
-      
+
       // After successful login, redirect to intended page or dashboard
       const destination = redirectUrl || '/dashboard';
       router.push(destination);
@@ -65,8 +65,8 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
-      <PageHeader 
-        title="Sign In" 
+      <PageHeader
+        title="Sign In"
         description="Welcome to Psychobilly Online. Sign in to access your account and manage content."
       />
 
@@ -78,10 +78,7 @@ export default function LoginPage() {
 
       {redirectUrl && (
         <InfoBar variant="default">
-          <InfoBar.Status 
-            type="warning" 
-            message="You need to sign in to access this page." 
-          />
+          <InfoBar.Status type="warning" message="You need to sign in to access this page." />
         </InfoBar>
       )}
 
@@ -130,8 +127,8 @@ export default function LoginPage() {
             </div>
 
             <div className={styles.actions}>
-              <a 
-                href="https://www.psychobilly-online.de/community/app.php/user/forgot_password" 
+              <a
+                href="https://www.psychobilly-online.de/community/app.php/user/forgot_password"
                 className={styles.link}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -139,20 +136,14 @@ export default function LoginPage() {
                 Forgot your password?
               </a>
 
-              <ActionButton
-                type="submit"
-                variant="primary"
-                disabled={isSubmitting}
-              >
+              <ActionButton type="submit" variant="primary" disabled={isSubmitting}>
                 {isSubmitting ? 'Signing in...' : 'Sign In'}
               </ActionButton>
             </div>
           </form>
 
           <div className={styles.register}>
-            <p className={styles.registerText}>
-              New user registrations are currently disabled.
-            </p>
+            <p className={styles.registerText}>New user registrations are currently disabled.</p>
           </div>
         </Section>
       </div>

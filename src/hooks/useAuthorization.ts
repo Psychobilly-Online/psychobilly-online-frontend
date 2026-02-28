@@ -1,6 +1,6 @@
 /**
  * Authorization hook
- * 
+ *
  * Provides convenient access to user role and authorization checks.
  * Built on top of AuthContext with role abstraction layer.
  */
@@ -78,18 +78,18 @@ interface UseAuthorizationReturn {
 
 /**
  * Hook for accessing authentication and authorization state
- * 
+ *
  * @returns Authorization state and helper functions
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {
  *   const { isAdmin, user, role } = useAuthorization();
- *   
+ *
  *   if (isAdmin) {
  *     return <AdminPanel />;
  *   }
- *   
+ *
  *   return <p>Hello {user?.username}, you are a {role}</p>;
  * }
  * ```
@@ -105,7 +105,7 @@ export function useAuthorization(): UseAuthorizationReturn {
       isAuthenticatedUser: isAuthenticatedUser(user),
       hasRole: (requiredRole: UserRole) => hasRole(user, requiredRole),
     }),
-    [user]
+    [user],
   );
 
   return {

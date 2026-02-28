@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Login API route (BFF pattern)
- * 
+ *
  * Proxies login request to backend API and sets httpOnly cookie
  * for server-side middleware authentication.
  */
@@ -13,10 +13,7 @@ export async function POST(request: NextRequest) {
 
     // Validate input
     if (!username || !password) {
-      return NextResponse.json(
-        { message: 'Username and password are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Username and password are required' }, { status: 400 });
     }
 
     // Forward login request to backend API
@@ -35,7 +32,7 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       return NextResponse.json(
         { message: data.message || 'Login failed' },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -43,7 +40,7 @@ export async function POST(request: NextRequest) {
     if (!data.token || !data.user) {
       return NextResponse.json(
         { message: 'Invalid response from authentication server' },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -59,7 +56,7 @@ export async function POST(request: NextRequest) {
     // Set httpOnly cookie for server-side middleware
     // This cookie is NOT accessible to client-side JavaScript
     const maxAge = data.expires_in || 3600; // 1 hour default
-    
+
     nextResponse.cookies.set('auth_token', data.token, {
       httpOnly: true, // Cannot be accessed by JavaScript
       secure: process.env.NODE_ENV === 'production', // HTTPS only in production
@@ -71,9 +68,6 @@ export async function POST(request: NextRequest) {
     return nextResponse;
   } catch (error) {
     console.error('Login error:', error);
-    return NextResponse.json(
-      { message: 'An error occurred during login' },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'An error occurred during login' }, { status: 500 });
   }
 }

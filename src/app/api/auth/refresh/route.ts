@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     // Update httpOnly cookie with new token if present
     if (data.token) {
       const maxAge = data.expires_in || 3600; // 1 hour default
-      
+
       nextResponse.cookies.set('auth_token', data.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
