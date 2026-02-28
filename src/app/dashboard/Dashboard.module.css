@@ -1,0 +1,123 @@
+.dashboardPage {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: var(--color-text-secondary);
+}
+
+/* Quick Stats */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-4);
+  margin: var(--spacing-6) 0;
+}
+
+.statCard {
+  padding: var(--spacing-5);
+  background-color: var(--color-bg-primary);
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.statCard:hover {
+  border-color: var(--color-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Navigation Cards */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-6);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-6);
+  background-color: var(--color-bg-primary);
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: var(--color-accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-4);
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-3) 0;
+  font-weight: 600;
+}
+
+.cardDescription {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-4) 0;
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.cardAction {
+  color: var(--color-accent-primary);
+  font-weight: 600;
+  margin-top: auto;
+  font-size: 0.95rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .dashboardPage {
+    padding: var(--spacing-4);
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statValue {
+    font-size: 1.75rem;
+  }
+}

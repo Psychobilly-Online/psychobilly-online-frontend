@@ -1,0 +1,56 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthorization } from '@/hooks/useAuthorization';
+import Breadcrumb from '@/components/common/Breadcrumb';
+import PageHeader from '@/components/common/PageHeader';
+import styles from '../Dashboard.module.css';
+
+export default function ProfilePage() {
+  const { user, isAuthenticated, isLoading } = useAuthorization();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/login?redirect=/dashboard/profile');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return null;
+  }
+
+  return (
+    <div className={styles.dashboardPage}>
+      <Breadcrumb
+        items={[
+          { label: 'Dashboard', href: '/dashboard' },
+          { label: 'Profile', href: '/dashboard/profile' },
+        ]}
+      />
+
+      <PageHeader
+        title="My Profile"
+        description="View and edit your profile information"
+      />
+
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <p style={{ fontSize: '1.2rem', color: 'var(--color-text-secondary)' }}>
+          🚧 Profile page coming soon!
+        </p>
+        <p style={{ marginTop: '1rem', color: 'var(--color-text-tertiary)' }}>
+          This page will allow you to manage your profile information, avatar, and bio.
+        </p>
+      </div>
+    </div>
+  );
+}
