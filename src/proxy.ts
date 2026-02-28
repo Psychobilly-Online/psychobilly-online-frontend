@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 /**
- * Middleware for protecting routes based on authentication and authorization
+ * Proxy for protecting routes based on authentication and authorization
  *
- * This runs on the Edge runtime before requests reach the page.
+ * This runs on the Node.js runtime before requests reach the page.
  * It checks JWT tokens stored in httpOnly cookies and redirects
  * unauthenticated or unauthorized users appropriately.
  */
@@ -64,7 +64,7 @@ const PROTECTED_ROUTES = {
   user: ['/dashboard'],
 };
 
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check if this is a protected route
@@ -114,7 +114,7 @@ export function middleware(request: NextRequest) {
 }
 
 /**
- * Configure which routes the middleware should run on
+ * Configure which routes the proxy should run on
  *
  * We match:
  * - /admin/* (all admin routes)
