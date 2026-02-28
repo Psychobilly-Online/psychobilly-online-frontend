@@ -12,6 +12,7 @@ import { formatEventDate, formatLongDate } from '@/lib/date-utils';
 import { decodeHtmlEntities } from '@/lib/stringUtils';
 import { formatVenueAddress } from '@/lib/address-utils';
 import { DateBadge } from '@/components/shared/DateBadge';
+import Breadcrumb from '@/components/common/Breadcrumb';
 import styles from './EventDetail.module.css';
 
 // Dynamically import EventMap to avoid SSR issues with Leaflet
@@ -100,21 +101,13 @@ export function EventDetail({ event }: EventDetailProps) {
 
   return (
     <div className={styles.eventDetail}>
-      {/* Navigation */}
-      <div className={styles.navigation}>
-        <button onClick={handleBackClick} className={styles.backButton}>
-          ← Back to Events
-        </button>
-
-        {/* TODO: Add aria-label="Breadcrumb" for better accessibility when multiple nav regions exist */}
-        <nav className={styles.breadcrumbs}>
-          <Link href="/">Home</Link>
-          <span className={styles.separator}>/</span>
-          <Link href="/events">Events</Link>
-          <span className={styles.separator}>/</span>
-          <span className={styles.current}>{decodeHtmlEntities(event.headline)}</span>
-        </nav>
-      </div>
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Events', onClick: handleBackClick },
+          { label: decodeHtmlEntities(event.headline) },
+        ]}
+      />
 
       {/* Content Card */}
       <div className={styles.contentCard}>
@@ -126,11 +119,20 @@ export function EventDetail({ event }: EventDetailProps) {
           <div className={styles.rightColumn}>
             <div className={styles.header}>
               <h1 className={styles.headline}>{decodeHtmlEntities(event.headline)}</h1>
-              <div className={styles.shareContainer}>
-                <button onClick={handleShare} className={styles.shareButton} title="Share event">
-                  🔗 Share
+              <div className={styles.actionsContainer}>
+                <button
+                  onClick={handleBackClick}
+                  className={styles.backButton}
+                  title="Back to events"
+                >
+                  ← Back
                 </button>
-                {shareSuccess && <span className={styles.shareSuccess}>✓ Copied!</span>}
+                <div className={styles.shareContainer}>
+                  <button onClick={handleShare} className={styles.shareButton} title="Share event">
+                    🔗 Share
+                  </button>
+                  {shareSuccess && <span className={styles.shareSuccess}>✓ Copied!</span>}
+                </div>
               </div>
             </div>
 

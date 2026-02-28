@@ -1,20 +1,23 @@
-import { Metadata } from 'next';
-import styles from './page.module.css';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'About the Project | Psychobilly Online',
-  description:
-    'Learn about the Psychobilly Online modernization project, our technical stack, and how you can contribute.',
-};
+import Breadcrumb from '@/components/common/Breadcrumb';
+import PageHeader from '@/components/common/PageHeader';
+import Section from '@/components/common/Section';
+import styles from './page.module.css';
 
 export default function AboutPage() {
   return (
     <div className={styles.content}>
       <div className={styles.container}>
-        <div className={styles.bigBox}>
-          <div className={styles.bigBoxContent}>
-            <h1>About the Relaunch</h1>
+        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
 
+        <PageHeader
+          title="About the Project"
+          description="The story behind Psychobilly Online and the vision for our independent community platform"
+        />
+
+        <Section>
+          <div className={styles.bigBoxContent}>
             <h2>The Philosophy</h2>
             <p>
               Psychobilly Online has always been <strong>from fans, for fans</strong>. We&apos;re
@@ -258,7 +261,7 @@ export default function AboutPage() {
               </li>
             </ul>
           </div>
-        </div>
+        </Section>
       </div>
     </div>
   );

@@ -1,72 +1,65 @@
 .content {
-  background: var(--content-bg);
   width: 100%;
-  min-height: 100vh;
-  padding: var(--spacing-3) 0;
+  padding: 0;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0;
 }
 
-.bigBox {
-  border: 1px solid var(--panel-border);
-  background: var(--color-bg-secondary);
-  border-radius: var(--spacing-4);
-  box-shadow: var(--shadow);
-  margin: 0 0 var(--spacing-7) 0;
-}
-
 .bigBoxContent {
-  padding: var(--spacing-8);
+  padding: 0;
 }
 
-.bigBox h1 {
-  font-size: var(--spacing-8);
+.bigBoxContent h1 {
+  font-size: 2rem;
   letter-spacing: 0.06em;
   margin: 0 0 var(--spacing-6) 0;
   text-transform: uppercase;
-  color: var(--accent-color);
+  color: var(--color-text-primary);
 }
 
-.bigBox h2 {
-  font-size: var(--spacing-6);
+.bigBoxContent h2 {
+  font-size: 1.5rem;
   margin: var(--spacing-8) 0 var(--spacing-4) 0;
-  color: var(--accent-color);
-  border-bottom: 2px solid var(--panel-border);
+  color: var(--color-accent-primary);
+  border-bottom: 2px solid var(--color-border-default);
   padding-bottom: var(--spacing-2);
 }
 
-.bigBox h3 {
-  font-size: var(--spacing-5);
+.bigBoxContent h3 {
+  font-size: 1.25rem;
   margin: var(--spacing-4) 0 var(--spacing-3) 0;
   color: var(--color-text-primary);
 }
 
-.bigBox p {
+.bigBoxContent p {
   margin: 0 0 var(--spacing-4) 0;
   line-height: 1.6;
+  color: var(--color-text-secondary);
 }
 
-.bigBox ul {
+.bigBoxContent ul {
   margin: var(--spacing-4) 0;
   padding-left: var(--spacing-6);
 }
 
-.bigBox li {
+.bigBoxContent li {
   margin: var(--spacing-3) 0;
   line-height: 1.6;
+  color: var(--color-text-secondary);
 }
 
 .manifesto {
-  background: var(--content-bg);
-  border-left: 4px solid var(--accent-color);
+  background: var(--color-bg-primary);
+  border-left: 4px solid var(--color-accent-primary);
   padding: var(--spacing-5);
   margin: var(--spacing-6) 0;
   font-size: 1.1em;
   line-height: 1.8;
+  color: var(--color-text-primary);
 }
 
 .techStack {
@@ -77,15 +70,15 @@
 }
 
 .techItem {
-  background: var(--content-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--spacing-3);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   padding: var(--spacing-5);
 }
 
 .techItem h3 {
   margin-top: 0;
-  color: var(--accent-color);
+  color: var(--color-accent-primary);
 }
 
 .techItem ul {
@@ -94,20 +87,26 @@
 }
 
 .dataList {
-  background: var(--content-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--spacing-3);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   padding: var(--spacing-5);
   margin: var(--spacing-5) 0;
+  list-style: none;
+}
+
+.dataList li {
+  margin: var(--spacing-2) 0;
+  color: var(--color-text-secondary);
 }
 
 .note {
-  background: var(--content-bg);
-  border-left: 3px solid var(--accent-color);
+  background: var(--color-bg-primary);
+  border-left: 3px solid var(--color-accent-primary);
   padding: var(--spacing-4);
   margin: var(--spacing-4) 0;
   font-size: 0.95em;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   font-style: italic;
 }
 
@@ -119,32 +118,32 @@
 }
 
 .involveItem {
-  background: var(--content-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--spacing-3);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   padding: var(--spacing-5);
 }
 
 .involveItem h3 {
   margin-top: 0;
-  font-size: var(--spacing-5);
+  font-size: 1.125rem;
 }
 
 .statusGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-4);
-  margin: var(--spacing-5) 0;
+  gap: var(--spacing-5);
+  margin: var(--spacing-6) 0;
 }
 
 .statusItem {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  background: var(--content-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--spacing-3);
-  padding: var(--spacing-4);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-5);
 }
 
 .statusDone {
@@ -210,13 +209,6 @@
 
   .statusGrid {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Desktop and up */
-@media (min-width: 992px) {
-  .statusGrid {
-    grid-template-columns: repeat(3, 1fr);
   }
 }
 

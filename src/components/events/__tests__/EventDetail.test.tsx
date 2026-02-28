@@ -54,6 +54,12 @@ describe('EventDetail', () => {
       expect(screen.getByText('Events')).toBeInTheDocument();
     });
 
+    it('renders back button', () => {
+      render(<EventDetail event={mockBaseEvent} />);
+      expect(screen.getByTitle('Back to events')).toBeInTheDocument();
+      expect(screen.getByText('← Back')).toBeInTheDocument();
+    });
+
     it('renders share button', () => {
       render(<EventDetail event={mockBaseEvent} />);
       expect(screen.getByTitle('Share event')).toBeInTheDocument();

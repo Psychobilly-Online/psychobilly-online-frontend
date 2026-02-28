@@ -32,7 +32,12 @@ export default function DashboardPage() {
 
   return (
     <div className={styles.dashboardPage}>
-      <Breadcrumb items={[{ label: 'Dashboard', href: '/dashboard' }]} />
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Dashboard', href: '/dashboard' },
+        ]}
+      />
 
       <PageHeader
         title={`Welcome back, ${user.username}!`}

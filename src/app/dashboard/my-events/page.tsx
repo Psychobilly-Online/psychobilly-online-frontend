@@ -33,15 +33,13 @@ export default function MyEventsPage() {
     <div className={styles.dashboardPage}>
       <Breadcrumb
         items={[
+          { label: 'Home', href: '/' },
           { label: 'Dashboard', href: '/dashboard' },
           { label: 'My Events', href: '/dashboard/my-events' },
         ]}
       />
 
-      <PageHeader
-        title="My Events"
-        description="Events you've created and manage"
-      />
+      <PageHeader title="My Events" description="Events you've created and manage" />
 
       <div style={{ padding: '2rem', textAlign: 'center' }}>
         <p style={{ fontSize: '1.2rem', color: 'var(--color-text-secondary)' }}>
