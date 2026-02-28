@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { IconButton } from '@/components/common/IconButton';
 import { useAuth } from '@/contexts/AuthContext';
+import { NavigationMenu } from './NavigationMenu';
 import { SearchBar } from './TopBar/SearchBar';
 import { UserMenu } from './TopBar/UserMenu';
 import styles from './TopBar.module.css';
@@ -15,30 +17,32 @@ interface TopBarProps {
 
 export function TopBar({ searchContext = 'default', hide = false }: TopBarProps) {
   const { isAuthenticated } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (hide) {
     return null;
   }
 
   return (
-    <div className={styles.topBar}>
-      <div className={styles.container}>
-        {/* Hamburger Menu */}
-        <IconButton
-          size="small"
-          ariaLabel="Open menu"
-          title="Open menu"
-          onClick={() => {
-            /* TODO: Implement menu */
-          }}
-          icon={
-            <div className={styles.hamburgerIcon}>
-              <span className={styles.hamburgerLine} />
-              <span className={styles.hamburgerLine} />
-              <span className={styles.hamburgerLine} />
-            </div>
-          }
-        />
+    <>
+      <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
+      <div className={styles.topBar}>
+        <div className={styles.container}>
+          {/* Hamburger Menu */}
+          <IconButton
+            size="small"
+            ariaLabel="Open menu"
+            title="Open menu"
+            onClick={() => setIsMenuOpen(true)}
+            icon={
+              <div className={styles.hamburgerIcon}>
+                <span className={styles.hamburgerLine} />
+                <span className={styles.hamburgerLine} />
+                <span className={styles.hamburgerLine} />
+              </div>
+            }
+          />
 
         {/* Search Field */}
         <SearchBar searchContext={searchContext} />
@@ -89,5 +93,6 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
         </div>
       </div>
     </div>
+    </>
   );
 }
