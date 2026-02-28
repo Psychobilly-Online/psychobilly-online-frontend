@@ -15,6 +15,27 @@
   border-color: var(--color-primary);
 }
 
+/* Status type colors applied to the InfoBar itself */
+.infoBar.type-info {
+  background-color: var(--color-info-bg);
+  border-color: var(--color-info-light);
+}
+
+.infoBar.type-success {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success);
+}
+
+.infoBar.type-warning {
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning);
+}
+
+.infoBar.type-error {
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error);
+}
+
 .count {
   display: flex;
   align-items: center;
@@ -36,28 +57,23 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
 }
 
-.status.status-info {
-  background-color: rgba(59, 130, 246, 0.1);
-  color: #60a5fa;
+/* Status icon colors based on parent InfoBar type */
+.infoBar.type-info .statusIcon {
+  color: var(--color-info-light);
 }
 
-.status.status-success {
-  background-color: var(--color-success-bg);
+.infoBar.type-success .statusIcon {
   color: var(--color-success);
 }
 
-.status.status-warning {
-  background-color: var(--color-warning-bg);
+.infoBar.type-warning .statusIcon {
   color: var(--color-warning);
 }
 
-.status.status-error {
-  background-color: var(--color-error-bg);
+.infoBar.type-error .statusIcon {
   color: var(--color-error);
 }
 

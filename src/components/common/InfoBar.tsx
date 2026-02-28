@@ -4,6 +4,7 @@ import styles from './InfoBar.module.css';
 interface InfoBarProps {
   children: ReactNode;
   variant?: 'default' | 'highlight';
+  type?: 'info' | 'success' | 'warning' | 'error';
 }
 
 interface CountProps {
@@ -21,8 +22,16 @@ interface ActionProps {
   children: ReactNode;
 }
 
-function InfoBarRoot({ children, variant = 'default' }: InfoBarProps) {
-  return <div className={`${styles.infoBar} ${styles[variant]}`}>{children}</div>;
+function InfoBarRoot({ children, variant = 'default', type }: InfoBarProps) {
+  // Build class names, avoiding 'undefined' by only adding non-default variant
+  const classNames = [styles.infoBar];
+  if (variant !== 'default') {
+    classNames.push(styles[variant]);
+  }
+  if (type) {
+    classNames.push(styles[`type-${type}`]);
+  }
+  return <div className={classNames.join(' ')}>{children}</div>;
 }
 
 function Count({ label, value }: CountProps) {
@@ -43,7 +52,7 @@ function Status({ message, type = 'info', icon }: StatusProps) {
   };
 
   return (
-    <div className={`${styles.status} ${styles[`status-${type}`]}`}>
+    <div className={styles.status}>
       <span className={styles.statusIcon}>{icon || defaultIcons[type]}</span>
       <span className={styles.statusMessage}>{message}</span>
     </div>

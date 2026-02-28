@@ -71,20 +71,20 @@ export default function LoginPage() {
       />
 
       {logoutMessage && (
-        <InfoBar variant="default">
-          <InfoBar.Status type="info" message="You have been successfully logged out." />
+        <InfoBar type="info">
+          <InfoBar.Status message="You have been successfully logged out." />
         </InfoBar>
       )}
 
       {redirectUrl && (
-        <InfoBar variant="default">
-          <InfoBar.Status type="warning" message="You need to sign in to access this page." />
+        <InfoBar type="warning">
+          <InfoBar.Status message="You need to sign in to access this page." />
         </InfoBar>
       )}
 
       {error && (
-        <InfoBar variant="default">
-          <InfoBar.Status type="error" message={error} />
+        <InfoBar type="error">
+          <InfoBar.Status message={error} />
         </InfoBar>
       )}
 
