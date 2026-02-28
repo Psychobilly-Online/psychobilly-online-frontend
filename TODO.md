@@ -151,7 +151,163 @@
   - [x] User menu with profile/logout
   - Completed: February 2026
 
+- [x] **Authorization & Route Protection** - COMPLETED ✅
+  - [x] Role-based authorization system (roles.ts)
+  - [x] useAuthorization hook with role helpers
+  - [x] Dedicated login page with redirect support
+  - [x] Next.js middleware for server-side route protection
+  - [x] httpOnly cookie for JWT storage
+  - [x] Login/logout API routes
+  - [x] Admin routes protected (requires admin role)
+  - [x] User dashboard routes protected (requires authentication)
+  - Completed: February 28, 2026
+
+#### Next Frontend Tasks
+
+- [ ] **Navigation Menu**
+  - [ ] Create hamburger menu component
+  - [ ] Add navigation links (Home, Events, About, Admin (if admin), Dashboard (if logged in))
+  - [ ] Connect to hamburger button in TopBar
+  - [ ] Mobile-first design
+  - [ ] Smooth animations
+  - Estimated: 2-3 hours
+
+- [ ] **Homepage & About Page UX Improvements**
+  - [ ] Show TopBar when user is logged in
+  - [ ] Adjust design to match admin overview/login page patterns
+  - [ ] Use consistent Section components
+  - [ ] Apply design system (spacing, colors, typography)
+  - [ ] Ensure responsive layout
+  - Estimated: 2-3 hours
+
+- [ ] **User Dashboard** (Phase 4)
+  - [ ] Create `/dashboard` page
+  - [ ] Welcome message with username
+  - [ ] Role-based navigation cards (admin sees admin links)
+  - [ ] Quick stats (my events, account info)
+  - [ ] Create placeholder pages (profile, settings, my-events)
+  - Estimated: 3 hours
+
 ## 🟢 Medium Priority (Next Sprint)
+
+### Admin Band Management (Local-Only Features)
+
+> **Security Note**: All admin features are gitignored and run locally only.
+> Backend API changes are committed and deployed to production with admin permission checks.
+
+- [x] **JWT Token Refresh** - COMPLETED ✅
+  - [x] Activity tracking (mouse, keyboard, click, scroll)
+  - [x] Auto-refresh when <15 min remain and user active
+  - [x] Fixed infinite refresh loop bug
+  - Completed: February 18, 2026
+
+- [x] **Admin Overview Page** - COMPLETED ✅
+  - [x] Feature card grid with 6 admin tools
+  - [x] Breadcrumb navigation
+  - [x] Route: `/admin/bands`
+  - Completed: February 18, 2026
+
+- [x] **Edit Bands Feature** - COMPLETED ✅
+  - [x] Search bands (debounced)
+  - [x] Edit band name
+  - [x] Manage name variations (Chip-based UI)
+  - [x] Edit genres with Autocomplete
+  - [x] Click-to-toggle primary genre (★ indicator)
+  - [x] Backend: UpdateBandAction with admin check
+  - [x] Backend: updateBandGenres() and getBandGenres()
+  - [x] BFF route: PUT `/api/admin/bands/[id]`
+  - Completed: February 18, 2026
+  - Genre editing added: February 22, 2026
+
+- [x] **Orphaned Bands Feature** - COMPLETED ✅
+  - [x] List bands with no events (NOT EXISTS query)
+  - [x] Paginated display (50 per page)
+  - [x] Show genres and variations
+  - [x] Backend: ListOrphanedBandsAction
+  - [x] BFF route: GET `/api/admin/bands/orphaned`
+  - Completed: February 18, 2026
+
+- [x] **Admin CSS Consistency & Code Quality** - COMPLETED ✅
+  - [x] Created shared components (LoadingSpinner, ErrorMessage, Pagination, SearchInput, Section)
+  - [x] Created useDebounce custom hook
+  - [x] Refactored all admin components to use shared components
+  - [x] Removed ~150 lines of duplicated code/CSS
+  - [x] Standardized loading states, error handling, pagination
+  - [x] Fixed useCallback memory leak causing increasing render times
+  - [x] Consistent component patterns across all admin pages
+  - Completed: February 22, 2026
+
+- [x] **Delete Band Functionality** - COMPLETED ✅
+  - [x] Add delete button to OrphanedBands page
+  - [x] Confirmation dialog with band details
+  - [x] Backend: DeleteBandAction with admin check
+  - [x] BFF route: DELETE `/api/admin/bands/[id]`
+  - [x] Transaction to cleanup related tables:
+    - `event_bands`
+    - `band_genres`
+    - `band_details`
+    - `band_admins` (if exists)
+    - `social_media_links` (if exists)
+    - `streaming_links` (if exists)
+  - Completed: February 22, 2026
+
+- [ ] **Split Band Functionality** (Frontend Complete ✅ - Backend Pending)
+  - [x] Frontend: Split preview dialog with separator selection
+  - [x] Frontend: Real-time preview of split result
+  - [x] Frontend: Confirm dialog before executing
+  - [x] Frontend: Support for common separators (&, and, +, /, ,)
+  - [x] Frontend: Custom separator input
+  - [x] Frontend: BandSplit component integrated into BandOverview
+  - [ ] Backend: POST `/api/bands/split` BFF route
+  - [ ] Backend: SplitBandAction with transaction
+  - [ ] Backend: Create new band entries for each split part
+  - [ ] Backend: Update references in multiple tables:
+    - `event_bands` (assign events to all new bands)
+    - `band_genres` (copy genres to all new bands)
+    - `band_admins` (if exists)
+    - `social_media_links` (if exists)
+    - `streaming_links` (if exists)
+  - [ ] Backend: Delete original band after split
+  - [ ] Backend: Handle edge cases (3+ bands, special characters)
+  - Frontend completed: February 23, 2026
+  - Backend estimated: 1 day
+
+- [x] **Enhanced Genre Assignment** - COMPLETED ✅
+  - [x] Add/edit genres inline (via EditBands dialog)
+  - [x] Remove genres from band (deselect existing)
+  - [x] Filter by genre (dropdown with "All", "No genres", specific genres)
+  - [x] Better pagination (page numbers, first/last buttons)
+  - [x] Direct page access (jump to page with input field)
+  - [x] Auto-refresh genre counts after assignment
+  - [x] Genre filter works with multi-search
+  - Completed: February 22, 2026
+
+- [x] **Band Overview & Code Refactoring** - COMPLETED ✅
+  - [x] Created useBandList hook for shared data loading logic
+  - [x] Created unified BandOverview component with search, pagination, and filters
+  - [x] Refactored BandList to use shared hook (eliminated ~100 lines of duplicate code)
+  - [x] Added quick filters (All Bands / Orphaned / No Genres)
+  - [x] Integrated genre dropdown filter
+  - [x] Multi-term search support (semicolon-separated)
+  - [x] Click band to open edit dialog
+  - [x] Route: `/admin/bands/overview`
+  - [x] Updated admin overview page with new card
+  - Completed: February 23, 2026
+
+- [ ] **View Events Enhancement** (Deferred until Event Admin is complete)
+  - [ ] Change from band name search to exact band ID filter
+  - [ ] Add date filter to show all events (not just upcoming)
+  - [ ] Navigate to events page with pre-filled filters
+  - [ ] Estimated: 30 minutes
+  - **Note**: Makes more sense after event administration is implemented
+
+- [ ] **Manage Genres Feature**
+  - [ ] List all genres (paginated)
+  - [ ] Add new genre
+  - [ ] Edit genre name
+  - [ ] Delete genre (with confirmation + usage check)
+  - [ ] Manage subgenres
+  - [ ] Estimated: 1 day
 
 ### Phase 3: Content Management
 
@@ -420,5 +576,5 @@ All database table structures are documented in `docs/DATABASE_SCHEMA.md`.
 
 ---
 
-**Last Updated**: February 13, 2026  
-**Next Sprint**: Backend/API/Database improvements
+**Last Updated**: February 23, 2026  
+**Next Sprint**: Band Overview deployment + Split Band functionality

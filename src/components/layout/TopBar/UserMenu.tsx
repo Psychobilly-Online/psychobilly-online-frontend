@@ -1,17 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Menu, MenuItem, Divider, Box, Typography } from '@mui/material';
 import { IconButton } from '@/components/common/IconButton';
 import { useAuth } from '@/contexts/AuthContext';
-import { LoginModal } from '@/components/auth/LoginModal';
 import { getAvatarUrl } from '@/lib/user-utils';
 import { decodeHtmlEntities } from '@/lib/stringUtils';
 import styles from './UserMenu.module.css';
 
 export function UserMenu() {
+  const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [avatarError, setAvatarError] = useState(false);
   const open = Boolean(anchorEl);
@@ -20,7 +20,8 @@ export function UserMenu() {
     if (isAuthenticated) {
       setAnchorEl(event.currentTarget);
     } else {
-      setIsLoginModalOpen(true);
+      // Navigate to login page instead of opening modal
+      router.push('/login');
     }
   };
 
@@ -30,6 +31,13 @@ export function UserMenu() {
 
   const handleLogout = () => {
     logout();
+    handleClose();
+    // Redirect to login page with logout message
+    router.push('/login?logout=true');
+  };
+
+  const handleDashboard = () => {
+    router.push('/dashboard');
     handleClose();
   };
 
@@ -88,7 +96,7 @@ export function UserMenu() {
         <MenuItem onClick={handleClose} className={styles.menuItem}>
           Profile
         </MenuItem>
-        <MenuItem onClick={handleClose} className={styles.menuItem}>
+        <MenuItem onClick={handleDashboard} className={styles.menuItem}>
           Dashboard
         </MenuItem>
 
@@ -98,8 +106,6 @@ export function UserMenu() {
           Logout
         </MenuItem>
       </Menu>
-
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </>
   );
 }
