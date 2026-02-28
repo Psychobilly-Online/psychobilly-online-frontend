@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# internal documentation
+TODO.md
+docs/ADMIN_UI_GUIDELINES.md

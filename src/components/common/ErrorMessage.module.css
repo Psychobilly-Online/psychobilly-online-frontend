@@ -1,0 +1,45 @@
+.container {
+  text-align: center;
+  padding: var(--spacing-8);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+}
+
+.icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-4);
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-error-light);
+  margin: 0 0 var(--spacing-3) 0;
+}
+
+.message {
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-5) 0;
+  line-height: 1.6;
+}
+
+.retryButton {
+  padding: var(--spacing-3) var(--spacing-6);
+  background-color: var(--color-accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.retryButton:hover {
+  opacity: 0.9;
+}
+
+.retryButton:active {
+  transform: translateY(1px);
+}

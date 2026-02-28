@@ -1,0 +1,19 @@
+.variations {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.label {
+  font-weight: 600;
+  margin-right: var(--spacing-1);
+}
+
+.list {
+  font-style: italic;
+}
+
+.more {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}

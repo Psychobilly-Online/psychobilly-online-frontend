@@ -42,7 +42,7 @@
 .pageBottom {
   padding: var(--spacing-7) 0 var(--spacing-10);
   font-size: var(--spacing-4);
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   text-align: center;
   border-top: 1px solid var(--panel-border);
   margin-top: var(--spacing-7);
