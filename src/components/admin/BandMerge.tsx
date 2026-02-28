@@ -99,8 +99,8 @@ export default function BandMerge({
     <div className={styles.container}>
       <div className={styles.header}>
         <h2>Merge Bands</h2>
-        <ActionButton 
-          onClick={onClearSelection} 
+        <ActionButton
+          onClick={onClearSelection}
           disabled={isMerging}
           variant="secondary"
           size="small"
@@ -145,8 +145,7 @@ export default function BandMerge({
               )}
 
             <div className={styles.summarySection}>
-              <strong>Deleted band IDs:</strong>{' '}
-              {mergeSummary.deleted_bands?.join(', ') || 'None'}
+              <strong>Deleted band IDs:</strong> {mergeSummary.deleted_bands?.join(', ') || 'None'}
             </div>
           </div>
         </div>
@@ -156,72 +155,68 @@ export default function BandMerge({
         <>
           <div className={styles.bandsList}>
             <p className={styles.instruction}>
-              Select the <strong>target band</strong> (the one to keep) and merge the others
-              into it:
+              Select the <strong>target band</strong> (the one to keep) and merge the others into
+              it:
             </p>
-        {bands.map((band) => (
-          <div key={band.id} className={styles.bandItem}>
-            <BandListItem
-              id={band.id}
-              name={band.name}
-              nameVariations={band.name_variations || []}
-              mode="radio"
-              selected={targetId === band.id}
-              onClick={() => setTargetId(band.id)}
-              showId={true}
-              className={targetId === band.id ? styles.targetItem : ''}
-              action={
-                <div className={styles.itemActions}>
-                  {targetId === band.id && (
-                    <Tag variant="primary">TARGET</Tag>
-                  )}
-                  <button
-                    className={styles.removeButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRemoveBand(band.id);
-                    }}
-                    disabled={isMerging}
-                    title="Remove from selection"
-                  >
-                    ×
-                  </button>
-                </div>
-              }
-            />
+            {bands.map((band) => (
+              <div key={band.id} className={styles.bandItem}>
+                <BandListItem
+                  id={band.id}
+                  name={band.name}
+                  nameVariations={band.name_variations || []}
+                  mode="radio"
+                  selected={targetId === band.id}
+                  onClick={() => setTargetId(band.id)}
+                  showId={true}
+                  className={targetId === band.id ? styles.targetItem : ''}
+                  action={
+                    <div className={styles.itemActions}>
+                      {targetId === band.id && <Tag variant="primary">TARGET</Tag>}
+                      <button
+                        className={styles.removeButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onRemoveBand(band.id);
+                        }}
+                        disabled={isMerging}
+                        title="Remove from selection"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  }
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className={styles.options}>
-        <label className={styles.checkboxLabel}>
-          <input
-            type="checkbox"
-            checked={addToVariations}
-            onChange={(e) => setAddToVariations(e.target.checked)}
-            disabled={isMerging}
-          />
-          Add merged band names to target's name variations
-        </label>
-      </div>      
+          <div className={styles.options}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={addToVariations}
+                onChange={(e) => setAddToVariations(e.target.checked)}
+                disabled={isMerging}
+              />
+              Add merged band names to target's name variations
+            </label>
+          </div>
 
-      <div className={styles.actions}>
-        <ActionButton
-          onClick={handleMergeClick}
-          disabled={!targetId || bands.length < 2 || isMerging}
-          variant="primary"
-          size="large"
-          fullWidth
-        >
-          {isMerging
-            ? 'Merging...'
-            : `Merge ${bands.filter((b) => b.id !== targetId).length} band(s) into selected`}
-        </ActionButton>
-      </div>
-            </>
-        )}
-
-      
+          <div className={styles.actions}>
+            <ActionButton
+              onClick={handleMergeClick}
+              disabled={!targetId || bands.length < 2 || isMerging}
+              variant="primary"
+              size="large"
+              fullWidth
+            >
+              {isMerging
+                ? 'Merging...'
+                : `Merge ${bands.filter((b) => b.id !== targetId).length} band(s) into selected`}
+            </ActionButton>
+          </div>
+        </>
+      )}
 
       {targetId && (
         <div className={styles.preview}>

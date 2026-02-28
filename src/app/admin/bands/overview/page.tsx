@@ -13,10 +13,7 @@ export default function BandOverviewPage() {
   return (
     <div className={styles.page}>
       <Breadcrumb
-        items={[
-          { label: 'Admin Dashboard', href: '/admin' },
-          { label: 'Band Overview' },
-        ]}
+        items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: 'Band Overview' }]}
       />
 
       <PageHeader

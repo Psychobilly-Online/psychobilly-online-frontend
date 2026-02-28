@@ -18,7 +18,7 @@
   white-space: nowrap;
 }
 
-.filterToggle input[type="checkbox"] {
+.filterToggle input[type='checkbox'] {
   cursor: pointer;
 }
 

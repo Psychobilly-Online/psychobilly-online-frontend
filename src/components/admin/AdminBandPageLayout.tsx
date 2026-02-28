@@ -12,17 +12,17 @@ interface AdminBandPageLayoutProps {
    * The page title to display in the PageHeader
    */
   title: string;
-  
+
   /**
    * Optional description to display in the PageHeader
    */
   description?: string;
-  
+
   /**
    * The label for this page in the breadcrumb (e.g., "Edit Bands")
    */
   breadcrumbLabel: string;
-  
+
   /**
    * The main content to render when authenticated
    */
@@ -63,10 +63,7 @@ export default function AdminBandPageLayout({
   return (
     <div className={styles.page}>
       <Breadcrumb
-        items={[
-          { label: 'Admin Dashboard', href: '/admin' },
-          { label: breadcrumbLabel },
-        ]}
+        items={[{ label: 'Admin Dashboard', href: '/admin' }, { label: breadcrumbLabel }]}
       />
 
       <PageHeader title={title} description={description} />

@@ -39,48 +39,51 @@ export default function ManageGenres() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [showInactive, setShowInactive] = useState(false);
-  
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingGenre, setEditingGenre] = useState<Genre | null>(null);
-  
+
   const [genreToDelete, setGenreToDelete] = useState<Genre | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const fetchGenres = useCallback(async (page: number) => {
-    setIsLoading(true);
-    setError(null);
+  const fetchGenres = useCallback(
+    async (page: number) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      if (!token) {
-        setError('Not authenticated');
-        return;
-      }
-
-      const includeInactiveParam = showInactive ? '&include_inactive=true' : '';
-      const response = await fetch(
-        `/api/admin/genres?page=${page}&per_page=50${includeInactiveParam}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+      try {
+        if (!token) {
+          setError('Not authenticated');
+          return;
         }
-      );
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch genres');
+        const includeInactiveParam = showInactive ? '&include_inactive=true' : '';
+        const response = await fetch(
+          `/api/admin/genres?page=${page}&per_page=50${includeInactiveParam}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch genres');
+        }
+
+        const data: GenresResponse = await response.json();
+        setGenres(data.genres);
+        setTotalPages(data.total_pages);
+        setTotalCount(data.total);
+        setCurrentPage(data.page);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setIsLoading(false);
       }
-
-      const data: GenresResponse = await response.json();
-      setGenres(data.genres);
-      setTotalPages(data.total_pages);
-      setTotalCount(data.total);
-      setCurrentPage(data.page);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token, showInactive]);
+    },
+    [token, showInactive],
+  );
 
   useEffect(() => {
     fetchGenres(currentPage);
@@ -119,8 +122,8 @@ export default function ManageGenres() {
       const response = await fetch(`/api/admin/genres/${genreToDelete.id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
@@ -129,8 +132,8 @@ export default function ManageGenres() {
       }
 
       // Remove from state
-      setGenres(genres.filter(g => g.id !== genreToDelete.id));
-      
+      setGenres(genres.filter((g) => g.id !== genreToDelete.id));
+
       // Adjust pagination if this was the last item on the page
       if (genres.length === 1 && currentPage > 1) {
         setCurrentPage(currentPage - 1);
@@ -148,19 +151,19 @@ export default function ManageGenres() {
 
   const handleToggleActive = async (genre: Genre) => {
     const newActiveStatus = genre.active === 1 ? 0 : 1;
-    
+
     try {
       const response = await fetch(`/api/admin/genres/${genre.id}`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: genre.name,
           sub_genres: genre.sub_genres.length > 0 ? genre.sub_genres : null,
-          active: newActiveStatus
-        })
+          active: newActiveStatus,
+        }),
       });
 
       if (!response.ok) {
@@ -169,9 +172,7 @@ export default function ManageGenres() {
       }
 
       // Update in state
-      setGenres(genres.map(g => 
-        g.id === genre.id ? { ...g, active: newActiveStatus } : g
-      ));
+      setGenres(genres.map((g) => (g.id === genre.id ? { ...g, active: newActiveStatus } : g)));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update genre');
     }
@@ -192,7 +193,7 @@ export default function ManageGenres() {
         <InfoBar.Action>
           <div className={styles.infoBarActions}>
             <label className={styles.filterToggle}>
-              <input 
+              <input
                 type="checkbox"
                 checked={showInactive}
                 onChange={(e) => {
@@ -202,11 +203,7 @@ export default function ManageGenres() {
               />
               <span>Show inactive</span>
             </label>
-            <ActionButton
-              onClick={handleAddClick}
-              variant="primary"
-              size="small"
-            >
+            <ActionButton onClick={handleAddClick} variant="primary" size="small">
               + Add Genre
             </ActionButton>
           </div>
@@ -224,15 +221,13 @@ export default function ManageGenres() {
                     {genre.active === 1 ? 'Active' : 'Inactive'}
                   </Tag>
                 </Card.Header>
-                
+
                 <Card.Title>{genre.name}</Card.Title>
-                
+
                 {genre.sub_genres && genre.sub_genres.length > 0 && (
-                  <Card.Meta>
-                    Subgenres: {genre.sub_genres.join(', ')}
-                  </Card.Meta>
+                  <Card.Meta>Subgenres: {genre.sub_genres.join(', ')}</Card.Meta>
                 )}
-                
+
                 <Card.Content>
                   <div className={styles.stats}>
                     <div className={styles.stat}>
@@ -286,11 +281,7 @@ export default function ManageGenres() {
       )}
 
       {isDialogOpen && (
-        <GenreDialog
-          genre={editingGenre}
-          onClose={handleDialogClose}
-          onSave={handleDialogSave}
-        />
+        <GenreDialog genre={editingGenre} onClose={handleDialogClose} onSave={handleDialogSave} />
       )}
 
       {genreToDelete && (
@@ -302,8 +293,8 @@ export default function ManageGenres() {
               Are you sure you want to delete <strong>{genreToDelete.name}</strong>?
               {(genreToDelete.band_count > 0 || genreToDelete.event_count > 0) && (
                 <div className={styles.deleteWarning}>
-                  This will remove the genre from {genreToDelete.band_count} band(s) 
-                  and {genreToDelete.event_count} event(s).
+                  This will remove the genre from {genreToDelete.band_count} band(s) and{' '}
+                  {genreToDelete.event_count} event(s).
                 </div>
               )}
             </>

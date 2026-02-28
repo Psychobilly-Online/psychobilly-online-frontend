@@ -3,7 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './GenreDialog.module.css';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Chip, Button } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Chip,
+  Button,
+} from '@mui/material';
 
 interface Genre {
   id: number;
@@ -50,7 +58,7 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
   };
 
   const handleRemoveSubGenre = (subGenre: string) => {
-    setSubGenres(subGenres.filter(sg => sg !== subGenre));
+    setSubGenres(subGenres.filter((sg) => sg !== subGenre));
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -62,7 +70,7 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
       setError('Genre name is required');
       return;
@@ -72,23 +80,21 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
     setError(null);
 
     try {
-      const url = genre 
-        ? `/api/admin/genres/${genre.id}`
-        : `/api/admin/genres`;
-      
+      const url = genre ? `/api/admin/genres/${genre.id}` : `/api/admin/genres`;
+
       const method = genre ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: name.trim(),
           sub_genres: subGenres.length > 0 ? subGenres : null,
-          active: active ? 1 : 0
-        })
+          active: active ? 1 : 0,
+        }),
       });
 
       if (!response.ok) {
@@ -105,8 +111,8 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
   };
 
   return (
-    <Dialog 
-      open={true} 
+    <Dialog
+      open={true}
       onClose={onClose}
       maxWidth="md"
       fullWidth
@@ -115,17 +121,15 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
       <DialogTitle className={styles.dialogTitle}>
         {genre ? 'Edit Genre' : 'Add New Genre'}
       </DialogTitle>
-      
+
       <form onSubmit={handleSubmit}>
         <DialogContent className={styles.dialogContent}>
-          {error && (
-            <div className={styles.error}>
-              {error}
-            </div>
-          )}
+          {error && <div className={styles.error}>{error}</div>}
 
           <div className={styles.formGroup}>
-            <label htmlFor="genre-name" className={styles.label}>Genre Name *</label>
+            <label htmlFor="genre-name" className={styles.label}>
+              Genre Name *
+            </label>
             <TextField
               id="genre-name"
               value={name}
@@ -139,11 +143,11 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="new-subgenre" className={styles.label}>Subgenres (optional)</label>
-            <p className={styles.hint}>
-              Add related sub-categories or style variations
-            </p>
-            
+            <label htmlFor="new-subgenre" className={styles.label}>
+              Subgenres (optional)
+            </label>
+            <p className={styles.hint}>Add related sub-categories or style variations</p>
+
             <div className={styles.variationInput}>
               <TextField
                 id="new-subgenre"
@@ -197,11 +201,7 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
         </DialogContent>
 
         <DialogActions className={styles.dialogActions}>
-          <Button
-            onClick={onClose}
-            disabled={isSaving}
-            className={styles.cancelButton}
-          >
+          <Button onClick={onClose} disabled={isSaving} className={styles.cancelButton}>
             Cancel
           </Button>
           <Button

@@ -48,7 +48,9 @@ export default function BandSplit({ band, onCancel, onSplitComplete }: BandSplit
     if (!effectiveSeparator.trim()) return [band.name];
 
     const parts = band.name
-      .split(new RegExp(`\\s*${effectiveSeparator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`, 'i'))
+      .split(
+        new RegExp(`\\s*${effectiveSeparator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`, 'i'),
+      )
       .map((part) => part.trim())
       .filter((part) => part.length > 0);
 
@@ -120,7 +122,8 @@ export default function BandSplit({ band, onCancel, onSplitComplete }: BandSplit
         <div className={styles.success}>
           <h3>✅ Band Split Successful!</h3>
           <p>
-            <strong>Original Band:</strong> {splitSummary.original_band} (ID: {splitSummary.deleted_band_id})
+            <strong>Original Band:</strong> {splitSummary.original_band} (ID:{' '}
+            {splitSummary.deleted_band_id})
           </p>
           <p>
             <strong>Created {splitSummary.created_bands.length} New Bands:</strong>
@@ -142,7 +145,9 @@ export default function BandSplit({ band, onCancel, onSplitComplete }: BandSplit
               </li>
             ))}
           </ul>
-          <p className={styles.autoClose}>This dialog will close automatically in a few seconds...</p>
+          <p className={styles.autoClose}>
+            This dialog will close automatically in a few seconds...
+          </p>
         </div>
       </div>
     );
@@ -152,9 +157,7 @@ export default function BandSplit({ band, onCancel, onSplitComplete }: BandSplit
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>Split Band</h2>
-        <p className={styles.subtitle}>
-          Split "{band.name}" into separate band entries
-        </p>
+        <p className={styles.subtitle}>Split "{band.name}" into separate band entries</p>
       </div>
 
       {error && (

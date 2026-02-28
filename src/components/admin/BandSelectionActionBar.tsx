@@ -46,9 +46,9 @@ export default function BandSelectionActionBar({
           {selectedCount} {selectedCount === 1 ? 'band' : 'bands'} selected
         </span>
         {onSelectAll && (
-          <ActionButton 
-            onClick={allSelected ? onClearSelection : onSelectAll} 
-            variant="ghost" 
+          <ActionButton
+            onClick={allSelected ? onClearSelection : onSelectAll}
+            variant="ghost"
             size="small"
           >
             {allSelected ? '☐ Deselect All' : '☑ Select All on Page'}

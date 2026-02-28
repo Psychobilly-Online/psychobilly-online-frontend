@@ -32,11 +32,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className={styles.adminPage}>
-      <Breadcrumb
-        items={[
-          { label: 'Admin Dashboard', href: '/admin' }
-        ]}
-      />
+      <Breadcrumb items={[{ label: 'Admin Dashboard', href: '/admin' }]} />
 
       <PageHeader
         title="Psychobilly Online Admin Dashboard"
@@ -50,7 +46,8 @@ export default function AdminDashboardPage() {
           <h2 className={styles.cardTitle}>Band Overview</h2>
           <p className={styles.cardDescription}>
             Unified interface for all band management tasks. Search, filter, select bands to edit,
-            merge, assign genres, view orphaned bands, and more. Your primary workspace for band data.
+            merge, assign genres, view orphaned bands, and more. Your primary workspace for band
+            data.
           </p>
           <div className={styles.cardAction}>Go to Band Overview →</div>
         </Link>

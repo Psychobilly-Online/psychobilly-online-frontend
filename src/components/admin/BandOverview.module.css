@@ -151,7 +151,8 @@
 }
 
 @keyframes highlightPulse {
-  0%, 100% {
+  0%,
+  100% {
     background-color: transparent;
   }
   50% {

@@ -50,16 +50,7 @@ export default function BandOverview() {
   const orphanedOnly = quickFilter === 'orphaned';
   const effectiveGenreFilter = quickFilter === 'no-genres' ? '0' : genreFilter;
 
-  const {
-    bands,
-    isLoading,
-    error,
-    total,
-    pages,
-    currentPage,
-    reload,
-    setPage,
-  } = useBandList({
+  const { bands, isLoading, error, total, pages, currentPage, reload, setPage } = useBandList({
     search: debouncedSearch,
     genreId: effectiveGenreFilter,
     orphanedOnly,
@@ -109,8 +100,8 @@ export default function BandOverview() {
   useEffect(() => {
     if (scrollToBandId && !isLoading && bands.length > 0) {
       // Find the band in the current results
-      const bandIndex = bands.findIndex(b => b.id === scrollToBandId);
-      
+      const bandIndex = bands.findIndex((b) => b.id === scrollToBandId);
+
       if (bandIndex !== -1) {
         // Calculate which page the band is on
         if (debouncedSearch) {
@@ -121,7 +112,7 @@ export default function BandOverview() {
             return;
           }
         }
-        
+
         // Scroll to the band after a delay to ensure DOM is updated
         const scrollTimeout = setTimeout(() => {
           requestAnimationFrame(() => {
@@ -278,9 +269,9 @@ export default function BandOverview() {
               multiTerm={true}
             />
             {!isLoading && !error && debouncedSearch && (
-              <ActionButton 
-                onClick={() => setSearch('')} 
-                variant="secondary" 
+              <ActionButton
+                onClick={() => setSearch('')}
+                variant="secondary"
                 size="medium"
                 className={styles.clearButton}
               >
@@ -472,7 +463,9 @@ export default function BandOverview() {
         fullWidth
         classes={{ paper: genreSelectorStyles.dialogPaper }}
       >
-        <DialogTitle className={genreSelectorStyles.dialogTitle}>Assign Genres to Bands</DialogTitle>
+        <DialogTitle className={genreSelectorStyles.dialogTitle}>
+          Assign Genres to Bands
+        </DialogTitle>
         <DialogContent className={genreSelectorStyles.dialogContent}>
           <GenreSelector
             selectedBands={selectedBands}

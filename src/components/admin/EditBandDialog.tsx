@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, IconButton, Chip, Autocomplete } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  IconButton,
+  Chip,
+  Autocomplete,
+} from '@mui/material';
 import { useAuth } from '@/contexts/AuthContext';
 import GenreTag from '@/components/common/GenreTag';
 import styles from './EditBandDialog.module.css';
@@ -68,7 +78,7 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
         setIsLoadingGenres(false);
       }
     };
-    
+
     if (open) {
       loadGenres();
     }
@@ -83,32 +93,34 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
   };
 
   const handleRemoveVariation = (variation: string) => {
-    setVariations(variations.filter(v => v !== variation));
+    setVariations(variations.filter((v) => v !== variation));
   };
 
   const handleAddGenre = (genre: Genre) => {
-    if (!genres.find(g => g.id === genre.id)) {
+    if (!genres.find((g) => g.id === genre.id)) {
       setGenres([...genres, { id: genre.id, name: genre.name, is_primary: genres.length === 0 }]);
     }
   };
 
   const handleRemoveGenre = (genreId: number) => {
-    const removedGenre = genres.find(g => g.id === genreId);
-    const newGenres = genres.filter(g => g.id !== genreId);
-    
+    const removedGenre = genres.find((g) => g.id === genreId);
+    const newGenres = genres.filter((g) => g.id !== genreId);
+
     // If we removed the primary genre and there are other genres, make the first one primary
     if (removedGenre?.is_primary && newGenres.length > 0) {
       newGenres[0].is_primary = true;
     }
-    
+
     setGenres(newGenres);
   };
 
   const handleTogglePrimary = (genreId: number) => {
-    setGenres(genres.map(g => ({
-      ...g,
-      is_primary: g.id === genreId
-    })));
+    setGenres(
+      genres.map((g) => ({
+        ...g,
+        is_primary: g.id === genreId,
+      })),
+    );
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -132,15 +144,15 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: name.trim(),
           name_variations: variations,
-          genres: genres.map(g => ({
+          genres: genres.map((g) => ({
             genre_id: g.id,
-            is_primary: g.is_primary
-          }))
+            is_primary: g.is_primary,
+          })),
         }),
       });
 
@@ -165,17 +177,15 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
       fullWidth
       classes={{ paper: styles.dialogPaper }}
     >
-      <DialogTitle className={styles.dialogTitle}>
-        Edit Band: {band.name}
-      </DialogTitle>
-      
+      <DialogTitle className={styles.dialogTitle}>Edit Band: {band.name}</DialogTitle>
+
       <DialogContent className={styles.dialogContent}>
-        {error && (
-          <div className={styles.error}>{error}</div>
-        )}
+        {error && <div className={styles.error}>{error}</div>}
 
         <div className={styles.formGroup}>
-          <label htmlFor="band-name" className={styles.label}>Band Name *</label>
+          <label htmlFor="band-name" className={styles.label}>
+            Band Name *
+          </label>
           <TextField
             id="band-name"
             value={name}
@@ -188,11 +198,13 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="new-variation" className={styles.label}>Name Variations</label>
+          <label htmlFor="new-variation" className={styles.label}>
+            Name Variations
+          </label>
           <p className={styles.hint}>
             Add alternative spellings, abbreviations, or common misspellings
           </p>
-          
+
           <div className={styles.variationInput}>
             <TextField
               id="new-variation"
@@ -231,14 +243,16 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="genre-search" className={styles.label}>Genres</label>
+          <label htmlFor="genre-search" className={styles.label}>
+            Genres
+          </label>
           <p className={styles.hint}>
             Assign music genres to this band. Click a genre chip to toggle it as primary.
           </p>
-          
+
           <Autocomplete
             id="genre-search"
-            options={availableGenres.filter(g => !genres.find(bg => bg.id === g.id))}
+            options={availableGenres.filter((g) => !genres.find((bg) => bg.id === g.id))}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
               <TextField
@@ -266,7 +280,11 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
                   key={genre.id}
                   onClick={() => handleTogglePrimary(genre.id)}
                   className={styles.genreChipWrapper}
-                  title={genre.is_primary ? "Primary genre (click another to change)" : "Click to make primary"}
+                  title={
+                    genre.is_primary
+                      ? 'Primary genre (click another to change)'
+                      : 'Click to make primary'
+                  }
                 >
                   <GenreTag name={genre.name} isPrimary={genre.is_primary} />
                   <button
@@ -288,11 +306,7 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
       </DialogContent>
 
       <DialogActions className={styles.dialogActions}>
-        <Button
-          onClick={onClose}
-          disabled={isSaving}
-          className={styles.cancelButton}
-        >
+        <Button onClick={onClose} disabled={isSaving} className={styles.cancelButton}>
           Cancel
         </Button>
         <Button
