@@ -93,9 +93,9 @@ export function UserMenu() {
           </Typography>
         </Box>
 
-        <MenuItem onClick={handleClose} className={styles.menuItem}>
+        {/*<MenuItem onClick={handleClose} className={styles.menuItem}>
           Profile
-        </MenuItem>
+        </MenuItem>*/}
         <MenuItem onClick={handleDashboard} className={styles.menuItem}>
           Dashboard
         </MenuItem>

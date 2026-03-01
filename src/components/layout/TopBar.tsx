@@ -45,7 +45,7 @@ export function TopBar({ searchContext = 'default', hide = false }: TopBarProps)
           />
 
           {/* Search Field */}
-          <SearchBar searchContext={searchContext} />
+          {isAuthenticated && <SearchBar searchContext={searchContext} />}
 
           {/* Spacer */}
           <div className={styles.spacer} />

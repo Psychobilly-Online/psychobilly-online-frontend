@@ -22,10 +22,7 @@ function TopBarWrapper() {
   const isHomePage = pathname === '/';
   const isAboutPage = pathname === '/about';
 
-  // Hide TopBar on homepage/about ONLY if user is not authenticated
-  const shouldHide = (isHomePage || isAboutPage) && !isAuthenticated;
-
-  return <TopBar searchContext={getSearchContext()} hide={shouldHide} />;
+  return <TopBar searchContext={getSearchContext()} />;
 }
 
 interface ClientLayoutProps {
