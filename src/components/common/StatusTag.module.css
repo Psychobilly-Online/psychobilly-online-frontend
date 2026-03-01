@@ -1,0 +1,41 @@
+.statusTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* Sizes */
+.small {
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: 11px;
+}
+
+.medium {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: 12px;
+}
+
+/* Status Colors */
+.active {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.closed {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+.temp_closed {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+/* Hover effect for interactive contexts */
+.statusTag:hover {
+  filter: brightness(0.95);
+}
