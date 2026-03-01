@@ -16,7 +16,12 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
     <nav className={styles.breadcrumb} aria-label="Breadcrumb">
       {items.map((item, index) => (
         <span key={index}>
-          {index > 0 && <span className={styles.separator} aria-hidden="true"> / </span>}
+          {index > 0 && (
+            <span className={styles.separator} aria-hidden="true">
+              {' '}
+              /{' '}
+            </span>
+          )}
           {'onClick' in item ? (
             <button onClick={item.onClick} className={styles.clickable} type="button">
               {item.label}
@@ -24,7 +29,9 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
           ) : 'href' in item ? (
             <Link href={item.href}>{item.label}</Link>
           ) : (
-            <span className={styles.current} aria-current="page">{item.label}</span>
+            <span className={styles.current} aria-current="page">
+              {item.label}
+            </span>
           )}
         </span>
       ))}
