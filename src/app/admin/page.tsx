@@ -32,7 +32,12 @@ export default function AdminDashboardPage() {
 
   return (
     <div className={styles.adminPage}>
-      <Breadcrumb items={[{ label: 'Admin Dashboard', href: '/admin' }]} />
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Admin Dashboard', href: '/admin' },
+        ]}
+      />
 
       <PageHeader
         title="Psychobilly Online Admin Dashboard"

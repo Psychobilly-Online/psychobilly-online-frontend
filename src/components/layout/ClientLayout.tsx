@@ -5,11 +5,12 @@ import { usePathname } from 'next/navigation';
 import { ReactNode, Suspense } from 'react';
 import { SearchProvider } from '@/contexts/SearchContext';
 import { MetadataProvider } from '@/contexts/MetadataContext';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import styles from './ClientLayout.module.css';
 
 function TopBarWrapper() {
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
 
   // Determine context based on pathname
   const getSearchContext = (): 'events' | 'news' | 'default' => {
@@ -21,7 +22,7 @@ function TopBarWrapper() {
   const isHomePage = pathname === '/';
   const isAboutPage = pathname === '/about';
 
-  return <TopBar searchContext={getSearchContext()} hide={isHomePage || isAboutPage} />;
+  return <TopBar searchContext={getSearchContext()} />;
 }
 
 interface ClientLayoutProps {

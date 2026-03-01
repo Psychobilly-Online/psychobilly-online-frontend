@@ -4,64 +4,6 @@
   padding: 0;
 }
 
-/* Navigation */
-.navigation {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-4);
-  flex-wrap: wrap;
-  margin-bottom: var(--spacing-6);
-  padding: var(--spacing-4);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--spacing-3);
-  background: var(--color-bg-secondary);
-}
-
-.backButton {
-  background: transparent;
-  border: none;
-  color: var(--link);
-  cursor: pointer;
-  font-size: 14px;
-  padding: 0;
-  transition: color 0.2s;
-}
-
-.backButton:hover {
-  color: var(--link-hover);
-  text-decoration: underline;
-}
-
-.breadcrumbs {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  font-size: 14px;
-  color: var(--color-text-muted);
-  flex-wrap: wrap;
-}
-
-.breadcrumbs a {
-  color: var(--link);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.breadcrumbs a:hover {
-  color: var(--link-hover);
-  text-decoration: underline;
-}
-
-.separator {
-  color: var(--color-text-muted);
-  user-select: none;
-}
-
-.current {
-  color: var(--color-text-primary);
-}
-
 /* Content Card */
 .contentCard {
   border: 1px solid var(--color-border-subtle);
@@ -113,6 +55,28 @@
   margin: 0;
   flex: 1;
   min-width: 0;
+}
+
+.actionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.backButton {
+  background: var(--color-accent-primary);
+  color: var(--color-text-primary);
+  border: none;
+  border-radius: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background: var(--color-accent-primary-dark);
 }
 
 .shareContainer {
@@ -469,14 +433,7 @@
 /* Mobile */
 @media (max-width: 767px) {
   .eventDetail {
-    padding: 0;
-  }
-
-  .navigation {
-    flex-direction: column;
-    align-items: flex-start;
     padding: var(--spacing-3);
-    border-radius: 0;
   }
 
   .contentCard {
@@ -506,10 +463,6 @@
 
   .headline {
     font-size: 22px;
-  }
-
-  .current {
-    display: none;
   }
 }
 

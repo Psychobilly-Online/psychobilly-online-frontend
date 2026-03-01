@@ -1,13 +1,21 @@
+import Breadcrumb from '@/components/common/Breadcrumb';
+import PageHeader from '@/components/common/PageHeader';
+import Section from '@/components/common/Section';
 import styles from './Startpage.module.css';
 
 export function Startpage() {
   return (
     <div className={styles.content}>
       <div className={styles.container}>
-        <div className={styles.bigBox}>
-          <div className={styles.bigBoxContent}>
-            <h1>Psychobilly Online: The Relaunch</h1>
+        <Breadcrumb items={[{ label: 'Home', href: '/' }]} />
 
+        <PageHeader
+          title="Psychobilly Online: The Relaunch"
+          description="Rebuilding the independent psychobilly community platform from scratch"
+        />
+
+        <Section>
+          <div className={styles.bigBoxContent}>
             <h2>A Fresh Start</h2>
             <p>
               In the late 1990s and early 2000s, Psychobilly Online has been a cornerstone of the
@@ -109,7 +117,7 @@ export function Startpage() {
               </em>
             </p>
           </div>
-        </div>
+        </Section>
       </div>
     </div>
   );

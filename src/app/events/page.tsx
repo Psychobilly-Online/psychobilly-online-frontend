@@ -5,6 +5,8 @@ import { useEvents } from '@/hooks/useEvents';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { EventCard } from '@/components/events/EventCard';
 import { EventFilters, FilterValues } from '@/components/events/EventFilters';
+import Breadcrumb from '@/components/common/Breadcrumb';
+import PageHeader from '@/components/common/PageHeader';
 import { useState, useEffect, useRef, useMemo, useTransition } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useMetadata } from '@/contexts/MetadataContext';
@@ -238,6 +240,13 @@ export default function EventsPage() {
         className={cx('col1', 'col-lg-12', 'col-md-12', 'col-xs-12', styles.mainColumn)}
         id="col1"
       >
+        <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Events' }]} />
+
+        <PageHeader
+          title="Psychobilly Events"
+          description="Discover upcoming psychobilly concerts and festivals worldwide"
+        />
+
         <div className={cx(styles.filterBar, isFilterSticky && styles.sticky)} ref={filterRef}>
           <EventFilters
             onFilterChange={handleFilterChange}

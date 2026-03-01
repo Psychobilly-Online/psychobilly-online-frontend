@@ -33,6 +33,7 @@ export default function SettingsPage() {
     <div className={styles.dashboardPage}>
       <Breadcrumb
         items={[
+          { label: 'Home', href: '/' },
           { label: 'Dashboard', href: '/dashboard' },
           { label: 'Settings', href: '/dashboard/settings' },
         ]}

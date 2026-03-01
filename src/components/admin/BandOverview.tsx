@@ -175,7 +175,8 @@ export default function BandOverview() {
   const handleViewEvents = () => {
     if (selectedBands.length === 1) {
       const band = selectedBands[0];
-      router.push(`/events?band=${encodeURIComponent(band.name)}`);
+      // Use 'search' parameter and set from_date to 1950 to show all events (including past)
+      router.push(`/events?search=${encodeURIComponent(band.name)}&from_date=1950-01-01`);
     }
   };
 

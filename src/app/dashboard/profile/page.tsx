@@ -33,15 +33,13 @@ export default function ProfilePage() {
     <div className={styles.dashboardPage}>
       <Breadcrumb
         items={[
+          { label: 'Home', href: '/' },
           { label: 'Dashboard', href: '/dashboard' },
           { label: 'Profile', href: '/dashboard/profile' },
         ]}
       />
 
-      <PageHeader
-        title="My Profile"
-        description="View and edit your profile information"
-      />
+      <PageHeader title="My Profile" description="View and edit your profile information" />
 
       <div style={{ padding: '2rem', textAlign: 'center' }}>
         <p style={{ fontSize: '1.2rem', color: 'var(--color-text-secondary)' }}>
