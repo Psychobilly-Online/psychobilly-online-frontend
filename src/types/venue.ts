@@ -2,27 +2,43 @@
  * Venue Status Types
  * Represents the operational status of a venue
  */
-export type VenueStatus = 'active' | 'closed' | 'temp_closed';
+export type VenueStatus = 'active' | 'temporarily_closed' | 'permanently_closed';
 
 /**
  * Venue Interface
  * Complete venue data structure from API
+ * Matches database schema in venues table
  */
 export interface Venue {
   id: number;
-  name: string;
-  street?: string | null;
-  zip?: string | null;
-  city?: string | null;
-  state?: string | null;
-  country?: string | null;
-  website?: string | null;
+  venue: string; // Backend returns 'venue' not 'name'
+  country_id: string;
+  state_id: string;
+  city_id?: number | null;
+  city: string;
+  zip: string;
+  address1: string;
+  address2: string;
+  latitude: string;
+  longitude: string;
+  contact: string;
+  phone1: string;
+  phone2: string;
+  fax: string;
+  email: string;
+  url: string;
+  text?: string | null;
+  user_id: number;
+  created_at: string;
+  updated_at: string;
+  approved: boolean;
   status: VenueStatus;
-  latitude?: number | null;
-  longitude?: number | null;
+  status_updated_at?: string | null;
+  status_reason?: string | null;
+  reopening_date?: string | null;
   event_count?: number; // Included in list responses
-  created_at?: string;
-  updated_at?: string;
+  country_name?: string; // Joined from countries table
+  state_name?: string; // Joined from states table
 }
 
 /**
@@ -46,18 +62,30 @@ export interface VenueResponse {
 
 /**
  * Venue Update Request
+ * Fields that can be updated via API
  */
 export interface VenueUpdateRequest {
   name: string;
-  street?: string;
-  zip?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  website?: string;
+  country_id: string;
+  state_id: string;
+  city_id?: number;
+  city: string;
+  zip: string;
+  address1: string;
+  address2?: string;
+  latitude?: string;
+  longitude?: string;
+  contact?: string;
+  phone1?: string;
+  phone2?: string;
+  fax?: string;
+  email?: string;
+  url?: string;
+  text?: string;
   status: VenueStatus;
-  latitude?: number;
-  longitude?: number;
+  status_reason?: string;
+  reopening_date?: string;
+  approved?: boolean;
 }
 
 /**

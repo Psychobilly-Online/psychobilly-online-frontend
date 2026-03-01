@@ -25,12 +25,12 @@
   color: var(--color-success-dark);
 }
 
-.closed {
+.permanently_closed {
   background-color: var(--color-danger-light);
   color: var(--color-danger-dark);
 }
 
-.temp_closed {
+.temporarily_closed {
   background-color: var(--color-warning-light);
   color: var(--color-warning-dark);
 }

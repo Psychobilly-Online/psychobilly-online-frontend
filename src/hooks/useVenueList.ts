@@ -115,8 +115,8 @@ export function useVenueList(options: UseVenueListOptions = {}): UseVenueListRes
           });
         }
 
-        // Sort by name
-        allResults.sort((a, b) => a.name.localeCompare(b.name));
+        // Sort by venue name
+        allResults.sort((a, b) => a.venue.localeCompare(b.venue));
 
         setVenues(allResults);
         setTotal(allResults.length);

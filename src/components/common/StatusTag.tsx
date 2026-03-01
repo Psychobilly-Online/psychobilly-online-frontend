@@ -8,13 +8,16 @@ interface StatusTagProps {
 
 const statusLabels: Record<VenueStatus, string> = {
   active: 'Active',
-  closed: 'Closed',
-  temp_closed: 'Temp. Closed',
+  temporarily_closed: 'Temp. Closed',
+  permanently_closed: 'Closed',
 };
 
 export default function StatusTag({ status, size = 'medium' }: StatusTagProps) {
   return (
-    <span className={`${styles.statusTag} ${styles[status]} ${styles[size]}`} title={statusLabels[status]}>
+    <span
+      className={`${styles.statusTag} ${styles[status]} ${styles[size]}`}
+      title={statusLabels[status]}
+    >
       {statusLabels[status]}
     </span>
   );
