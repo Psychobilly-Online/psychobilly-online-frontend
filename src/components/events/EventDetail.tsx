@@ -39,6 +39,18 @@ export function EventDetail({ event }: EventDetailProps) {
     router.back();
   };
 
+  const handleEventsClick = () => {
+    // Check if we have a referrer from the same origin (indicating internal navigation)
+    const referrer = document.referrer;
+    const isSameOrigin = referrer && new URL(referrer).origin === window.location.origin;
+
+    if (isSameOrigin) {
+      router.back();
+    } else {
+      router.push('/events');
+    }
+  };
+
   const handleShare = async () => {
     const url = window.location.href;
     const title = decodeHtmlEntities(event.headline);
@@ -104,7 +116,7 @@ export function EventDetail({ event }: EventDetailProps) {
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
-          { label: 'Events', onClick: handleBackClick },
+          { label: 'Events', onClick: handleEventsClick },
           { label: decodeHtmlEntities(event.headline) },
         ]}
       />
