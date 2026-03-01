@@ -1,5 +1,3 @@
-'use client';
-
 import Breadcrumb from '@/components/common/Breadcrumb';
 import PageHeader from '@/components/common/PageHeader';
 import Section from '@/components/common/Section';
