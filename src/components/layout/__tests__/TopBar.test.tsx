@@ -31,8 +31,11 @@ vi.mock('@/contexts/AuthContext', async () => {
     ...actual,
     useAuth: vi.fn(() => ({
       user: null,
+      token: null,
+      role: 'guest' as const,
       isAuthenticated: false,
       isLoading: false,
+      login: vi.fn(),
       logout: vi.fn(),
     })),
   };
@@ -73,8 +76,11 @@ describe('TopBar', () => {
     it('renders search input for authenticated users', () => {
       mockedUseAuth.mockReturnValue({
         user: mockAuthenticatedUser,
+        token: 'mock-token',
+        role: 'user',
         isAuthenticated: true,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
 
@@ -85,8 +91,11 @@ describe('TopBar', () => {
     it('adds search term when form is submitted', async () => {
       mockedUseAuth.mockReturnValue({
         user: mockAuthenticatedUser,
+        token: 'mock-token',
+        role: 'user',
         isAuthenticated: true,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
 
@@ -106,8 +115,11 @@ describe('TopBar', () => {
     it('does not add empty search terms', async () => {
       mockedUseAuth.mockReturnValue({
         user: mockAuthenticatedUser,
+        token: 'mock-token',
+        role: 'user',
         isAuthenticated: true,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
 
@@ -124,8 +136,11 @@ describe('TopBar', () => {
     it('trims whitespace from search terms', async () => {
       mockedUseAuth.mockReturnValue({
         user: mockAuthenticatedUser,
+        token: 'mock-token',
+        role: 'user',
         isAuthenticated: true,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
 
@@ -144,8 +159,11 @@ describe('TopBar', () => {
     it('updates search input value as user types', async () => {
       mockedUseAuth.mockReturnValue({
         user: mockAuthenticatedUser,
+        token: 'mock-token',
+        role: 'user',
         isAuthenticated: true,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
 
@@ -163,8 +181,11 @@ describe('TopBar', () => {
     beforeEach(() => {
       mockedUseAuth.mockReturnValue({
         user: mockAuthenticatedUser,
+        token: 'mock-token',
+        role: 'user',
         isAuthenticated: true,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
     });
@@ -190,8 +211,11 @@ describe('TopBar', () => {
       // Reset to unauthenticated state for these tests
       mockedUseAuth.mockReturnValue({
         user: null,
+        token: null,
+        role: 'guest',
         isAuthenticated: false,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
     });
@@ -217,8 +241,11 @@ describe('TopBar', () => {
     beforeEach(() => {
       mockedUseAuth.mockReturnValue({
         user: mockAuthenticatedUser,
+        token: 'mock-token',
+        role: 'user',
         isAuthenticated: true,
         isLoading: false,
+        login: vi.fn(),
         logout: vi.fn(),
       });
     });
