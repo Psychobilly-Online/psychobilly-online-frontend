@@ -1,9 +1,14 @@
-'use client';
-
+import { Metadata } from 'next';
 import Breadcrumb from '@/components/common/Breadcrumb';
 import PageHeader from '@/components/common/PageHeader';
 import Section from '@/components/common/Section';
 import styles from './page.module.css';
+
+export const metadata: Metadata = {
+  title: 'About the Project',
+  description:
+    'The story behind Psychobilly Online and the vision for our independent community platform - from fans, for fans.',
+};
 
 export default function AboutPage() {
   return (
