@@ -258,11 +258,11 @@ export function EventDetail({ event }: EventDetailProps) {
                     </div>
                   ))}
                   {/* Map */}
-                  {event.venue?.latitude && event.venue?.longitude && (
+                  {event.venue && (event.venue.latitude || event.venue.lat) && (event.venue.longitude || event.venue.long) && (
                     <div className={styles.mapSection}>
                       <EventMap
-                        latitude={parseFloat(event.venue.latitude)}
-                        longitude={parseFloat(event.venue.longitude)}
+                        latitude={parseFloat(event.venue.latitude || event.venue.lat || '0')}
+                        longitude={parseFloat(event.venue.longitude || event.venue.long || '0')}
                         venueName={event.venue.name || 'Event Venue'}
                       />
                     </div>

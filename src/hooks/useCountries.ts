@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 
 export interface Country {
-  id: string;
+  id: number;
   name: string;
-  iso_code: string;
-  region: string;
+  print_name: string;
+  iso: string;
+  iso3: string;
+  numcode: number;
 }
 
 export function useCountries() {
@@ -17,13 +19,13 @@ export function useCountries() {
       try {
         setIsLoading(true);
         const response = await fetch('/api/countries/all');
-        
+
         if (!response.ok) {
           throw new Error('Failed to fetch countries');
         }
 
         const data = await response.json();
-        setCountries(data.countries || []);
+        setCountries(data.data || []);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load countries');

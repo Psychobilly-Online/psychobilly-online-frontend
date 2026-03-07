@@ -1,0 +1,561 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
+} from '@mui/material';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCountries } from '@/hooks/useCountries';
+import type { Venue, VenueStatus } from '@/types/venue';
+import styles from './EditVenueDialog.module.css';
+
+interface EditVenueDialogProps {
+  open: boolean;
+  venue: Venue;
+  onClose: () => void;
+  onSave: (updatedVenue: Venue) => void;
+}
+
+export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVenueDialogProps) {
+  const { token } = useAuth();
+  const { countries } = useCountries();
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    venue: venue.venue,
+    country_id: venue.country_id,
+    state_id: venue.state_id || '',
+    city_id: venue.city_id || null,
+    city: venue.city,
+    zip: venue.zip || '',
+    address1: venue.address1 || '',
+    address2: venue.address2 || '',
+    lat: venue.lat || '',
+    long: venue.long || '',
+    url: venue.url || '',
+    text: venue.text || '',
+    status: venue.status || 'active',
+    status_reason: venue.status_reason || '',
+    reopening_date: venue.reopening_date || '',
+    approved: venue.approved,
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [geocodeSuccess, setGeocodeSuccess] = useState<string | null>(null);
+  
+  // Track original address fields to detect changes
+  const [originalAddress, setOriginalAddress] = useState({
+    country_id: venue.country_id,
+    city: venue.city,
+    zip: venue.zip || '',
+    address1: venue.address1 || '',
+    address2: venue.address2 || '',
+  });
+
+  // Reset form when venue changes
+  useEffect(() => {
+    const addressFields = {
+      country_id: venue.country_id,
+      city: venue.city,
+      zip: venue.zip || '',
+      address1: venue.address1 || '',
+      address2: venue.address2 || '',
+    };
+    
+    setFormData({
+      venue: venue.venue,
+      country_id: venue.country_id,
+      state_id: venue.state_id || '',
+      city_id: venue.city_id || null,
+      city: venue.city,
+      zip: venue.zip || '',
+      address1: venue.address1 || '',
+      address2: venue.address2 || '',
+      lat: venue.lat || '',
+      long: venue.long || '',
+      url: venue.url || '',
+      text: venue.text || '',
+      status: venue.status || 'active',
+      status_reason: venue.status_reason || '',
+      reopening_date: venue.reopening_date || '',
+      approved: venue.approved,
+    });
+    setOriginalAddress(addressFields);
+    setError(null);
+    setGeocodeSuccess(null);
+  }, [venue]);
+
+  const handleChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+  
+  // Check if address has changed from original
+  const addressHasChanged = () => {
+    return (
+      formData.country_id !== originalAddress.country_id ||
+      formData.city !== originalAddress.city ||
+      formData.zip !== originalAddress.zip ||
+      formData.address1 !== originalAddress.address1 ||
+      formData.address2 !== originalAddress.address2
+    );
+  };
+  
+  // Determine if geocode button should be visible
+  const showGeocodeButton = !formData.lat || !formData.long || addressHasChanged();
+  
+  // Clear coordinates
+  const handleClearCoordinates = () => {
+    setFormData(prev => ({ ...prev, lat: '', long: '' }));
+  };
+
+  const handleGeocode = async () => {
+    // Validation
+    if (!formData.city.trim()) {
+      setError('City is required for geocoding');
+      return;
+    }
+
+    setIsGeocoding(true);
+    setError(null);
+    setGeocodeSuccess(null);
+
+    try {
+      // Get country name from countries list
+      const country = countries.find(c => String(c.id) === formData.country_id);
+      const countryName = country?.name || '';
+
+      const response = await fetch('/api/admin/venues/geocode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          address1: formData.address1,
+          city: formData.city,
+          zip: formData.zip,
+          country: countryName,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || data.error || 'Failed to geocode address');
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+        // Update lat/long fields
+        setFormData(prev => ({
+          ...prev,
+          lat: result.data.latitude,
+          long: result.data.longitude,
+        }));
+
+        setGeocodeSuccess(
+          `Coordinates found! ${result.data.formatted_address || 'Location verified'} (Confidence: ${result.data.confidence}/10)`
+        );
+
+        // Clear success message after 5 seconds
+        setTimeout(() => setGeocodeSuccess(null), 5000);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to geocode address');
+    } finally {
+      setIsGeocoding(false);
+    }
+  };
+
+  const handleSave = async () => {
+    // Validation
+    if (!formData.venue.trim()) {
+      setError('Venue name is required');
+      return;
+    }
+    if (!formData.country_id) {
+      setError('Country is required');
+      return;
+    }
+    if (!formData.city.trim()) {
+      setError('City is required');
+      return;
+    }
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      // Prepare payload - convert empty strings to null for date fields only
+      // Keep text as empty string (TEXT field can handle it, unlike DATE fields)
+      const payload = {
+        ...formData,
+        status_reason: formData.status_reason || null,
+        reopening_date: formData.reopening_date || null,
+      };
+
+      const response = await fetch(`/api/admin/venues/${venue.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || data.message || 'Failed to update venue');
+      }
+
+      const result = await response.json();
+      
+      // Call onSave with the updated venue
+      if (result.venue) {
+        onSave(result.venue);
+      }
+      
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update venue');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      classes={{ paper: styles.dialogPaper }}
+    >
+      <DialogTitle className={styles.dialogTitle}>
+        Edit Venue: {venue.venue}
+      </DialogTitle>
+
+      <DialogContent className={styles.dialogContent}>
+        {error && (
+          <div className={styles.error}>{error}</div>
+        )}
+
+        {geocodeSuccess && (
+          <div className={styles.success}>{geocodeSuccess}</div>
+        )}
+
+        <div className={styles.formGrid}>
+          {/* Venue Name */}
+          <div className={styles.formGroup}>
+            <label htmlFor="venue-name" className={styles.label}>
+              Venue Name *
+            </label>
+            <TextField
+              id="venue-name"
+              value={formData.venue}
+              onChange={(e) => handleChange('venue', e.target.value)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+            />
+          </div>
+
+          {/* Country */}
+          <div className={styles.formGroup}>
+            <label htmlFor="country" className={styles.label}>
+              Country *
+            </label>
+            <TextField
+              id="country"
+              select
+              value={formData.country_id}
+              onChange={(e) => handleChange('country_id', e.target.value)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+            >
+              {countries.map((country) => (
+                <MenuItem key={country.id} value={String(country.id)}>
+                  {country.print_name || country.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </div>
+
+          {/* City */}
+          <div className={styles.formGroup}>
+            <label htmlFor="city" className={styles.label}>
+              City *
+            </label>
+            <TextField
+              id="city"
+              value={formData.city}
+              onChange={(e) => handleChange('city', e.target.value)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+            />
+          </div>
+
+          {/* ZIP Code */}
+          <div className={styles.formGroup}>
+            <label htmlFor="zip" className={styles.label}>
+              ZIP Code
+            </label>
+            <TextField
+              id="zip"
+              value={formData.zip}
+              onChange={(e) => handleChange('zip', e.target.value)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+            />
+          </div>
+
+          {/* Address 1 */}
+          <div className={styles.formGroup}>
+            <label htmlFor="address1" className={styles.label}>
+              Address Line 1
+            </label>
+            <TextField
+              id="address1"
+              value={formData.address1}
+              onChange={(e) => handleChange('address1', e.target.value)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+            />
+          </div>
+
+          {/* Address 2 */}
+          <div className={styles.formGroup}>
+            <label htmlFor="address2" className={styles.label}>
+              Address Line 2
+            </label>
+            <TextField
+              id="address2"
+              value={formData.address2}
+              onChange={(e) => handleChange('address2', e.target.value)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+            />
+          </div>
+
+          {/* Geocode Button - only show if coordinates are empty or address changed */}
+          {showGeocodeButton && (
+            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+              <Button
+                variant="outlined"
+                onClick={handleGeocode}
+                disabled={isSaving || isGeocoding || !formData.city}
+                className={styles.geocodeButton}
+                fullWidth
+              >
+                {isGeocoding ? '🌍 Geocoding...' : '🌍 Get Coordinates from Address'}
+              </Button>
+              <p className={styles.geocodeHint}>
+                {!formData.lat || !formData.long
+                  ? 'Click to automatically fetch latitude and longitude based on the address above.'
+                  : 'Address has changed. Click to update coordinates.'}
+              </p>
+            </div>
+          )}
+
+          {/* Latitude - readonly */}
+          <div className={styles.formGroup}>
+            <label htmlFor="latitude" className={styles.label}>
+              Latitude
+            </label>
+            <TextField
+              id="latitude"
+              value={formData.lat}
+              fullWidth
+              variant="outlined"
+              className={styles.textField}
+              placeholder="e.g., 52.5200"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+
+          {/* Longitude - readonly */}
+          <div className={styles.formGroup}>
+            <label htmlFor="longitude" className={styles.label}>
+              Longitude
+            </label>
+            <TextField
+              id="longitude"
+              value={formData.long}
+              fullWidth
+              variant="outlined"
+              className={styles.textField}
+              placeholder="e.g., 13.4050"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+
+          {/* Clear Coordinates Button */}
+          {(formData.lat || formData.long) && (
+            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+              <Button
+                variant="text"
+                onClick={handleClearCoordinates}
+                disabled={isSaving}
+                color="error"
+                size="small"
+              >
+                Clear Coordinates
+              </Button>
+            </div>
+          )}
+
+          {/* Website URL */}
+          <div className={styles.formGroup}>
+            <label htmlFor="url" className={styles.label}>
+              Website URL
+            </label>
+            <TextField
+              id="url"
+              value={formData.url}
+              onChange={(e) => handleChange('url', e.target.value)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+              placeholder="https://example.com"
+            />
+          </div>
+
+          {/* Status */}
+          <div className={styles.formGroup}>
+            <label htmlFor="status" className={styles.label}>
+              Status *
+            </label>
+            <TextField
+              id="status"
+              select
+              value={formData.status}
+              onChange={(e) => handleChange('status', e.target.value as VenueStatus)}
+              fullWidth
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="temporarily_closed">Temporarily Closed</MenuItem>
+              <MenuItem value="permanently_closed">Permanently Closed</MenuItem>
+            </TextField>
+          </div>
+
+          {/* Status Reason (shown if not active) */}
+          {formData.status !== 'active' && (
+            <div className={styles.formGroup}>
+              <label htmlFor="status-reason" className={styles.label}>
+                Status Reason
+              </label>
+              <TextField
+                id="status-reason"
+                value={formData.status_reason}
+                onChange={(e) => handleChange('status_reason', e.target.value)}
+                fullWidth
+                multiline
+                rows={2}
+                variant="outlined"
+                disabled={isSaving}
+                className={styles.textField}
+                placeholder="Reason for closure..."
+              />
+            </div>
+          )}
+
+          {/* Reopening Date (shown if temporarily closed) */}
+          {formData.status === 'temporarily_closed' && (
+            <div className={styles.formGroup}>
+              <label htmlFor="reopening-date" className={styles.label}>
+                Expected Reopening Date
+              </label>
+              <TextField
+                id="reopening-date"
+                type="date"
+                value={formData.reopening_date}
+                onChange={(e) => handleChange('reopening_date', e.target.value)}
+                fullWidth
+                variant="outlined"
+                disabled={isSaving}
+                className={styles.textField}
+                InputLabelProps={{ shrink: true }}
+              />
+            </div>
+          )}
+
+          {/* Description */}
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+            <label htmlFor="text" className={styles.label}>
+              Description
+            </label>
+            <TextField
+              id="text"
+              value={formData.text}
+              onChange={(e) => handleChange('text', e.target.value)}
+              fullWidth
+              multiline
+              rows={4}
+              variant="outlined"
+              disabled={isSaving}
+              className={styles.textField}
+              placeholder="Additional information about this venue..."
+            />
+          </div>
+
+          {/* Approved Checkbox */}
+          <div className={styles.formGroup}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.approved}
+                  onChange={(e) => handleChange('approved', e.target.checked)}
+                  disabled={isSaving}
+                />
+              }
+              label="Approved"
+            />
+          </div>
+        </div>
+      </DialogContent>
+
+      <DialogActions className={styles.dialogActions}>
+        <Button onClick={onClose} disabled={isSaving}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSave}
+          disabled={isSaving}
+          className={styles.saveButton}
+        >
+          {isSaving ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}

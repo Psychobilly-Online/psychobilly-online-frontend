@@ -15,6 +15,8 @@ import Section from '@/components/common/Section';
 import VenueListItem from '@/components/common/VenueListItem';
 import ActionButton from '@/components/common/ActionButton';
 import VenueSelectionActionBar from './VenueSelectionActionBar';
+import EditVenueDialog from './EditVenueDialog';
+import MergeVenuesDialog from './MergeVenuesDialog';
 import styles from './VenueOverview.module.css';
 
 export default function VenueOverview() {
@@ -30,6 +32,8 @@ export default function VenueOverview() {
   const [resultsPerPage, setResultsPerPage] = useState(50);
   const [clientPage, setClientPage] = useState(1);
   const [scrollToVenueId, setScrollToVenueId] = useState<number | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [mergeDialogOpen, setMergeDialogOpen] = useState(false);
 
   // Load countries for filter
   const { countries } = useCountries();
@@ -136,8 +140,7 @@ export default function VenueOverview() {
 
   const handleEditVenue = () => {
     if (selectedVenues.length === 1) {
-      // TODO: Open edit dialog
-      console.log('Edit venue:', selectedVenues[0]);
+      setEditDialogOpen(true);
     }
   };
 
@@ -150,8 +153,7 @@ export default function VenueOverview() {
 
   const handleMergeVenues = () => {
     if (selectedVenues.length >= 2) {
-      // TODO: Open merge dialog
-      console.log('Merge venues:', selectedVenues);
+      setMergeDialogOpen(true);
     }
   };
 
@@ -159,8 +161,10 @@ export default function VenueOverview() {
     if (selectedVenues.length !== 1) return;
 
     const venue = selectedVenues[0];
-    
-    if (!confirm(`Are you sure you want to delete "${venue.venue}"?\n\nThis action cannot be undone.`)) {
+
+    if (
+      !confirm(`Are you sure you want to delete "${venue.venue}"?\n\nThis action cannot be undone.`)
+    ) {
       return;
     }
 
@@ -184,6 +188,20 @@ export default function VenueOverview() {
 
   const handleQuickFilterChange = (filter: 'all' | 'orphaned') => {
     setQuickFilter(filter);
+  };
+
+  const handleVenueSaved = (updatedVenue: Venue) => {
+    // Update the selected venue with the fresh data
+    setSelectedVenues([updatedVenue]);
+    // Refresh the list and scroll to the updated venue
+    setScrollToVenueId(updatedVenue.id);
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
+  const handleVenuesMerged = () => {
+    // Refresh the list after merge
+    setRefreshTrigger((prev) => prev + 1);
+    handleClearSelection();
   };
 
   const handlePageChange = (page: number) => {
@@ -353,6 +371,26 @@ export default function VenueOverview() {
           </>
         )}
       </Section>
+
+      {/* Edit Venue Dialog */}
+      {selectedVenues.length === 1 && (
+        <EditVenueDialog
+          open={editDialogOpen}
+          venue={selectedVenues[0]}
+          onClose={() => setEditDialogOpen(false)}
+          onSave={handleVenueSaved}
+        />
+      )}
+
+      {/* Merge Venues Dialog */}
+      {selectedVenues.length >= 2 && (
+        <MergeVenuesDialog
+          open={mergeDialogOpen}
+          venues={selectedVenues}
+          onClose={() => setMergeDialogOpen(false)}
+          onMerge={handleVenuesMerged}
+        />
+      )}
     </div>
   );
 }
