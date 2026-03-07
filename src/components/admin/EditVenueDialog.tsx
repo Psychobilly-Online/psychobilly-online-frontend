@@ -27,7 +27,7 @@ interface EditVenueDialogProps {
 export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVenueDialogProps) {
   const { token } = useAuth();
   const { countries } = useCountries();
-  
+
   // Form state
   const [formData, setFormData] = useState({
     venue: venue.venue,
@@ -52,7 +52,7 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [geocodeSuccess, setGeocodeSuccess] = useState<string | null>(null);
-  
+
   // Track original address fields to detect changes
   const [originalAddress, setOriginalAddress] = useState({
     country_id: venue.country_id,
@@ -71,7 +71,7 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       address1: venue.address1 || '',
       address2: venue.address2 || '',
     };
-    
+
     setFormData({
       venue: venue.venue,
       country_id: venue.country_id,
@@ -96,9 +96,9 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
   }, [venue]);
 
   const handleChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
-  
+
   // Check if address has changed from original
   const addressHasChanged = () => {
     return (
@@ -109,13 +109,13 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       formData.address2 !== originalAddress.address2
     );
   };
-  
+
   // Determine if geocode button should be visible
   const showGeocodeButton = !formData.lat || !formData.long || addressHasChanged();
-  
+
   // Clear coordinates
   const handleClearCoordinates = () => {
-    setFormData(prev => ({ ...prev, lat: '', long: '' }));
+    setFormData((prev) => ({ ...prev, lat: '', long: '' }));
   };
 
   const handleGeocode = async () => {
@@ -131,7 +131,7 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
 
     try {
       // Get country name from countries list
-      const country = countries.find(c => String(c.id) === formData.country_id);
+      const country = countries.find((c) => String(c.id) === formData.country_id);
       const countryName = country?.name || '';
 
       const response = await fetch('/api/admin/venues/geocode', {
@@ -154,17 +154,17 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       }
 
       const result = await response.json();
-      
+
       if (result.success && result.data) {
         // Update lat/long fields
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
           lat: result.data.latitude,
           long: result.data.longitude,
         }));
 
         setGeocodeSuccess(
-          `Coordinates found! ${result.data.formatted_address || 'Location verified'} (Confidence: ${result.data.confidence}/10)`
+          `Coordinates found! ${result.data.formatted_address || 'Location verified'} (Confidence: ${result.data.confidence}/10)`,
         );
 
         // Clear success message after 5 seconds
@@ -219,12 +219,12 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       }
 
       const result = await response.json();
-      
+
       // Call onSave with the updated venue
       if (result.venue) {
         onSave(result.venue);
       }
-      
+
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update venue');
@@ -241,18 +241,12 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       fullWidth
       classes={{ paper: styles.dialogPaper }}
     >
-      <DialogTitle className={styles.dialogTitle}>
-        Edit Venue: {venue.venue}
-      </DialogTitle>
+      <DialogTitle className={styles.dialogTitle}>Edit Venue: {venue.venue}</DialogTitle>
 
       <DialogContent className={styles.dialogContent}>
-        {error && (
-          <div className={styles.error}>{error}</div>
-        )}
+        {error && <div className={styles.error}>{error}</div>}
 
-        {geocodeSuccess && (
-          <div className={styles.success}>{geocodeSuccess}</div>
-        )}
+        {geocodeSuccess && <div className={styles.success}>{geocodeSuccess}</div>}
 
         <div className={styles.formGrid}>
           {/* Venue Name */}
@@ -285,6 +279,21 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
               variant="outlined"
               disabled={isSaving}
               className={styles.textField}
+              InputProps={{
+                sx: {
+                  color: 'var(--color-text-primary)',
+                  '& .MuiSelect-icon': {
+                    color: 'var(--color-text-primary)',
+                  },
+                },
+              }}
+              SelectProps={{
+                MenuProps: {
+                  PaperProps: {
+                    className: styles.selectMenu,
+                  },
+                },
+              }}
             >
               {countries.map((country) => (
                 <MenuItem key={country.id} value={String(country.id)}>
@@ -362,11 +371,10 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
           {showGeocodeButton && (
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
               <Button
-                variant="outlined"
+                variant="contained"
                 onClick={handleGeocode}
                 disabled={isSaving || isGeocoding || !formData.city}
                 className={styles.geocodeButton}
-                fullWidth
               >
                 {isGeocoding ? '🌍 Geocoding...' : '🌍 Get Coordinates from Address'}
               </Button>
@@ -418,11 +426,11 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
           {(formData.lat || formData.long) && (
             <div className={`${styles.formGroup} ${styles.fullWidth}`}>
               <Button
-                variant="text"
+                variant="outlined"
                 onClick={handleClearCoordinates}
                 disabled={isSaving}
-                color="error"
                 size="small"
+                className={styles.clearCoordsButton}
               >
                 Clear Coordinates
               </Button>
@@ -460,6 +468,21 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
               variant="outlined"
               disabled={isSaving}
               className={styles.textField}
+              InputProps={{
+                sx: {
+                  color: 'var(--color-text-primary)',
+                  '& .MuiSelect-icon': {
+                    color: 'var(--color-text-primary)',
+                  },
+                },
+              }}
+              SelectProps={{
+                MenuProps: {
+                  PaperProps: {
+                    className: styles.selectMenu,
+                  },
+                },
+              }}
             >
               <MenuItem value="active">Active</MenuItem>
               <MenuItem value="temporarily_closed">Temporarily Closed</MenuItem>
@@ -544,7 +567,7 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       </DialogContent>
 
       <DialogActions className={styles.dialogActions}>
-        <Button onClick={onClose} disabled={isSaving}>
+        <Button onClick={onClose} disabled={isSaving} className={styles.cancelButton}>
           Cancel
         </Button>
         <Button

@@ -9,14 +9,14 @@ export interface VenueContact {
   role?: string | null;
   phpbb_user_id?: number | null;
   is_primary: boolean;
-  
+
   // Contact methods
   phone_mobile?: string | null;
   phone_landline?: string | null;
   phone_other?: string | null;
   email?: string | null;
   website_url?: string | null;
-  
+
   // Social/Messaging platforms
   whatsapp?: string | null;
   telegram?: string | null;
@@ -24,18 +24,18 @@ export interface VenueContact {
   instagram?: string | null;
   facebook?: string | null;
   twitter_x?: string | null;
-  
+
   // Legacy
   fax?: string | null;
-  
+
   // Additional
   notes?: string | null;
   language_preference?: string | null;
-  
+
   // Validity period
   valid_from?: number | null;
   valid_to?: number | null;
-  
+
   // Metadata
   is_public: boolean;
   is_verified: boolean;
@@ -135,14 +135,14 @@ export interface VenueContactRequest {
   role?: string;
   phpbb_user_id?: number;
   is_primary?: boolean;
-  
+
   // Contact methods
   phone_mobile?: string;
   phone_landline?: string;
   phone_other?: string;
   email?: string;
   website_url?: string;
-  
+
   // Social/Messaging platforms
   whatsapp?: string;
   telegram?: string;
@@ -150,18 +150,18 @@ export interface VenueContactRequest {
   instagram?: string;
   facebook?: string;
   twitter_x?: string;
-  
+
   // Legacy
   fax?: string;
-  
+
   // Additional
   notes?: string;
   language_preference?: string;
-  
+
   // Validity period
   valid_from?: number;
   valid_to?: number;
-  
+
   // Metadata
   is_public?: boolean;
   is_verified?: boolean;

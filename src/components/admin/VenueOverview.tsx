@@ -191,11 +191,11 @@ export default function VenueOverview() {
   };
 
   const handleVenueSaved = (updatedVenue: Venue) => {
-    // Update the selected venue with the fresh data
-    setSelectedVenues([updatedVenue]);
     // Refresh the list and scroll to the updated venue
     setScrollToVenueId(updatedVenue.id);
     setRefreshTrigger((prev) => prev + 1);
+    // Deselect after save
+    handleClearSelection();
   };
 
   const handleVenuesMerged = () => {

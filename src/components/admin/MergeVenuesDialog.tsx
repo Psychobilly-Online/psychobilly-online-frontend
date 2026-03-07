@@ -52,9 +52,10 @@ export default function MergeVenuesDialog({
       return;
     }
 
-    const confirmMessage = `Are you sure you want to merge ${venues.length} venues?\n\n` +
+    const confirmMessage =
+      `Are you sure you want to merge ${venues.length} venues?\n\n` +
       `Primary Venue: ${primaryVenue?.venue}\n` +
-      `Venues to merge: ${mergeVenues.map(v => v.venue).join(', ')}\n\n` +
+      `Venues to merge: ${mergeVenues.map((v) => v.venue).join(', ')}\n\n` +
       `This will:\n` +
       `• Transfer all ${totalEvents} event(s) to "${primaryVenue?.venue}"\n` +
       `• Delete ${mergeVenues.length} venue(s)\n` +
@@ -86,11 +87,11 @@ export default function MergeVenuesDialog({
       }
 
       const result = await response.json();
-      
+
       // Show success message
       alert(
         result.message ||
-          `Successfully merged ${result.venues_deleted} venue(s). ${result.events_updated} event(s) updated.`
+          `Successfully merged ${result.venues_deleted} venue(s). ${result.events_updated} event(s) updated.`,
       );
 
       // Trigger refresh
@@ -116,7 +117,7 @@ export default function MergeVenuesDialog({
       <DialogContent className={styles.dialogContent}>
         {error && <div className={styles.error}>{error}</div>}
 
-        <div className={styles.section}>
+        <div className={styles.warning}>
           <div className={styles.info}>
             <strong>⚠️ Warning:</strong> This action will merge {venues.length} venues and cannot be
             undone.
@@ -195,7 +196,7 @@ export default function MergeVenuesDialog({
       </DialogContent>
 
       <DialogActions className={styles.dialogActions}>
-        <Button onClick={onClose} disabled={isMerging}>
+        <Button onClick={onClose} disabled={isMerging} className={styles.cancelButton}>
           Cancel
         </Button>
         <Button
