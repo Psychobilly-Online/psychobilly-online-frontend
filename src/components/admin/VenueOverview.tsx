@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { useAuth } from '@/contexts/AuthContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useVenueList } from '@/hooks/useVenueList';
 import { useCountries } from '@/hooks/useCountries';
@@ -21,6 +22,7 @@ import styles from './VenueOverview.module.css';
 
 export default function VenueOverview() {
   const router = useRouter();
+  const { token } = useAuth();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -171,6 +173,9 @@ export default function VenueOverview() {
     try {
       const response = await fetch(`/api/admin/venues/${venue.id}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
