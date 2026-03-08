@@ -17,14 +17,6 @@ export interface VenueContact {
   email?: string | null;
   website_url?: string | null;
 
-  // Social/Messaging platforms
-  whatsapp?: string | null;
-  telegram?: string | null;
-  signal?: string | null;
-  instagram?: string | null;
-  facebook?: string | null;
-  twitter_x?: string | null;
-
   // Legacy
   fax?: string | null;
 
@@ -143,14 +135,6 @@ export interface VenueContactRequest {
   phone_other?: string;
   email?: string;
   website_url?: string;
-
-  // Social/Messaging platforms
-  whatsapp?: string;
-  telegram?: string;
-  signal?: string;
-  instagram?: string;
-  facebook?: string;
-  twitter_x?: string;
 
   // Legacy
   fax?: string;

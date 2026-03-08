@@ -15,6 +15,7 @@ import Pagination from '@/components/common/Pagination';
 import Section from '@/components/common/Section';
 import VenueListItem from '@/components/common/VenueListItem';
 import ActionButton from '@/components/common/ActionButton';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
 import VenueSelectionActionBar from './VenueSelectionActionBar';
 import EditVenueDialog from './EditVenueDialog';
 import MergeVenuesDialog from './MergeVenuesDialog';
@@ -36,6 +37,9 @@ export default function VenueOverview() {
   const [scrollToVenueId, setScrollToVenueId] = useState<number | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [mergeDialogOpen, setMergeDialogOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Load countries for filter
   const { countries } = useCountries();
@@ -159,16 +163,18 @@ export default function VenueOverview() {
     }
   };
 
-  const handleDeleteVenue = async () => {
+  const handleDeleteVenue = () => {
+    if (selectedVenues.length !== 1) return;
+    setDeleteError(null);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     if (selectedVenues.length !== 1) return;
 
     const venue = selectedVenues[0];
-
-    if (
-      !confirm(`Are you sure you want to delete "${venue.venue}"?\n\nThis action cannot be undone.`)
-    ) {
-      return;
-    }
+    setIsDeleting(true);
+    setDeleteError(null);
 
     try {
       const response = await fetch(`/api/admin/venues/${venue.id}`, {
@@ -183,11 +189,14 @@ export default function VenueOverview() {
         throw new Error(data.error || 'Failed to delete venue');
       }
 
-      // Success
+      // Success - close dialog and refresh
+      setDeleteConfirmOpen(false);
       setRefreshTrigger((prev) => prev + 1);
       handleClearSelection();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to delete venue');
+      setDeleteError(err instanceof Error ? err.message : 'Failed to delete venue');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -394,6 +403,36 @@ export default function VenueOverview() {
           venues={selectedVenues}
           onClose={() => setMergeDialogOpen(false)}
           onMerge={handleVenuesMerged}
+        />
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {selectedVenues.length === 1 && (
+        <ConfirmDialog
+          isOpen={deleteConfirmOpen}
+          onClose={() => {
+            setDeleteConfirmOpen(false);
+            setDeleteError(null);
+          }}
+          onConfirm={handleConfirmDelete}
+          title="Delete Venue"
+          message={
+            <div>
+              <p>Are you sure you want to delete &quot;{selectedVenues[0].venue}&quot;?</p>
+              <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
+                This action cannot be undone.
+              </p>
+              {deleteError && (
+                <p style={{ marginTop: '12px', color: 'var(--color-error)', fontSize: '14px' }}>
+                  Error: {deleteError}
+                </p>
+              )}
+            </div>
+          }
+          confirmText="Delete"
+          cancelText="Cancel"
+          confirmColor="error"
+          isLoading={isDeleting}
         />
       )}
     </div>

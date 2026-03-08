@@ -12,8 +12,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Checkbox,
-  TextField,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -21,6 +19,8 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAuth } from '@/contexts/AuthContext';
 import VenueListItem from '@/components/common/VenueListItem';
+import ConfirmDialog from '@/components/common/ConfirmDialog';
+import { StyledTextField, StyledCheckbox } from '@/components/common/form';
 import type { Venue } from '@/types/venue';
 import styles from './MergeVenuesDialog.module.css';
 
@@ -55,6 +55,7 @@ export default function MergeVenuesDialog({
   const [primaryVenueId, setPrimaryVenueId] = useState<number>(venues[0]?.id || 0);
   const [isMerging, setIsMerging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   // Historical tracking state
   const [historicalNames, setHistoricalNames] = useState<Map<number, HistoricalName>>(new Map());
@@ -129,7 +130,7 @@ export default function MergeVenuesDialog({
     }
   };
 
-  const handleMerge = async () => {
+  const handleMergeClick = () => {
     if (!primaryVenueId) {
       setError('Please select a primary venue');
       return;
@@ -140,28 +141,14 @@ export default function MergeVenuesDialog({
       return;
     }
 
-    const histNamesCount = historicalNames.size;
-    const histAddrsCount = historicalAddresses.size;
-    const histInfo =
-      histNamesCount > 0 || histAddrsCount > 0
-        ? `\n• Save ${histNamesCount} historical name(s) and ${histAddrsCount} historical address(es)`
-        : '';
+    setError(null);
+    setConfirmOpen(true);
+  };
 
-    const confirmMessage =
-      `Are you sure you want to merge ${venues.length} venues?\n\n` +
-      `Primary Venue: ${primaryVenue?.venue}\n` +
-      `Venues to merge: ${mergeVenues.map((v) => v.venue).join(', ')}\n\n` +
-      `This will:\n` +
-      `• Transfer all ${totalEvents} event(s) to "${primaryVenue?.venue}"\n` +
-      `• Delete ${mergeVenues.length} venue(s)${histInfo}\n` +
-      `• This action cannot be undone`;
-
-    if (!confirm(confirmMessage)) {
-      return;
-    }
-
+  const handleConfirmMerge = async () => {
     setIsMerging(true);
     setError(null);
+    setConfirmOpen(false);
 
     try {
       const body: {
@@ -198,15 +185,12 @@ export default function MergeVenuesDialog({
 
       const result = await response.json();
 
-      // Show success message
-      alert(
-        result.message ||
-          `Successfully merged ${result.venues_deleted} venue(s). ${result.events_updated} event(s) updated.`,
-      );
-
-      // Trigger refresh
+      // Trigger refresh and close
       onMerge();
       onClose();
+      
+      // Success is visible when the venue list refreshes
+      // (merged venue remains, others are gone)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to merge venues');
     } finally {
@@ -306,7 +290,7 @@ export default function MergeVenuesDialog({
                   <div key={venue.id} className={styles.historicalItem}>
                     <FormControlLabel
                       control={
-                        <Checkbox
+                        <StyledCheckbox
                           checked={historicalNames.has(venue.id)}
                           onChange={(e) => toggleHistoricalName(venue.id, e.target.checked)}
                         />
@@ -319,7 +303,7 @@ export default function MergeVenuesDialog({
                     />
                     {historicalNames.has(venue.id) && (
                       <div className={styles.historicalFields}>
-                        <TextField
+                        <StyledTextField
                           label="From Year"
                           type="number"
                           size="small"
@@ -334,7 +318,7 @@ export default function MergeVenuesDialog({
                           }
                           className={styles.yearField}
                         />
-                        <TextField
+                        <StyledTextField
                           label="To Year"
                           type="number"
                           size="small"
@@ -349,7 +333,7 @@ export default function MergeVenuesDialog({
                           }
                           className={styles.yearField}
                         />
-                        <TextField
+                        <StyledTextField
                           label="Notes"
                           size="small"
                           fullWidth
@@ -389,7 +373,7 @@ export default function MergeVenuesDialog({
                   <div key={venue.id} className={styles.historicalItem}>
                     <FormControlLabel
                       control={
-                        <Checkbox
+                        <StyledCheckbox
                           checked={historicalAddresses.has(venue.id)}
                           onChange={(e) => toggleHistoricalAddress(venue.id, e.target.checked)}
                         />
@@ -403,7 +387,7 @@ export default function MergeVenuesDialog({
                     />
                     {historicalAddresses.has(venue.id) && (
                       <div className={styles.historicalFields}>
-                        <TextField
+                        <StyledTextField
                           label="From Year"
                           type="number"
                           size="small"
@@ -418,7 +402,7 @@ export default function MergeVenuesDialog({
                           }
                           className={styles.yearField}
                         />
-                        <TextField
+                        <StyledTextField
                           label="To Year"
                           type="number"
                           size="small"
@@ -433,7 +417,7 @@ export default function MergeVenuesDialog({
                           }
                           className={styles.yearField}
                         />
-                        <TextField
+                        <StyledTextField
                           label="Notes"
                           size="small"
                           fullWidth
@@ -506,13 +490,58 @@ export default function MergeVenuesDialog({
         <Button
           variant="contained"
           color="error"
-          onClick={handleMerge}
+          onClick={handleMergeClick}
           disabled={isMerging || venues.length < 2}
           className={styles.mergeButton}
         >
           {isMerging ? 'Merging...' : `Merge ${venues.length} Venues`}
         </Button>
       </DialogActions>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleConfirmMerge}
+        title="Confirm Venue Merge"
+        message={
+          <div>
+            <p style={{ marginBottom: '12px' }}>
+              Are you sure you want to merge <strong>{venues.length} venues</strong>?
+            </p>
+            <div style={{ marginBottom: '12px' }}>
+              <strong>Primary Venue:</strong> {primaryVenue?.venue}
+              <br />
+              <strong>Venues to merge:</strong> {mergeVenues.map((v) => v.venue).join(', ')}
+            </div>
+            <div style={{ marginBottom: '12px' }}>
+              <strong>This will:</strong>
+              <ul style={{ marginTop: '6px', paddingLeft: '20px' }}>
+                <li>Transfer all {totalEvents} event(s) to &quot;{primaryVenue?.venue}&quot;</li>
+                <li>Delete {mergeVenues.length} venue(s)</li>
+                {historicalNames.size > 0 && (
+                  <li>
+                    Save {historicalNames.size} historical name{historicalNames.size !== 1 ? 's' : ''}
+                  </li>
+                )}
+                {historicalAddresses.size > 0 && (
+                  <li>
+                    Save {historicalAddresses.size} historical address
+                    {historicalAddresses.size !== 1 ? 'es' : ''}
+                  </li>
+                )}
+              </ul>
+            </div>
+            <p style={{ fontWeight: 'bold', color: 'var(--color-error)' }}>
+              This action cannot be undone.
+            </p>
+          </div>
+        }
+        confirmText="Merge Venues"
+        cancelText="Cancel"
+        confirmColor="error"
+        isLoading={isMerging}
+      />
     </Dialog>
   );
 }

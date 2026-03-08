@@ -7,15 +7,21 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextField,
   MenuItem,
   FormControlLabel,
   Checkbox,
   Chip,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCountries } from '@/hooks/useCountries';
-import type { Venue, VenueStatus } from '@/types/venue';
+import type { Venue, VenueStatus, VenueContact } from '@/types/venue';
+import VenueContactsManager from './VenueContactsManager';
+import VenueSocialMediaManager from './VenueSocialMediaManager';
+import { StyledTextField, StyledCheckbox } from '@/components/common/form';
 import styles from './EditVenueDialog.module.css';
 
 interface EditVenueDialogProps {
@@ -57,6 +63,11 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [geocodeSuccess, setGeocodeSuccess] = useState<string | null>(null);
+
+  // Contacts and social media state
+  const [contacts, setContacts] = useState<VenueContact[]>([]);
+  const [socialMediaLinks, setSocialMediaLinks] = useState<any[]>([]);
+  const [isLoadingExtras, setIsLoadingExtras] = useState(false);
 
   // Track original address fields to detect changes
   const [originalAddress, setOriginalAddress] = useState({
@@ -101,7 +112,35 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
     setOriginalAddress(addressFields);
     setError(null);
     setGeocodeSuccess(null);
-  }, [venue]);
+
+    // Load contacts and social media when dialog opens
+    if (open) {
+      loadExtras();
+    }
+  }, [venue, open]);
+
+  const loadExtras = async () => {
+    setIsLoadingExtras(true);
+    try {
+      // Load contacts
+      const contactsResponse = await fetch(`/api/admin/venues/${venue.id}/contacts`);
+      if (contactsResponse.ok) {
+        const contactsData = await contactsResponse.json();
+        setContacts(contactsData.contacts || []);
+      }
+
+      // Load social media links
+      const socialResponse = await fetch(`/api/admin/venues/${venue.id}/social-media`);
+      if (socialResponse.ok) {
+        const socialData = await socialResponse.json();
+        setSocialMediaLinks(socialData.social_media || []);
+      }
+    } catch (err) {
+      console.error('Failed to load contacts/social media:', err);
+    } finally {
+      setIsLoadingExtras(false);
+    }
+  };
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -283,14 +322,12 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
             <label htmlFor="venue-name" className={styles.label}>
               Venue Name *
             </label>
-            <TextField
+            <StyledTextField
               id="venue-name"
               value={formData.venue}
               onChange={(e) => handleChange('venue', e.target.value)}
               fullWidth
-              variant="outlined"
               disabled={isSaving}
-              className={styles.textField}
             />
           </div>
 
@@ -304,16 +341,14 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
             </p>
 
             <div className={styles.variationInput}>
-              <TextField
+              <StyledTextField
                 id="new-variation"
                 value={newVariation}
                 onChange={(e) => setNewVariation(e.target.value)}
                 onKeyPress={handleVariationKeyPress}
                 placeholder="Enter variation and press Enter"
                 fullWidth
-                variant="outlined"
                 disabled={isSaving}
-                className={styles.textField}
               />
               <Button
                 onClick={handleAddVariation}
@@ -340,304 +375,327 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
             )}
           </div>
 
-          {/* Country */}
-          <div className={styles.formGroup}>
-            <label htmlFor="country" className={styles.label}>
-              Country *
-            </label>
-            <TextField
-              id="country"
-              select
-              value={formData.country_id}
-              onChange={(e) => handleChange('country_id', e.target.value)}
-              fullWidth
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-              InputProps={{
-                sx: {
-                  color: 'var(--color-text-primary)',
-                  '& .MuiSelect-icon': {
-                    color: 'var(--color-text-primary)',
-                  },
-                },
-              }}
-              SelectProps={{
-                MenuProps: {
-                  PaperProps: {
-                    className: styles.selectMenu,
-                  },
-                },
-              }}
+          {/* Venue Data Accordion */}
+          <Accordion className={styles.accordion} style={{ gridColumn: '1 / -1' }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              className={styles.accordionSummary}
             >
-              {countries.map((country) => (
-                <MenuItem key={country.id} value={String(country.id)}>
-                  {country.print_name || country.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </div>
+              <div className={styles.accordionTitle}>Venue Data</div>
+            </AccordionSummary>
+            <AccordionDetails className={styles.accordionDetails}>
+              <div className={styles.formGrid}>
+              {/* Country */}
+              <div className={styles.formGroup}>
+                <label htmlFor="country" className={styles.label}>
+                  Country *
+                </label>
+                <StyledTextField
+                  id="country"
+                  select
+                  value={formData.country_id}
+                  onChange={(e) => handleChange('country_id', e.target.value)}
+                  fullWidth
+                  disabled={isSaving}
+                  SelectProps={{
+                    MenuProps: {
+                      PaperProps: {
+                        className: styles.selectMenu,
+                      },
+                    },
+                  }}
+                >
+                  {countries.map((country) => (
+                    <MenuItem key={country.id} value={String(country.id)}>
+                      {country.print_name || country.name}
+                    </MenuItem>
+                  ))}
+                </StyledTextField>
+              </div>
 
-          {/* City */}
-          <div className={styles.formGroup}>
-            <label htmlFor="city" className={styles.label}>
-              City *
-            </label>
-            <TextField
-              id="city"
-              value={formData.city}
-              onChange={(e) => handleChange('city', e.target.value)}
-              fullWidth
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-            />
-          </div>
-
-          {/* ZIP Code */}
-          <div className={styles.formGroup}>
-            <label htmlFor="zip" className={styles.label}>
-              ZIP Code
-            </label>
-            <TextField
-              id="zip"
-              value={formData.zip}
-              onChange={(e) => handleChange('zip', e.target.value)}
-              fullWidth
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-            />
-          </div>
-
-          {/* Address 1 */}
-          <div className={styles.formGroup}>
-            <label htmlFor="address1" className={styles.label}>
-              Address Line 1
-            </label>
-            <TextField
-              id="address1"
-              value={formData.address1}
-              onChange={(e) => handleChange('address1', e.target.value)}
-              fullWidth
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-            />
-          </div>
-
-          {/* Address 2 */}
-          <div className={styles.formGroup}>
-            <label htmlFor="address2" className={styles.label}>
-              Address Line 2
-            </label>
-            <TextField
-              id="address2"
-              value={formData.address2}
-              onChange={(e) => handleChange('address2', e.target.value)}
-              fullWidth
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-            />
-          </div>
-
-          {/* Geocode Button - only show if coordinates are empty or address changed */}
-          {showGeocodeButton && (
-            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-              <Button
-                variant="contained"
-                onClick={handleGeocode}
-                disabled={isSaving || isGeocoding || !formData.city}
-                className={styles.geocodeButton}
-              >
-                {isGeocoding ? '🌍 Geocoding...' : '🌍 Get Coordinates from Address'}
-              </Button>
-              <p className={styles.geocodeHint}>
-                {!formData.lat || !formData.long
-                  ? 'Click to automatically fetch latitude and longitude based on the address above.'
-                  : 'Address has changed. Click to update coordinates.'}
-              </p>
-            </div>
-          )}
-
-          {/* Latitude - readonly */}
-          <div className={styles.formGroup}>
-            <label htmlFor="latitude" className={styles.label}>
-              Latitude
-            </label>
-            <TextField
-              id="latitude"
-              value={formData.lat}
-              fullWidth
-              variant="outlined"
-              className={styles.textField}
-              placeholder="e.g., 52.5200"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </div>
-
-          {/* Longitude - readonly */}
-          <div className={styles.formGroup}>
-            <label htmlFor="longitude" className={styles.label}>
-              Longitude
-            </label>
-            <TextField
-              id="longitude"
-              value={formData.long}
-              fullWidth
-              variant="outlined"
-              className={styles.textField}
-              placeholder="e.g., 13.4050"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </div>
-
-          {/* Clear Coordinates Button */}
-          {(formData.lat || formData.long) && (
-            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-              <Button
-                variant="outlined"
-                onClick={handleClearCoordinates}
-                disabled={isSaving}
-                size="small"
-                className={styles.clearCoordsButton}
-              >
-                Clear Coordinates
-              </Button>
-            </div>
-          )}
-
-          {/* Website URL */}
-          <div className={styles.formGroup}>
-            <label htmlFor="url" className={styles.label}>
-              Website URL
-            </label>
-            <TextField
-              id="url"
-              value={formData.url}
-              onChange={(e) => handleChange('url', e.target.value)}
-              fullWidth
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-              placeholder="https://example.com"
-            />
-          </div>
-
-          {/* Status */}
-          <div className={styles.formGroup}>
-            <label htmlFor="status" className={styles.label}>
-              Status *
-            </label>
-            <TextField
-              id="status"
-              select
-              value={formData.status}
-              onChange={(e) => handleChange('status', e.target.value as VenueStatus)}
-              fullWidth
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-              InputProps={{
-                sx: {
-                  color: 'var(--color-text-primary)',
-                  '& .MuiSelect-icon': {
-                    color: 'var(--color-text-primary)',
-                  },
-                },
-              }}
-              SelectProps={{
-                MenuProps: {
-                  PaperProps: {
-                    className: styles.selectMenu,
-                  },
-                },
-              }}
-            >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="temporarily_closed">Temporarily Closed</MenuItem>
-              <MenuItem value="permanently_closed">Permanently Closed</MenuItem>
-            </TextField>
-          </div>
-
-          {/* Status Reason (shown if not active) */}
-          {formData.status !== 'active' && (
-            <div className={styles.formGroup}>
-              <label htmlFor="status-reason" className={styles.label}>
-                Status Reason
-              </label>
-              <TextField
-                id="status-reason"
-                value={formData.status_reason}
-                onChange={(e) => handleChange('status_reason', e.target.value)}
-                fullWidth
-                multiline
-                rows={2}
-                variant="outlined"
-                disabled={isSaving}
-                className={styles.textField}
-                placeholder="Reason for closure..."
-              />
-            </div>
-          )}
-
-          {/* Reopening Date (shown if temporarily closed) */}
-          {formData.status === 'temporarily_closed' && (
-            <div className={styles.formGroup}>
-              <label htmlFor="reopening-date" className={styles.label}>
-                Expected Reopening Date
-              </label>
-              <TextField
-                id="reopening-date"
-                type="date"
-                value={formData.reopening_date}
-                onChange={(e) => handleChange('reopening_date', e.target.value)}
-                fullWidth
-                variant="outlined"
-                disabled={isSaving}
-                className={styles.textField}
-                InputLabelProps={{ shrink: true }}
-              />
-            </div>
-          )}
-
-          {/* Description */}
-          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-            <label htmlFor="text" className={styles.label}>
-              Description
-            </label>
-            <TextField
-              id="text"
-              value={formData.text}
-              onChange={(e) => handleChange('text', e.target.value)}
-              fullWidth
-              multiline
-              rows={4}
-              variant="outlined"
-              disabled={isSaving}
-              className={styles.textField}
-              placeholder="Additional information about this venue..."
-            />
-          </div>
-
-          {/* Approved Checkbox */}
-          <div className={styles.formGroup}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.approved}
-                  onChange={(e) => handleChange('approved', e.target.checked)}
+              {/* City */}
+              <div className={styles.formGroup}>
+                <label htmlFor="city" className={styles.label}>
+                  City *
+                </label>
+                <StyledTextField
+                  id="city"
+                  value={formData.city}
+                  onChange={(e) => handleChange('city', e.target.value)}
+                  fullWidth
                   disabled={isSaving}
                 />
-              }
-              label="Approved"
-            />
-          </div>
+              </div>
+
+              {/* ZIP Code */}
+              <div className={styles.formGroup}>
+                <label htmlFor="zip" className={styles.label}>
+                  ZIP Code
+                </label>
+                <StyledTextField
+                  id="zip"
+                  value={formData.zip}
+                  onChange={(e) => handleChange('zip', e.target.value)}
+                  fullWidth
+                  disabled={isSaving}
+                />
+              </div>
+
+              {/* Address 1 */}
+              <div className={styles.formGroup}>
+                <label htmlFor="address1" className={styles.label}>
+                  Address Line 1
+                </label>
+                <StyledTextField
+                  id="address1"
+                  value={formData.address1}
+                  onChange={(e) => handleChange('address1', e.target.value)}
+                  fullWidth
+                  disabled={isSaving}
+                />
+              </div>
+
+              {/* Address 2 */}
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label htmlFor="address2" className={styles.label}>
+                  Address Line 2
+                </label>
+                <StyledTextField
+                  id="address2"
+                  value={formData.address2}
+                  onChange={(e) => handleChange('address2', e.target.value)}
+                  fullWidth
+                  disabled={isSaving}
+                />
+              </div>
+
+              {/* Geocode Button - only show if coordinates are empty or address changed */}
+              {showGeocodeButton && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <Button
+                    variant="contained"
+                    onClick={handleGeocode}
+                    disabled={isSaving || isGeocoding || !formData.city}
+                    className={styles.geocodeButton}
+                  >
+                    {isGeocoding ? '🌍 Geocoding...' : '🌍 Get Coordinates from Address'}
+                  </Button>
+                  <p className={styles.geocodeHint}>
+                    {!formData.lat || !formData.long
+                      ? 'Click to automatically fetch latitude and longitude based on the address above.'
+                      : 'Address has changed. Click to update coordinates.'}
+                  </p>
+                </div>
+              )}
+
+              {/* Coordinates Row - separate from other fields */}
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <div className={styles.coordinatesRow}>
+                  {/* Latitude - readonly */}
+                  <div className={styles.coordinateField}>
+                    <label htmlFor="latitude" className={styles.label}>
+                      Latitude
+                    </label>
+                    <StyledTextField
+                      id="latitude"
+                      value={formData.lat}
+                      fullWidth
+                      placeholder="e.g., 52.5200"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </div>
+
+                  {/* Longitude - readonly */}
+                  <div className={styles.coordinateField}>
+                    <label htmlFor="longitude" className={styles.label}>
+                      Longitude
+                    </label>
+                    <StyledTextField
+                      id="longitude"
+                      value={formData.long}
+                      fullWidth
+                      placeholder="e.g., 13.4050"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Clear Coordinates Button */}
+                {(formData.lat || formData.long) && (
+                  <Button
+                    variant="outlined"
+                    onClick={handleClearCoordinates}
+                    disabled={isSaving}
+                    size="small"
+                    className={styles.clearCoordsButton}
+                  >
+                    Clear Coordinates
+                  </Button>
+                )}
+              </div>
+
+              {/* Website URL */}
+              <div className={styles.formGroup}>
+                <label htmlFor="url" className={styles.label}>
+                  Website URL
+                </label>
+                <StyledTextField
+                  id="url"
+                  value={formData.url}
+                  onChange={(e) => handleChange('url', e.target.value)}
+                  fullWidth
+                  disabled={isSaving}
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              {/* Status */}
+              <div className={styles.formGroup}>
+                <label htmlFor="status" className={styles.label}>
+                  Status *
+                </label>
+                <StyledTextField
+                  id="status"
+                  select
+                  value={formData.status}
+                  onChange={(e) => handleChange('status', e.target.value as VenueStatus)}
+                  fullWidth
+                  disabled={isSaving}
+                  SelectProps={{
+                    MenuProps: {
+                      PaperProps: {
+                        className: styles.selectMenu,
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="active">Active</MenuItem>
+                  <MenuItem value="temporarily_closed">Temporarily Closed</MenuItem>
+                  <MenuItem value="permanently_closed">Permanently Closed</MenuItem>
+                </StyledTextField>
+              </div>
+
+              {formData.status !== 'active' && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label htmlFor="status-reason" className={styles.label}>
+                    Status Reason
+                  </label>
+                  <StyledTextField
+                    id="status-reason"
+                    value={formData.status_reason}
+                    onChange={(e) => handleChange('status_reason', e.target.value)}
+                    fullWidth
+                    multiline
+                    rows={2}
+                    disabled={isSaving}
+                    placeholder="Reason for closure..."
+                  />
+                </div>
+              )}
+
+              {formData.status === 'temporarily_closed' && (
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label htmlFor="reopening-date" className={styles.label}>
+                    Expected Reopening Date
+                  </label>
+                  <StyledTextField
+                    id="reopening-date"
+                    type="date"
+                    value={formData.reopening_date}
+                    onChange={(e) => handleChange('reopening_date', e.target.value)}
+                    fullWidth
+                    disabled={isSaving}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </div>
+              )}
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <label htmlFor="text" className={styles.label}>
+                  Description
+                </label>
+                <StyledTextField
+                  id="text"
+                  value={formData.text}
+                  onChange={(e) => handleChange('text', e.target.value)}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  disabled={isSaving}
+                  placeholder="Additional information about this venue..."
+                />
+              </div>
+
+              <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                <FormControlLabel
+                  control={
+                    <StyledCheckbox
+                      checked={formData.approved}
+                      onChange={(e) => handleChange('approved', e.target.checked)}
+                      disabled={isSaving}
+                    />
+                  }
+                  label="Approved"
+                />
+              </div>
+              </div>
+            </AccordionDetails>
+          </Accordion>
+
+        </div>
+
+        {/* Contacts and Social Media Sections */}
+        <div>
+          <Accordion className={styles.accordion}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              className={styles.accordionSummary}
+            >
+              <div className={styles.accordionTitle}>
+                Social Media Links
+                <span className={styles.badge}>{socialMediaLinks.length}</span>
+              </div>
+            </AccordionSummary>
+            <AccordionDetails className={styles.accordionDetails}>
+              {isLoadingExtras ? (
+                <div className={styles.loading}>Loading links...</div>
+              ) : (
+                <VenueSocialMediaManager
+                  entityType="venue"
+                  entityId={venue.id}
+                  initialLinks={socialMediaLinks}
+                  onLinksChange={setSocialMediaLinks}
+                />
+              )}
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion className={styles.accordion}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              className={styles.accordionSummary}
+            >
+              <div className={styles.accordionTitle}>
+                Contacts
+                <span className={styles.badge}>{contacts.length}</span>
+              </div>
+            </AccordionSummary>
+            <AccordionDetails className={styles.accordionDetails}>
+              {isLoadingExtras ? (
+                <div className={styles.loading}>Loading contacts...</div>
+              ) : (
+                <VenueContactsManager
+                  venueId={venue.id}
+                  initialContacts={contacts}
+                  onContactsChange={setContacts}
+                />
+              )}
+            </AccordionDetails>
+          </Accordion>
         </div>
       </DialogContent>
 

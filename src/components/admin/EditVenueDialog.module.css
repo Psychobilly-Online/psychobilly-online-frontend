@@ -64,8 +64,7 @@
 }
 
 .textField {
-  background-color: var(--color-bg-secondary) !important;
-  color: var(--color-text-primary) !important;
+  background-color: var(--color-bg-primary) !important;
 }
 
 .textField .MuiInputBase-root {
@@ -89,19 +88,24 @@
 
 .textField .MuiOutlinedInput-notchedOutline {
   border-color: var(--color-border-default) !important;
+  border-width: 1px !important;
 }
 
 .textField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
   border-color: var(--color-accent-primary) !important;
+  border-width: 1px !important;
 }
 
 .textField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: var(--color-accent-primary) !important;
+  border-width: 1px !important;
+  box-shadow: 0 0 0 2px rgba(177, 50, 42, 0.2) !important;
 }
 
-.textField .MuiInputBase-input::placeholder {
+.textField input::placeholder,
+.textField textarea::placeholder {
   color: var(--color-text-secondary) !important;
-  opacity: 0.7;
+  opacity: 0.7 !important;
 }
 
 /* Select dropdown styling */
@@ -122,6 +126,14 @@
   color: var(--color-text-primary) !important;
   font-size: 14px;
   font-weight: 600;
+}
+
+/* Additional specificity for FormControlLabel - ensure white text */
+.formGrid .MuiFormControlLabel-label,
+.accordionDetails .MuiFormControlLabel-label,
+.formGroup .MuiFormControlLabel-label,
+.MuiFormControlLabel-label {
+  color: var(--color-text-primary) !important;
 }
 
 /* Select dropdown menu paper styling - applied via MenuProps */
@@ -272,6 +284,87 @@
   margin: 0 0 var(--spacing-2) 0;
 }
 
+/* Coordinates row styling */
+.coordinatesRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-3);
+}
+
+.coordinateField {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Extras section (contacts and social media) */
+.extrasSection {
+  margin-top: var(--spacing-5);
+  border-top: 1px solid var(--color-border-default);
+  padding-top: var(--spacing-5);
+}
+
+.accordion {
+  background-color: var(--color-bg-secondary) !important;
+  border: 1px solid var(--color-border-default) !important;
+  border-radius: var(--radius-lg) !important;
+  margin-bottom: var(--spacing-3) !important;
+  box-shadow: none !important;
+}
+
+.accordion:before {
+  display: none !important;
+}
+
+.accordionSummary {
+  background-color: var(--color-bg-tertiary) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--spacing-3) var(--spacing-4) !important;
+  min-height: unset !important;
+}
+
+.accordionSummary .MuiAccordionSummary-content {
+  margin: 0 !important;
+}
+
+.accordionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.badge {
+  background-color: var(--color-accent-primary);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  min-width: 20px;
+  text-align: center;
+}
+
+.accordionDetails {
+  padding: var(--spacing-4) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Override MUI Accordion Paper inherited color for FormControlLabel */
+.accordion .MuiFormControlLabel-root,
+.accordion .MuiFormControlLabel-label {
+  color: var(--color-text-primary) !important;
+}
+
+.loading {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  text-align: center;
+  padding: var(--spacing-4);
+}
+
 /* Responsive layout */
 @media (max-width: 768px) {
   .formGrid {
@@ -280,5 +373,9 @@
 
   .formGroup.fullWidth {
     grid-column: 1;
+  }
+
+  .coordinatesRow {
+    grid-template-columns: 1fr;
   }
 }

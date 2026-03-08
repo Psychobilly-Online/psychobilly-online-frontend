@@ -1,0 +1,24 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// GET /api/social-media/platforms - List available social media platforms
+export async function GET(request: NextRequest) {
+  try {
+    const response = await fetch(`${API_URL}/social-media/platforms`);
+
+    if (!response.ok) {
+      const error = await response.json();
+      return NextResponse.json(error, { status: response.status });
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Error fetching social media platforms:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch social media platforms' },
+      { status: 500 }
+    );
+  }
+}
