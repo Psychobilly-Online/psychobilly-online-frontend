@@ -47,7 +47,9 @@ export default function VenueContactsManager({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [contactToDelete, setContactToDelete] = useState<VenueContact | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [contactSocialMedia, setContactSocialMedia] = useState<Record<number, SocialMediaLink[]>>({});
+  const [contactSocialMedia, setContactSocialMedia] = useState<Record<number, SocialMediaLink[]>>(
+    {},
+  );
 
   // Form state
   const [formData, setFormData] = useState({
@@ -167,7 +169,11 @@ export default function VenueContactsManager({
         setContacts([...contacts, result]);
       }
 
-      onContactsChange?.(editingContact ? contacts.map((c) => (c.id === result.id ? result : c)) : [...contacts, result]);
+      onContactsChange?.(
+        editingContact
+          ? contacts.map((c) => (c.id === result.id ? result : c))
+          : [...contacts, result],
+      );
       resetForm();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save contact');
@@ -188,15 +194,12 @@ export default function VenueContactsManager({
     setError(null);
 
     try {
-      const response = await fetch(
-        `/api/admin/venues/${venueId}/contacts/${contactToDelete.id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`/api/admin/venues/${venueId}/contacts/${contactToDelete.id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -238,8 +241,8 @@ export default function VenueContactsManager({
       {contacts.length > 0 && !isAdding && !editingContact && (
         <div className={styles.contactsList}>
           {contacts.map((contact) => (
-            <Accordion 
-              key={contact.id} 
+            <Accordion
+              key={contact.id}
               className={styles.contactItem}
               onChange={(_, expanded) => {
                 if (expanded) {
@@ -251,9 +254,7 @@ export default function VenueContactsManager({
                 <div className={styles.summaryContent}>
                   <span className={styles.contactName}>
                     {contact.contact_name}
-                    {contact.is_primary && (
-                      <span className={styles.primaryBadge}>PRIMARY</span>
-                    )}
+                    {contact.is_primary && <span className={styles.primaryBadge}>PRIMARY</span>}
                   </span>
                   {contact.role && <span className={styles.role}>{contact.role}</span>}
                 </div>
@@ -479,9 +480,7 @@ export default function VenueContactsManager({
           title="Delete Contact"
           message={
             <div>
-              <p>
-                Are you sure you want to delete {contactToDelete.contact_name}?
-              </p>
+              <p>Are you sure you want to delete {contactToDelete.contact_name}?</p>
               {error && (
                 <p style={{ marginTop: '12px', color: 'var(--color-error)', fontSize: '14px' }}>
                   Error: {error}

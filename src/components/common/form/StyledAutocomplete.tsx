@@ -11,9 +11,7 @@ export default function StyledAutocomplete<
   Multiple extends boolean | undefined = undefined,
   DisableClearable extends boolean | undefined = undefined,
   FreeSolo extends boolean | undefined = undefined,
->(
-  props: AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>
-) {
+>(props: AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>) {
   const { renderInput, ...autocompleteProps } = props;
 
   return (

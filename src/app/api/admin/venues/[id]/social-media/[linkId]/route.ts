@@ -5,7 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 // PATCH /api/admin/venues/[id]/social-media/[linkId] - Update social media link
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ id: string; linkId: string }> }
+  context: { params: Promise<{ id: string; linkId: string }> },
 ) {
   try {
     const { id, linkId } = await context.params;
@@ -30,17 +30,14 @@ export async function PATCH(
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error updating social media link:', error);
-    return NextResponse.json(
-      { error: 'Failed to update social media link' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update social media link' }, { status: 500 });
   }
 }
 
 // DELETE /api/admin/venues/[id]/social-media/[linkId] - Delete social media link
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string; linkId: string }> }
+  context: { params: Promise<{ id: string; linkId: string }> },
 ) {
   try {
     const { id, linkId } = await context.params;
@@ -62,9 +59,6 @@ export async function DELETE(
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error deleting social media link:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete social media link' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete social media link' }, { status: 500 });
   }
 }

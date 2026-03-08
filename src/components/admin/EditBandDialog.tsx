@@ -250,10 +250,7 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
             options={availableGenres.filter((g) => !genres.find((bg) => bg.id === g.id))}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
-              <StyledTextField
-                {...params}
-                placeholder="Search and add genres..."
-              />
+              <StyledTextField {...params} placeholder="Search and add genres..." />
             )}
             onChange={(_, value) => {
               if (value) {

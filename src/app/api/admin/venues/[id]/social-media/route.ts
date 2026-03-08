@@ -3,10 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // GET /api/admin/venues/[id]/social-media - List venue social media links
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
     const response = await fetch(`${API_URL}/venues/${id}/social-media`);
@@ -20,18 +17,12 @@ export async function GET(
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching venue social media:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch venue social media' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch venue social media' }, { status: 500 });
   }
 }
 
 // POST /api/admin/venues/[id]/social-media - Create social media link
-export async function POST(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
     const token = request.headers.get('authorization');
@@ -55,9 +46,6 @@ export async function POST(
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error creating social media link:', error);
-    return NextResponse.json(
-      { error: 'Failed to create social media link' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create social media link' }, { status: 500 });
   }
 }

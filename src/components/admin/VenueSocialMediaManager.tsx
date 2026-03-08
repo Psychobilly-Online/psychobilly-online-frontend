@@ -150,7 +150,7 @@ export default function VenueSocialMediaManager({
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -300,9 +300,7 @@ export default function VenueSocialMediaManager({
           title="Delete Social Media Link"
           message={
             <div>
-              <p>
-                Are you sure you want to delete the {linkToDelete.platform_name} link?
-              </p>
+              <p>Are you sure you want to delete the {linkToDelete.platform_name} link?</p>
               {error && (
                 <p style={{ marginTop: '12px', color: 'var(--color-error)', fontSize: '14px' }}>
                   Error: {error}

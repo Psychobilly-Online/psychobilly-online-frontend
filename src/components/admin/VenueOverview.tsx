@@ -419,9 +419,7 @@ export default function VenueOverview() {
           message={
             <div>
               <p>Are you sure you want to delete &quot;{selectedVenues[0].venue}&quot;?</p>
-              <p style={{ marginTop: '8px', fontWeight: 'bold' }}>
-                This action cannot be undone.
-              </p>
+              <p style={{ marginTop: '8px', fontWeight: 'bold' }}>This action cannot be undone.</p>
               {deleteError && (
                 <p style={{ marginTop: '12px', color: 'var(--color-error)', fontSize: '14px' }}>
                   Error: {deleteError}

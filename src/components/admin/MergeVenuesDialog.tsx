@@ -188,7 +188,7 @@ export default function MergeVenuesDialog({
       // Trigger refresh and close
       onMerge();
       onClose();
-      
+
       // Success is visible when the venue list refreshes
       // (merged venue remains, others are gone)
     } catch (err) {
@@ -517,11 +517,14 @@ export default function MergeVenuesDialog({
             <div style={{ marginBottom: '12px' }}>
               <strong>This will:</strong>
               <ul style={{ marginTop: '6px', paddingLeft: '20px' }}>
-                <li>Transfer all {totalEvents} event(s) to &quot;{primaryVenue?.venue}&quot;</li>
+                <li>
+                  Transfer all {totalEvents} event(s) to &quot;{primaryVenue?.venue}&quot;
+                </li>
                 <li>Delete {mergeVenues.length} venue(s)</li>
                 {historicalNames.size > 0 && (
                   <li>
-                    Save {historicalNames.size} historical name{historicalNames.size !== 1 ? 's' : ''}
+                    Save {historicalNames.size} historical name
+                    {historicalNames.size !== 1 ? 's' : ''}
                   </li>
                 )}
                 {historicalAddresses.size > 0 && (

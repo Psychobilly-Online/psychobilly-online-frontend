@@ -5,7 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 // PUT /api/admin/venues/[id]/contacts/[contactId] - Update venue contact
 export async function PUT(
   request: NextRequest,
-  context: { params: Promise<{ id: string; contactId: string }> }
+  context: { params: Promise<{ id: string; contactId: string }> },
 ) {
   try {
     const { id, contactId } = await context.params;
@@ -30,17 +30,14 @@ export async function PUT(
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error updating venue contact:', error);
-    return NextResponse.json(
-      { error: 'Failed to update venue contact' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update venue contact' }, { status: 500 });
   }
 }
 
 // DELETE /api/admin/venues/[id]/contacts/[contactId] - Delete venue contact
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string; contactId: string }> }
+  context: { params: Promise<{ id: string; contactId: string }> },
 ) {
   try {
     const { id, contactId } = await context.params;
@@ -62,9 +59,6 @@ export async function DELETE(
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error deleting venue contact:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete venue contact' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete venue contact' }, { status: 500 });
   }
 }

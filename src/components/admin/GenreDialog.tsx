@@ -3,14 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './GenreDialog.module.css';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Chip,
-  Button,
-} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Chip, Button } from '@mui/material';
 import { StyledTextField } from '@/components/common/form';
 
 interface Genre {
