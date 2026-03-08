@@ -58,6 +58,7 @@ export type VenueStatus = 'active' | 'temporarily_closed' | 'permanently_closed'
 export interface Venue {
   id: number;
   venue: string; // Backend returns 'venue' not 'name'
+  name_variations?: string[] | null;
   country_id: string;
   state_id: string;
   city_id?: number | null;

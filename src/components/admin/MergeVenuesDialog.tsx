@@ -12,11 +12,31 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Checkbox,
+  TextField,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAuth } from '@/contexts/AuthContext';
 import VenueListItem from '@/components/common/VenueListItem';
 import type { Venue } from '@/types/venue';
 import styles from './MergeVenuesDialog.module.css';
+
+interface HistoricalName {
+  venue_id: number;
+  from_year: number | null;
+  to_year: number | null;
+  notes: string | null;
+}
+
+interface HistoricalAddress {
+  venue_id: number;
+  from_year: number | null;
+  to_year: number | null;
+  notes: string | null;
+}
 
 interface MergeVenuesDialogProps {
   open: boolean;
@@ -36,10 +56,78 @@ export default function MergeVenuesDialog({
   const [isMerging, setIsMerging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Historical tracking state
+  const [historicalNames, setHistoricalNames] = useState<Map<number, HistoricalName>>(new Map());
+  const [historicalAddresses, setHistoricalAddresses] = useState<Map<number, HistoricalAddress>>(
+    new Map(),
+  );
+
   // Calculate total events
   const totalEvents = venues.reduce((sum, venue) => sum + (venue.event_count || 0), 0);
   const primaryVenue = venues.find((v) => v.id === primaryVenueId);
   const mergeVenues = venues.filter((v) => v.id !== primaryVenueId);
+
+    const toggleHistoricalName = (venueId: number, checked: boolean) => {
+    const newMap = new Map(historicalNames);
+    if (checked) {
+      newMap.set(venueId, {
+        venue_id: venueId,
+        from_year: null,
+        to_year: null,
+        notes: null,
+      });
+    } else {
+      newMap.delete(venueId);
+    }
+    setHistoricalNames(newMap);
+  };
+
+  const updateHistoricalName = (
+    venueId: number,
+    field: keyof HistoricalName,
+    value: number | string | null,
+  ) => {
+    const newMap = new Map(historicalNames);
+    const existing = newMap.get(venueId);
+    if (existing) {
+      newMap.set(venueId, {
+        ...existing,
+        [field]: value === '' ? null : value,
+      });
+      setHistoricalNames(newMap);
+    }
+  };
+
+  const toggleHistoricalAddress = (venueId: number, checked: boolean) => {
+    const newMap = new Map(historicalAddresses);
+    if (checked) {
+      newMap.set(venueId, {
+        venue_id: venueId,
+        from_year: null,
+        to_year: null,
+        notes: null,
+      });
+    } else {
+      newMap.delete(venueId);
+    }
+    setHistoricalAddresses(newMap);
+  };
+
+  const updateHistoricalAddress = (
+    venueId: number,
+    field: keyof HistoricalAddress,
+    value: number | string | null,
+  ) => {
+    const newMap = new Map(historicalAddresses);
+    const existing = newMap.get(venueId);
+    if (existing) {
+      newMap.set(venueId, {
+        ...existing,
+        [field]: value === '' ? null : value,
+      });
+      setHistoricalAddresses(newMap);
+    }
+  };
 
   const handleMerge = async () => {
     if (!primaryVenueId) {
@@ -52,13 +140,20 @@ export default function MergeVenuesDialog({
       return;
     }
 
+    const histNamesCount = historicalNames.size;
+    const histAddrsCount = historicalAddresses.size;
+    const histInfo =
+      histNamesCount > 0 || histAddrsCount > 0
+        ? `\n• Save ${histNamesCount} historical name(s) and ${histAddrsCount} historical address(es)`
+        : '';
+
     const confirmMessage =
       `Are you sure you want to merge ${venues.length} venues?\n\n` +
       `Primary Venue: ${primaryVenue?.venue}\n` +
       `Venues to merge: ${mergeVenues.map((v) => v.venue).join(', ')}\n\n` +
       `This will:\n` +
       `• Transfer all ${totalEvents} event(s) to "${primaryVenue?.venue}"\n` +
-      `• Delete ${mergeVenues.length} venue(s)\n` +
+      `• Delete ${mergeVenues.length} venue(s)${histInfo}\n` +
       `• This action cannot be undone`;
 
     if (!confirm(confirmMessage)) {
@@ -69,16 +164,31 @@ export default function MergeVenuesDialog({
     setError(null);
 
     try {
+      const body: {
+        primary_venue_id: number;
+        merge_venue_ids: number[];
+        historical_names?: HistoricalName[];
+        historical_addresses?: HistoricalAddress[];
+      } = {
+        primary_venue_id: primaryVenueId,
+        merge_venue_ids: mergeVenues.map((v) => v.id),
+      };
+
+      // Add historical data if provided
+      if (historicalNames.size > 0) {
+        body.historical_names = Array.from(historicalNames.values());
+      }
+      if (historicalAddresses.size > 0) {
+        body.historical_addresses = Array.from(historicalAddresses.values());
+      }
+
       const response = await fetch('/api/admin/venues/merge', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          primary_venue_id: primaryVenueId,
-          merge_venue_ids: mergeVenues.map((v) => v.id),
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -145,19 +255,27 @@ export default function MergeVenuesDialog({
                     value={venue.id}
                     control={<Radio />}
                     label={
-                      <VenueListItem
-                        id={venue.id}
-                        venue={venue.venue}
-                        city={venue.city}
-                        country_name={venue.country_name}
-                        status={venue.status}
-                        event_count={venue.event_count}
-                        mode="radio"
-                        selected={primaryVenueId === venue.id}
-                        onClick={() => setPrimaryVenueId(venue.id)}
-                        showId={true}
-                        className={styles.venueItem}
-                      />
+                      <div>
+                        <VenueListItem
+                          id={venue.id}
+                          venue={venue.venue}
+                          city={venue.city}
+                          country_name={venue.country_name}
+                          status={venue.status}
+                          event_count={venue.event_count}
+                          mode="radio"
+                          selected={primaryVenueId === venue.id}
+                          onClick={() => setPrimaryVenueId(venue.id)}
+                          showId={true}
+                          className={styles.venueItem}
+                        />
+                        {venue.address1 && (
+                          <div className={styles.venueAddress}>
+                            {venue.address1}
+                            {venue.address2 && `, ${venue.address2}`}
+                          </div>
+                        )}
+                      </div>
                     }
                     className={styles.radioLabel}
                   />
@@ -166,6 +284,174 @@ export default function MergeVenuesDialog({
             </RadioGroup>
           </FormControl>
         </div>
+
+        {/* Historical Tracking */}
+        {mergeVenues.length > 0 && (
+          <div className={styles.section}>
+            <Accordion className={styles.accordion}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} className={styles.accordionSummary}>
+                <div className={styles.accordionTitle}>
+                  📜 Historical Names (Optional)
+                  {historicalNames.size > 0 && (
+                    <span className={styles.badge}>{historicalNames.size}</span>
+                  )}
+                </div>
+              </AccordionSummary>
+              <AccordionDetails className={styles.accordionDetails}>
+                <p className={styles.hint}>
+                  Mark venues whose names are historical (e.g., venue was renamed). These names will
+                  be saved to venue history with time periods.
+                </p>
+                {mergeVenues.map((venue) => (
+                  <div key={venue.id} className={styles.historicalItem}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={historicalNames.has(venue.id)}
+                          onChange={(e) => toggleHistoricalName(venue.id, e.target.checked)}
+                        />
+                      }
+                      label={
+                        <span className={styles.historicalLabel}>
+                          <strong>{venue.venue}</strong> (ID: {venue.id})
+                        </span>
+                      }
+                    />
+                    {historicalNames.has(venue.id) && (
+                      <div className={styles.historicalFields}>
+                        <TextField
+                          label="From Year"
+                          type="number"
+                          size="small"
+                          placeholder="e.g., 1995"
+                          value={historicalNames.get(venue.id)?.from_year || ''}
+                          onChange={(e) =>
+                            updateHistoricalName(
+                              venue.id,
+                              'from_year',
+                              e.target.value ? Number(e.target.value) : null,
+                            )
+                          }
+                          className={styles.yearField}
+                        />
+                        <TextField
+                          label="To Year"
+                          type="number"
+                          size="small"
+                          placeholder="e.g., 2010"
+                          value={historicalNames.get(venue.id)?.to_year || ''}
+                          onChange={(e) =>
+                            updateHistoricalName(
+                              venue.id,
+                              'to_year',
+                              e.target.value ? Number(e.target.value) : null,
+                            )
+                          }
+                          className={styles.yearField}
+                        />
+                        <TextField
+                          label="Notes"
+                          size="small"
+                          fullWidth
+                          placeholder="e.g., Original name when venue opened"
+                          value={historicalNames.get(venue.id)?.notes || ''}
+                          onChange={(e) =>
+                            updateHistoricalName(venue.id, 'notes', e.target.value || null)
+                          }
+                          className={styles.notesField}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        )}
+
+        {mergeVenues.length > 0 && (
+          <div className={styles.section}>
+            <Accordion className={styles.accordion}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} className={styles.accordionSummary}>
+                <div className={styles.accordionTitle}>
+                  📍 Historical Addresses (Optional)
+                  {historicalAddresses.size > 0 && (
+                    <span className={styles.badge}>{historicalAddresses.size}</span>
+                  )}
+                </div>
+              </AccordionSummary>
+              <AccordionDetails className={styles.accordionDetails}>
+                <p className={styles.hint}>
+                  Mark venues whose addresses are historical (e.g., venue moved locations). These
+                  addresses will be saved to venue history with time periods.
+                </p>
+                {mergeVenues.map((venue) => (
+                  <div key={venue.id} className={styles.historicalItem}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={historicalAddresses.has(venue.id)}
+                          onChange={(e) => toggleHistoricalAddress(venue.id, e.target.checked)}
+                        />
+                      }
+                      label={
+                        <span className={styles.historicalLabel}>
+                          <strong>{venue.venue}</strong> - {venue.address1}, {venue.city} (ID:{' '}
+                          {venue.id})
+                        </span>
+                      }
+                    />
+                    {historicalAddresses.has(venue.id) && (
+                      <div className={styles.historicalFields}>
+                        <TextField
+                          label="From Year"
+                          type="number"
+                          size="small"
+                          placeholder="e.g., 1995"
+                          value={historicalAddresses.get(venue.id)?.from_year || ''}
+                          onChange={(e) =>
+                            updateHistoricalAddress(
+                              venue.id,
+                              'from_year',
+                              e.target.value ? Number(e.target.value) : null,
+                            )
+                          }
+                          className={styles.yearField}
+                        />
+                        <TextField
+                          label="To Year"
+                          type="number"
+                          size="small"
+                          placeholder="e.g., 2015"
+                          value={historicalAddresses.get(venue.id)?.to_year || ''}
+                          onChange={(e) =>
+                            updateHistoricalAddress(
+                              venue.id,
+                              'to_year',
+                              e.target.value ? Number(e.target.value) : null,
+                            )
+                          }
+                          className={styles.yearField}
+                        />
+                        <TextField
+                          label="Notes"
+                          size="small"
+                          fullWidth
+                          placeholder="e.g., Original location before moving to current address"
+                          value={historicalAddresses.get(venue.id)?.notes || ''}
+                          onChange={(e) =>
+                            updateHistoricalAddress(venue.id, 'notes', e.target.value || null)
+                          }
+                          className={styles.notesField}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        )}
 
         {primaryVenue && (
           <div className={styles.section}>
@@ -190,6 +476,24 @@ export default function MergeVenuesDialog({
                   {primaryVenue.venue}"
                 </span>
               </div>
+              {historicalNames.size > 0 && (
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>Historical Names:</span>
+                  <span className={styles.summaryValue}>
+                    {historicalNames.size} name{historicalNames.size !== 1 ? 's' : ''} will be saved
+                    to history
+                  </span>
+                </div>
+              )}
+              {historicalAddresses.size > 0 && (
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>Historical Addresses:</span>
+                  <span className={styles.summaryValue}>
+                    {historicalAddresses.size} address{historicalAddresses.size !== 1 ? 'es' : ''}{' '}
+                    will be saved to history
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}

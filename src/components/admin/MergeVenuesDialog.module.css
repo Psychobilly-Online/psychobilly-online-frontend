@@ -111,6 +111,14 @@
   background-color: var(--color-accent-overlay);
 }
 
+.venueAddress {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-2);
+  padding-left: var(--spacing-2);
+  font-style: italic;
+}
+
 .summary {
   background-color: var(--color-bg-secondary);
   padding: var(--spacing-4);
@@ -176,6 +184,129 @@
   background-color: var(--color-bg-secondary) !important;
 }
 
+/* Accordion */
+.accordion {
+  background-color: var(--color-bg-secondary) !important;
+  border: 1px solid var(--color-border-default) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: none !important;
+}
+
+.accordion::before {
+  display: none !important;
+}
+
+.accordionSummary {
+  min-height: 48px !important;
+  padding: var(--spacing-3) var(--spacing-4) !important;
+}
+
+.accordionSummary .MuiAccordionSummary-content {
+  margin: 0 !important;
+}
+
+.accordionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 15px;
+}
+
+.badge {
+  background-color: var(--color-accent-primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.accordionDetails {
+  padding: var(--spacing-4) !important;
+  border-top: 1px solid var(--color-border-default);
+}
+
+/* Historical items */
+.historicalItem {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+  background-color: var(--color-bg-primary);
+}
+
+.historicalItem:last-child {
+  margin-bottom: 0;
+}
+
+.historicalItem .MuiCheckbox-root {
+  color: var(--color-border-default) !important;
+}
+
+.historicalItem .MuiCheckbox-root.Mui-checked {
+  color: var(--color-accent-primary) !important;
+}
+
+.historicalItem .MuiFormControlLabel-label {
+  color: var(--color-text-primary) !important;
+}
+
+.historicalLabel {
+  color: var(--color-text-primary);
+  font-size: 14px;
+}
+
+.historicalFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
+  padding-left: var(--spacing-10);
+}
+
+.yearField {
+  width: 100%;
+}
+
+.notesField {
+  grid-column: 1 / -1;
+}
+
+.historicalFields .MuiTextField-root .MuiInputBase-input {
+  color: var(--color-text-primary) !important;
+}
+
+.historicalFields .MuiOutlinedInput-root {
+  border-radius: var(--radius-lg) !important;
+}
+
+.historicalFields .MuiInputLabel-root {
+  color: var(--color-text-secondary) !important;
+}
+
+.historicalFields .MuiInputLabel-root.Mui-focused {
+  color: var(--color-accent-primary) !important;
+}
+
+.historicalFields .MuiOutlinedInput-notchedOutline {
+  border-color: var(--color-border-default) !important;
+}
+
+.historicalFields .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--color-accent-primary) !important;
+}
+
+.historicalFields .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--color-accent-primary) !important;
+}
+
+.historicalFields .MuiInputBase-input::placeholder {
+  color: var(--color-text-secondary) !important;
+  opacity: 0.7;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .summaryRow {
@@ -185,5 +316,14 @@
 
   .summaryValue {
     text-align: left;
+  }
+
+  .historicalFields {
+    grid-template-columns: 1fr;
+    padding-left: var(--spacing-6);
+  }
+
+  .notesField {
+    grid-column: 1;
   }
 }

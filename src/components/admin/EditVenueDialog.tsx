@@ -11,6 +11,7 @@ import {
   MenuItem,
   FormControlLabel,
   Checkbox,
+  Chip,
 } from '@mui/material';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCountries } from '@/hooks/useCountries';
@@ -47,6 +48,10 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
     reopening_date: venue.reopening_date || '',
     approved: venue.approved,
   });
+
+  // Name variations state
+  const [variations, setVariations] = useState<string[]>(venue.name_variations || []);
+  const [newVariation, setNewVariation] = useState('');
 
   const [isSaving, setIsSaving] = useState(false);
   const [isGeocoding, setIsGeocoding] = useState(false);
@@ -90,6 +95,9 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       reopening_date: venue.reopening_date || '',
       approved: venue.approved,
     });
+
+    setVariations(venue.name_variations || []);
+    setNewVariation('');
     setOriginalAddress(addressFields);
     setError(null);
     setGeocodeSuccess(null);
@@ -97,6 +105,26 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Variation handlers
+  const handleAddVariation = () => {
+    const trimmed = newVariation.trim();
+    if (trimmed && !variations.includes(trimmed)) {
+      setVariations([...variations, trimmed]);
+      setNewVariation('');
+    }
+  };
+
+  const handleRemoveVariation = (variation: string) => {
+    setVariations(variations.filter((v) => v !== variation));
+  };
+
+  const handleVariationKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddVariation();
+    }
   };
 
   // Check if address has changed from original
@@ -200,6 +228,7 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       // Keep text as empty string (TEXT field can handle it, unlike DATE fields)
       const payload = {
         ...formData,
+        name_variations: variations,
         status_reason: formData.status_reason || null,
         reopening_date: formData.reopening_date || null,
       };
@@ -263,6 +292,52 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
               disabled={isSaving}
               className={styles.textField}
             />
+          </div>
+
+          {/* Name Variations */}
+          <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+            <label htmlFor="new-variation" className={styles.label}>
+              Name Variations
+            </label>
+            <p className={styles.hint}>
+              Add alternative spellings or common variations (e.g., "SO36" vs "SO 36")
+            </p>
+
+            <div className={styles.variationInput}>
+              <TextField
+                id="new-variation"
+                value={newVariation}
+                onChange={(e) => setNewVariation(e.target.value)}
+                onKeyPress={handleVariationKeyPress}
+                placeholder="Enter variation and press Enter"
+                fullWidth
+                variant="outlined"
+                disabled={isSaving}
+                className={styles.textField}
+              />
+              <Button
+                onClick={handleAddVariation}
+                disabled={!newVariation.trim() || isSaving}
+                variant="outlined"
+                className={styles.addButton}
+              >
+                Add
+              </Button>
+            </div>
+
+            {variations.length > 0 && (
+              <div className={styles.variationsList}>
+                {variations.map((variation) => (
+                  <Chip
+                    key={variation}
+                    label={variation}
+                    onDelete={() => handleRemoveVariation(variation)}
+                    disabled={isSaving}
+                    className={styles.chip}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Country */}
