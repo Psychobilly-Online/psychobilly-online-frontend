@@ -67,7 +67,7 @@ export default function MergeVenuesDialog({
   const primaryVenue = venues.find((v) => v.id === primaryVenueId);
   const mergeVenues = venues.filter((v) => v.id !== primaryVenueId);
 
-    const toggleHistoricalName = (venueId: number, checked: boolean) => {
+  const toggleHistoricalName = (venueId: number, checked: boolean) => {
     const newMap = new Map(historicalNames);
     if (checked) {
       newMap.set(venueId, {
