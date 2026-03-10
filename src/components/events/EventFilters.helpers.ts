@@ -20,4 +20,4 @@ export const normalizeFilterValue = (value: string | number | string[] | undefin
   return value;
 };
 
-export const getCountryIso = (country: Country) => country.iso_code || country.iso || '';
+export const getCountryIso = (country: Country) => country.iso ?? '';

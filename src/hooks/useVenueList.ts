@@ -77,7 +77,7 @@ export function useVenueList(options: UseVenueListOptions = {}): UseVenueListRes
         for (const term of searchTerms) {
           const params = new URLSearchParams({
             page: '1',
-            limit: '10000', // Use high limit for multi-search to get all results
+            limit: '500', // High limit per term to capture all matches without pagination
             search: term,
           });
 

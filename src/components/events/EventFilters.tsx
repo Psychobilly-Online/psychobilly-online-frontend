@@ -440,7 +440,7 @@ export function EventFilters({
     const map: Record<string, string[]> = {};
     Object.entries(REGION_ISO_MAP).forEach(([region, isoList]) => {
       map[region] = countries
-        .filter((country) => isoList.includes(getCountryIso(country).toUpperCase()))
+        .filter((country) => isoList.includes(getCountryIso(country)))
         .map((country) => String(country.id));
     });
     return map;

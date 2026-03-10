@@ -53,11 +53,21 @@ export default function VenueListItem({
       data-venue-id={id}
     >
       {mode === 'selectable' && (
-        <input type="checkbox" checked={selected} onChange={onClick} className={styles.checkbox} />
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={() => onClick?.()}
+          className={styles.checkbox}
+        />
       )}
 
       {mode === 'radio' && (
-        <input type="radio" checked={selected} onChange={onClick} className={styles.radio} />
+        <input
+          type="radio"
+          checked={selected}
+          onChange={() => onClick?.()}
+          className={styles.radio}
+        />
       )}
 
       <div className={styles.content}>

@@ -6,7 +6,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await context.params;
-    const response = await fetch(`${API_URL}/venues/${id}/contacts`);
+    const token = request.headers.get('authorization');
+
+    const response = await fetch(`${API_URL}/venues/${id}/contacts`, {
+      headers: {
+        ...(token ? { Authorization: token } : {}),
+      },
+    });
 
     if (!response.ok) {
       const error = await response.json();

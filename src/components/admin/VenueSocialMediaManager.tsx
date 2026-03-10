@@ -8,7 +8,7 @@ import ConfirmDialog from '@/components/common/ConfirmDialog';
 import { StyledTextField } from '@/components/common/form';
 import styles from './VenueSocialMediaManager.module.css';
 
-interface SocialMediaLink {
+export interface SocialMediaLink {
   id: number;
   social_media_id: number;
   platform_name: string;
@@ -59,23 +59,23 @@ export default function VenueSocialMediaManager({
   }, [initialLinks]);
 
   useEffect(() => {
+    const loadPlatforms = async () => {
+      setIsLoadingPlatforms(true);
+      try {
+        const response = await fetch('/api/social-media/platforms');
+        if (!response.ok) throw new Error('Failed to load platforms');
+        const data = await response.json();
+        setPlatforms(data.platforms || []);
+      } catch (err) {
+        console.error('Failed to load platforms:', err);
+        setError('Failed to load social media platforms');
+      } finally {
+        setIsLoadingPlatforms(false);
+      }
+    };
+
     loadPlatforms();
   }, []);
-
-  const loadPlatforms = async () => {
-    setIsLoadingPlatforms(true);
-    try {
-      const response = await fetch('/api/social-media/platforms');
-      if (!response.ok) throw new Error('Failed to load platforms');
-      const data = await response.json();
-      setPlatforms(data.platforms || []);
-    } catch (err) {
-      console.error('Failed to load platforms:', err);
-      setError('Failed to load social media platforms');
-    } finally {
-      setIsLoadingPlatforms(false);
-    }
-  };
 
   const resetForm = () => {
     setSelectedPlatform('');

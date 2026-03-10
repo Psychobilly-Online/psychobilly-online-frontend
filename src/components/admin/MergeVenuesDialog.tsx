@@ -183,8 +183,6 @@ export default function MergeVenuesDialog({
         throw new Error(data.error || data.message || 'Failed to merge venues');
       }
 
-      const result = await response.json();
-
       // Trigger refresh and close
       onMerge();
       onClose();

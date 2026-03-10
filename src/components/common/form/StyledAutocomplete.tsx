@@ -18,10 +18,11 @@ export default function StyledAutocomplete<
     <Autocomplete
       {...autocompleteProps}
       renderInput={(params) => {
-        // If custom renderInput was provided, use it but apply our styling
+        // If custom renderInput was provided, use it
+        // Note: Custom inputs must apply their own TextField styling
+        // The Autocomplete wrapper below provides popup/clear indicator styling
         if (renderInput) {
-          const customInput = renderInput(params);
-          return customInput;
+          return renderInput(params);
         }
 
         // Default renderInput with our styling

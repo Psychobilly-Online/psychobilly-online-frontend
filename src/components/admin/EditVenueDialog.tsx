@@ -17,10 +17,10 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAuth } from '@/contexts/AuthContext';
-import { useCountries } from '@/hooks/useCountries';
+import { useMetadata } from '@/contexts/MetadataContext';
 import type { Venue, VenueStatus, VenueContact } from '@/types/venue';
 import VenueContactsManager from './VenueContactsManager';
-import VenueSocialMediaManager from './VenueSocialMediaManager';
+import VenueSocialMediaManager, { type SocialMediaLink } from './VenueSocialMediaManager';
 import { StyledTextField, StyledCheckbox } from '@/components/common/form';
 import styles from './EditVenueDialog.module.css';
 
@@ -33,7 +33,7 @@ interface EditVenueDialogProps {
 
 export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVenueDialogProps) {
   const { token } = useAuth();
-  const { countries } = useCountries();
+  const { countries } = useMetadata();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -66,7 +66,7 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
 
   // Contacts and social media state
   const [contacts, setContacts] = useState<VenueContact[]>([]);
-  const [socialMediaLinks, setSocialMediaLinks] = useState<any[]>([]);
+  const [socialMediaLinks, setSocialMediaLinks] = useState<SocialMediaLink[]>([]);
   const [isLoadingExtras, setIsLoadingExtras] = useState(false);
 
   // Track original address fields to detect changes
@@ -142,7 +142,7 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
     }
   };
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string | number | boolean | null) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 

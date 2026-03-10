@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { useAuth } from '@/contexts/AuthContext';
+import { useMetadata } from '@/contexts/MetadataContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useVenueList } from '@/hooks/useVenueList';
-import { useCountries } from '@/hooks/useCountries';
 import type { Venue } from '@/types/venue';
 import SearchInput from '@/components/common/SearchInput';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
@@ -42,7 +41,7 @@ export default function VenueOverview() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Load countries for filter
-  const { countries } = useCountries();
+  const { countries } = useMetadata();
 
   // Determine filter values based on quick filter
   const orphanedOnly = quickFilter === 'orphaned';

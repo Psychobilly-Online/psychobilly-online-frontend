@@ -82,7 +82,7 @@ export default function VenueContactsManager({
     setIsAdding(false);
   };
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
   const loadContactSocialMedia = async (contactId: number) => {
@@ -163,17 +163,12 @@ export default function VenueContactsManager({
       const result = await response.json();
 
       // Update local state
-      if (editingContact) {
-        setContacts(contacts.map((c) => (c.id === result.id ? result : c)));
-      } else {
-        setContacts([...contacts, result]);
-      }
+      const updatedContacts = editingContact
+        ? contacts.map((c) => (c.id === result.id ? result : c))
+        : [...contacts, result];
 
-      onContactsChange?.(
-        editingContact
-          ? contacts.map((c) => (c.id === result.id ? result : c))
-          : [...contacts, result],
-      );
+      setContacts(updatedContacts);
+      onContactsChange?.(updatedContacts);
       resetForm();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save contact');
