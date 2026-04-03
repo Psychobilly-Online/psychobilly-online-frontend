@@ -17,6 +17,7 @@ interface VenueListItemProps {
   action?: ReactNode;
   showId?: boolean;
   className?: string;
+  radioGroupName?: string; // Required for radio mode to group radios semantically
 }
 
 export default function VenueListItem({
@@ -32,6 +33,7 @@ export default function VenueListItem({
   action,
   showId = true,
   className,
+  radioGroupName = 'venue-selection',
 }: VenueListItemProps) {
   const handleClick = () => {
     if (onClick && mode === 'clickable') {
@@ -58,6 +60,7 @@ export default function VenueListItem({
           checked={selected}
           onChange={() => onClick?.()}
           className={styles.checkbox}
+          aria-label={`Select ${venue} in ${city}`}
         />
       )}
 
@@ -67,6 +70,8 @@ export default function VenueListItem({
           checked={selected}
           onChange={() => onClick?.()}
           className={styles.radio}
+          name={radioGroupName}
+          aria-label={`Select ${venue} in ${city}`}
         />
       )}
 
@@ -79,12 +84,13 @@ export default function VenueListItem({
 
         <div className={styles.metadata}>
           <span className={styles.location}>
-            📍 {city}
+            <span aria-hidden="true">📍</span> {city}
             {country_name && `, ${country_name}`}
           </span>
           {event_count !== undefined && (
             <span className={styles.eventCount}>
-              📅 {event_count} {event_count === 1 ? 'event' : 'events'}
+              <span aria-hidden="true">📅</span> {event_count}{' '}
+              {event_count === 1 ? 'event' : 'events'}
             </span>
           )}
         </div>

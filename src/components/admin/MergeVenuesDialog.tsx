@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -62,6 +62,16 @@ export default function MergeVenuesDialog({
   const [historicalAddresses, setHistoricalAddresses] = useState<Map<number, HistoricalAddress>>(
     new Map(),
   );
+
+  // Reset state when dialog opens or venues change
+  useEffect(() => {
+    if (open && venues.length > 0) {
+      setPrimaryVenueId(venues[0].id);
+      setHistoricalNames(new Map());
+      setHistoricalAddresses(new Map());
+      setError(null);
+    }
+  }, [open, venues]);
 
   // Calculate total events
   const totalEvents = venues.reduce((sum, venue) => sum + (venue.event_count || 0), 0);
@@ -250,6 +260,7 @@ export default function MergeVenuesDialog({
                           onClick={() => setPrimaryVenueId(venue.id)}
                           showId={true}
                           className={styles.venueItem}
+                          radioGroupName="primary-venue"
                         />
                         {venue.address1 && (
                           <div className={styles.venueAddress}>

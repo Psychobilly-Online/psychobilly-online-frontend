@@ -9,16 +9,18 @@ export default function StyledCheckbox(props: CheckboxProps) {
   return (
     <Checkbox
       {...props}
-      sx={{
-        color: 'var(--color-text-secondary)',
-        '&.Mui-checked': {
-          color: 'var(--color-accent-primary)',
+      sx={[
+        {
+          color: 'var(--color-text-secondary)',
+          '&.Mui-checked': {
+            color: 'var(--color-accent-primary)',
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(177, 50, 42, 0.08)',
+          },
         },
-        '&:hover': {
-          backgroundColor: 'rgba(177, 50, 42, 0.08)',
-        },
-        ...props.sx,
-      }}
+        ...(Array.isArray(props.sx) ? props.sx : props.sx ? [props.sx] : []),
+      ]}
     />
   );
 }

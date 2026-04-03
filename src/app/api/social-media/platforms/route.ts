@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://psychobilly-online.de/api/v1';
 
 // GET /api/social-media/platforms - List available social media platforms
 export async function GET(request: NextRequest) {

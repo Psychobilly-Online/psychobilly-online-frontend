@@ -15,18 +15,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VenueContact } from '@/types/venue';
 import ConfirmDialog from '@/components/common/ConfirmDialog';
-import VenueSocialMediaManager from './VenueSocialMediaManager';
+import VenueSocialMediaManager, { type SocialMediaLink } from './VenueSocialMediaManager';
 import { StyledTextField, StyledCheckbox } from '@/components/common/form';
 import styles from './VenueContactsManager.module.css';
-
-interface SocialMediaLink {
-  id: number;
-  social_media_id: number;
-  platform_name: string;
-  platform_icon?: string;
-  url: string;
-  is_verified: boolean;
-}
 
 interface VenueContactsManagerProps {
   venueId: number;
@@ -91,14 +82,24 @@ export default function VenueContactsManager({
     }
 
     try {
-      const response = await fetch(`/api/admin/contacts/${contactId}/social-media`);
-      if (!response.ok) throw new Error('Failed to load social media');
+      const response = await fetch(`/api/admin/contacts/${contactId}/social-media`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || data.message || 'Failed to load social media');
+      }
       const data = await response.json();
       setContactSocialMedia((prev) => ({
         ...prev,
         [contactId]: data.social_media || [],
       }));
     } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to load contact social media';
+      setError(errorMessage);
       console.error('Failed to load contact social media:', err);
     }
   };

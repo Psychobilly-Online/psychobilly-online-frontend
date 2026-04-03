@@ -9,7 +9,6 @@ import {
   Button,
   MenuItem,
   FormControlLabel,
-  Checkbox,
   Chip,
   Accordion,
   AccordionSummary,

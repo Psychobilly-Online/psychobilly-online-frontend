@@ -70,14 +70,13 @@ export function useVenueList(options: UseVenueListOptions = {}): UseVenueListRes
           return;
         }
 
-        // Fetch results for each term and combine
-        const allResults: Venue[] = [];
-        const seenIds = new Set<number>();
+        // Fetch results for each term in parallel and combine
+        const endpoint = orphanedOnly ? '/api/admin/venues/orphaned' : '/api/admin/venues';
 
-        for (const term of searchTerms) {
+        const fetchPromises = searchTerms.map((term) => {
           const params = new URLSearchParams({
             page: '1',
-            limit: '500', // High limit per term to capture all matches without pagination
+            limit: '500', // High limit per term to capture most matches; consider pagination for exhaustive results
             search: term,
           });
 
@@ -93,27 +92,32 @@ export function useVenueList(options: UseVenueListOptions = {}): UseVenueListRes
             params.append('city', city);
           }
 
-          const endpoint = orphanedOnly ? '/api/admin/venues/orphaned' : '/api/admin/venues';
-          const response = await fetch(`${endpoint}?${params}`, {
+          return fetch(`${endpoint}?${params}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+          }).then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to search venues');
+            }
+            return response.json();
           });
+        });
 
-          if (!response.ok) {
-            throw new Error('Failed to search venues');
-          }
+        const results = await Promise.all(fetchPromises);
 
-          const data = await response.json();
+        // Merge and deduplicate results
+        const allResults: Venue[] = [];
+        const seenIds = new Set<number>();
 
-          // Add results, avoiding duplicates
+        results.forEach((data) => {
           (data.venues || []).forEach((venue: Venue) => {
             if (!seenIds.has(venue.id)) {
               seenIds.add(venue.id);
               allResults.push(venue);
             }
           });
-        }
+        });
 
         // Sort by venue name
         allResults.sort((a, b) => a.venue.localeCompare(b.venue));

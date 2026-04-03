@@ -64,15 +64,17 @@ export default function StyledAutocomplete<
           />
         );
       }}
-      sx={{
-        '& .MuiAutocomplete-popupIndicator': {
-          color: 'var(--color-text-primary)',
+      sx={[
+        {
+          '& .MuiAutocomplete-popupIndicator': {
+            color: 'var(--color-text-primary)',
+          },
+          '& .MuiAutocomplete-clearIndicator': {
+            color: 'var(--color-text-primary)',
+          },
         },
-        '& .MuiAutocomplete-clearIndicator': {
-          color: 'var(--color-text-primary)',
-        },
-        ...props.sx,
-      }}
+        ...(Array.isArray(props.sx) ? props.sx : props.sx ? [props.sx] : []),
+      ]}
     />
   );
 }
