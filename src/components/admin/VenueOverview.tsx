@@ -338,7 +338,7 @@ export default function VenueOverview() {
       {/* Selection Action Bar */}
       <VenueSelectionActionBar
         selectedCount={selectedVenues.length}
-        totalCount={venues.length}
+        totalCount={displayedVenues.length}
         onClearSelection={handleClearSelection}
         onSelectAll={handleSelectAll}
         onEditVenue={handleEditVenue}
@@ -355,7 +355,7 @@ export default function VenueOverview() {
           <>
             <div className={styles.venueList}>
               {displayedVenues.map((venue) => (
-                <div key={venue.id} data-venue-id={venue.id}>
+                <div key={venue.id}>
                   <VenueListItem
                     id={venue.id}
                     venue={venue.venue}

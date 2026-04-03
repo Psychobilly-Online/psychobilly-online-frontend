@@ -9,9 +9,7 @@ import {
   Button,
   FormControl,
   FormLabel,
-  RadioGroup,
   FormControlLabel,
-  Radio,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -236,45 +234,32 @@ export default function MergeVenuesDialog({
               it, and the other venues will be deleted.
             </p>
 
-            <RadioGroup
-              value={primaryVenueId}
-              onChange={(e) => setPrimaryVenueId(Number(e.target.value))}
-            >
-              <div className={styles.venueList}>
-                {venues.map((venue) => (
-                  <FormControlLabel
-                    key={venue.id}
-                    value={venue.id}
-                    control={<Radio />}
-                    label={
-                      <div>
-                        <VenueListItem
-                          id={venue.id}
-                          venue={venue.venue}
-                          city={venue.city}
-                          country_name={venue.country_name}
-                          status={venue.status}
-                          event_count={venue.event_count}
-                          mode="radio"
-                          selected={primaryVenueId === venue.id}
-                          onClick={() => setPrimaryVenueId(venue.id)}
-                          showId={true}
-                          className={styles.venueItem}
-                          radioGroupName="primary-venue"
-                        />
-                        {venue.address1 && (
-                          <div className={styles.venueAddress}>
-                            {venue.address1}
-                            {venue.address2 && `, ${venue.address2}`}
-                          </div>
-                        )}
-                      </div>
-                    }
-                    className={styles.radioLabel}
+            <div className={styles.venueList}>
+              {venues.map((venue) => (
+                <div key={venue.id}>
+                  <VenueListItem
+                    id={venue.id}
+                    venue={venue.venue}
+                    city={venue.city}
+                    country_name={venue.country_name}
+                    status={venue.status}
+                    event_count={venue.event_count}
+                    mode="radio"
+                    selected={primaryVenueId === venue.id}
+                    onClick={() => setPrimaryVenueId(venue.id)}
+                    showId={true}
+                    className={styles.venueItem}
+                    radioGroupName="primary-venue"
                   />
-                ))}
-              </div>
-            </RadioGroup>
+                  {venue.address1 && (
+                    <div className={styles.venueAddress}>
+                      {venue.address1}
+                      {venue.address2 && `, ${venue.address2}`}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </FormControl>
         </div>
 

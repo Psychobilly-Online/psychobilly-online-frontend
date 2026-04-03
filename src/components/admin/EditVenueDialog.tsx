@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  MenuItem,
+  MenuItem, 
   FormControlLabel,
   Chip,
   Accordion,
@@ -113,33 +113,42 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
     setGeocodeSuccess(null);
 
     // Load contacts and social media when dialog opens
-    if (open) {
+    if (open && token) {
+      const loadExtras = async () => {
+        setIsLoadingExtras(true);
+        try {
+          // Load contacts
+          const contactsResponse = await fetch(`/api/admin/venues/${venue.id}/contacts`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (contactsResponse.ok) {
+            const contactsData = await contactsResponse.json();
+            setContacts(contactsData.contacts || []);
+          }
+
+          // Load social media links
+          const socialResponse = await fetch(`/api/admin/venues/${venue.id}/social-media`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (socialResponse.ok) {
+            const socialData = await socialResponse.json();
+            setSocialMediaLinks(socialData.social_media || []);
+          }
+        } catch (err) {
+          console.error('Failed to load contacts/social media:', err);
+        } finally {
+          setIsLoadingExtras(false);
+        }
+      };
+
       loadExtras();
     }
-  }, [venue, open]);
+  }, [venue, open, token]);
 
-  const loadExtras = async () => {
-    setIsLoadingExtras(true);
-    try {
-      // Load contacts
-      const contactsResponse = await fetch(`/api/admin/venues/${venue.id}/contacts`);
-      if (contactsResponse.ok) {
-        const contactsData = await contactsResponse.json();
-        setContacts(contactsData.contacts || []);
-      }
-
-      // Load social media links
-      const socialResponse = await fetch(`/api/admin/venues/${venue.id}/social-media`);
-      if (socialResponse.ok) {
-        const socialData = await socialResponse.json();
-        setSocialMediaLinks(socialData.social_media || []);
-      }
-    } catch (err) {
-      console.error('Failed to load contacts/social media:', err);
-    } finally {
-      setIsLoadingExtras(false);
-    }
-  };
 
   const handleChange = (field: string, value: string | number | boolean | null) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

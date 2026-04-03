@@ -53,35 +53,6 @@
   margin: 0 0 var(--spacing-3) 0;
 }
 
-.textField {
-  background-color: var(--color-bg-primary) !important;
-}
-
-.textField input,
-.textField textarea {
-  color: var(--color-text-primary) !important;
-}
-
-.textField .MuiOutlinedInput-root {
-  border-radius: var(--radius-lg) !important;
-}
-
-.textField .MuiOutlinedInput-notchedOutline {
-  border-color: var(--color-border-default) !important;
-  border-width: 1px !important;
-}
-
-.textField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: var(--color-accent-primary) !important;
-  border-width: 1px !important;
-}
-
-.textField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: var(--color-accent-primary) !important;
-  border-width: 1px !important;
-  box-shadow: 0 0 0 2px rgba(177, 50, 42, 0.2) !important;
-}
-
 .variationInput {
   display: flex;
   gap: var(--spacing-3);

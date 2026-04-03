@@ -41,7 +41,23 @@ export default function VenueListItem({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (mode === 'clickable' && onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   const Container = mode === 'clickable' ? 'div' : 'label';
+
+  // Accessibility props for clickable mode
+  const clickableProps = mode === 'clickable' 
+    ? {
+        role: 'button' as const,
+        tabIndex: 0,
+        onKeyDown: handleKeyDown,
+      }
+    : {};
 
   return (
     <Container
@@ -53,6 +69,7 @@ export default function VenueListItem({
       `}
       onClick={handleClick}
       data-venue-id={id}
+      {...clickableProps}
     >
       {mode === 'selectable' && (
         <input
