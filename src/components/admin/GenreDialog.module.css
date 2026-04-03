@@ -53,31 +53,6 @@
   margin: 0 0 var(--spacing-3) 0;
 }
 
-.textField {
-  background-color: var(--color-bg-secondary) !important;
-}
-
-.textField input,
-.textField textarea {
-  color: var(--color-text-primary) !important;
-}
-
-.textField .MuiOutlinedInput-root {
-  border-radius: var(--radius-lg) !important;
-}
-
-.textField .MuiOutlinedInput-notchedOutline {
-  border-color: var(--color-border-default) !important;
-}
-
-.textField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: var(--color-accent-primary) !important;
-}
-
-.textField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: var(--color-accent-primary) !important;
-}
-
 .checkboxLabel {
   display: flex;
   align-items: center;

@@ -3,15 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './GenreDialog.module.css';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Chip,
-  Button,
-} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Chip, Button } from '@mui/material';
+import { StyledTextField } from '@/components/common/form';
 
 interface Genre {
   id: number;
@@ -130,15 +123,13 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
             <label htmlFor="genre-name" className={styles.label}>
               Genre Name *
             </label>
-            <TextField
+            <StyledTextField
               id="genre-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               fullWidth
-              variant="outlined"
               disabled={isSaving}
               autoFocus
-              className={styles.textField}
             />
           </div>
 
@@ -149,16 +140,14 @@ export default function GenreDialog({ genre, onClose, onSave }: GenreDialogProps
             <p className={styles.hint}>Add related sub-categories or style variations</p>
 
             <div className={styles.variationInput}>
-              <TextField
+              <StyledTextField
                 id="new-subgenre"
                 value={newSubGenre}
                 onChange={(e) => setNewSubGenre(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Enter subgenre and press Enter"
                 fullWidth
-                variant="outlined"
                 disabled={isSaving}
-                className={styles.textField}
               />
               <Button
                 onClick={handleAddSubGenre}

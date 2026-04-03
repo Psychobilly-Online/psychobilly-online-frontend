@@ -1,0 +1,161 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.searchSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.searchInputWrapper {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: flex-start;
+}
+
+.searchInputWrapper > :first-child {
+  flex: 1;
+}
+
+.clearButton {
+  padding: var(--spacing-3) var(--spacing-4) !important;
+  white-space: nowrap;
+}
+
+.quickFilters {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.quickFilterButton {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.quickFilterButton:hover {
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-bg-secondary);
+}
+
+.quickFilterButton.active {
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-accent-primary);
+  color: white;
+}
+
+.count {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.advancedFilters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+}
+
+.filterLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.filterSelect,
+.filterInput {
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filterSelect {
+  cursor: pointer;
+}
+
+.filterSelect:hover,
+.filterInput:hover {
+  border-color: var(--color-accent-primary);
+}
+
+.filterSelect:focus,
+.filterInput:focus {
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 2px rgba(177, 50, 42, 0.2);
+}
+
+.venueList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--list-item-gap);
+  min-height: 200px;
+}
+
+/* Highlight effect for scrolled venue */
+.highlightVenue {
+  animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+  0%,
+  100% {
+    background-color: var(--color-bg-primary);
+    transform: scale(1);
+  }
+  50% {
+    background-color: var(--color-bg-tertiary);
+    transform: scale(1.02);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .searchInputWrapper {
+    flex-direction: column;
+  }
+
+  .quickFilters {
+    flex-direction: column;
+  }
+
+  .quickFilterButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .advancedFilters {
+    grid-template-columns: 1fr;
+  }
+
+  .filterSelect,
+  .filterInput {
+    width: 100%;
+  }
+}

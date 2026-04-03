@@ -31,8 +31,9 @@ describe('EventFilters helpers', () => {
     expect(normalizeFilterValue(null as unknown as string)).toBeUndefined();
   });
 
-  it('prefers iso_code for countries', () => {
-    expect(getCountryIso({ iso_code: 'DE', iso: 'X' } as any)).toBe('DE');
-    expect(getCountryIso({ iso: 'US' } as any)).toBe('US');
+  it('returns country iso code', () => {
+    expect(getCountryIso({ id: 1, name: 'Germany', iso: 'DE' })).toBe('DE');
+    expect(getCountryIso({ id: 2, name: 'USA', iso: 'US' })).toBe('US');
+    expect(getCountryIso({ id: 3, name: 'Unknown' })).toBe(''); // Fallback for missing iso
   });
 });

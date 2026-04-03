@@ -7,13 +7,12 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextField,
   IconButton,
   Chip,
-  Autocomplete,
 } from '@mui/material';
 import { useAuth } from '@/contexts/AuthContext';
 import GenreTag from '@/components/common/GenreTag';
+import { StyledTextField, StyledAutocomplete } from '@/components/common/form';
 import styles from './EditBandDialog.module.css';
 
 interface BandGenre {
@@ -186,14 +185,12 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
           <label htmlFor="band-name" className={styles.label}>
             Band Name *
           </label>
-          <TextField
+          <StyledTextField
             id="band-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             fullWidth
-            variant="outlined"
             disabled={isSaving}
-            className={styles.textField}
           />
         </div>
 
@@ -206,16 +203,14 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
           </p>
 
           <div className={styles.variationInput}>
-            <TextField
+            <StyledTextField
               id="new-variation"
               value={newVariation}
               onChange={(e) => setNewVariation(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Enter variation and press Enter"
               fullWidth
-              variant="outlined"
               disabled={isSaving}
-              className={styles.textField}
             />
             <Button
               onClick={handleAddVariation}
@@ -250,17 +245,12 @@ export default function EditBandDialog({ open, band, onClose, onSave }: EditBand
             Assign music genres to this band. Click a genre chip to toggle it as primary.
           </p>
 
-          <Autocomplete
+          <StyledAutocomplete
             id="genre-search"
             options={availableGenres.filter((g) => !genres.find((bg) => bg.id === g.id))}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Search and add genres..."
-                variant="outlined"
-                className={styles.textField}
-              />
+              <StyledTextField {...params} placeholder="Search and add genres..." />
             )}
             onChange={(_, value) => {
               if (value) {

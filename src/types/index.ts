@@ -17,8 +17,10 @@ export interface Event {
     state?: string;
     country_id?: string; // ISO2 country code (e.g., "DE", "US")
     country?: string; // Full country name
-    latitude?: string;
-    longitude?: string;
+    latitude?: string; // Legacy field name
+    longitude?: string; // Legacy field name
+    lat?: string; // Current backend field name
+    long?: string; // Current backend field name
   };
   city?: string;
   state_id?: string;

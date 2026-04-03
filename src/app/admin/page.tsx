@@ -57,6 +57,18 @@ export default function AdminDashboardPage() {
           <div className={styles.cardAction}>Go to Band Overview →</div>
         </Link>
 
+        {/* Venue Overview Card */}
+        <Link href="/admin/venues/overview" className={styles.overviewCard}>
+          <div className={styles.cardIcon}>📍</div>
+          <h2 className={styles.cardTitle}>Venue Overview</h2>
+          <p className={styles.cardDescription}>
+            Search and manage all venues. Edit venue details, manage contacts, add social media
+            links, geocode addresses, merge duplicate venues, and more. Comprehensive venue
+            administration.
+          </p>
+          <div className={styles.cardAction}>Go to Venue Overview →</div>
+        </Link>
+
         {/* Manage Genres Card */}
         <Link href="/admin/bands/manage-genres" className={styles.overviewCard}>
           <div className={styles.cardIcon}>📚</div>
