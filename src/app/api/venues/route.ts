@@ -30,10 +30,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
   } catch (error: any) {
     console.error('Venues search API error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch venues' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: error.message || 'Failed to fetch venues' }, { status: 500 });
   }
 }
 
@@ -64,9 +61,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data, { status: 201 });
   } catch (error: any) {
     console.error('Create venue API error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to create venue' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: error.message || 'Failed to create venue' }, { status: 500 });
   }
 }

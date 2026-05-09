@@ -2,8 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@mui/material';
 import { useAuthorization } from '@/hooks/useAuthorization';
+import ActionButton from '@/components/common/ActionButton';
 import WizardStepper from '../WizardStepper';
 import LocationStep from './steps/LocationStep';
 import VenueStep from './steps/VenueStep';
@@ -26,12 +26,9 @@ export default function CreateEventWizard() {
   const [formData, setFormData] = useState<CreateEventFormData>(INITIAL_FORM_DATA);
   const [submitting, setSubmitting] = useState(false);
 
-  const updateFormData = useCallback(
-    (patch: Partial<CreateEventFormData>) => {
-      setFormData((prev) => ({ ...prev, ...patch }));
-    },
-    [],
-  );
+  const updateFormData = useCallback((patch: Partial<CreateEventFormData>) => {
+    setFormData((prev) => ({ ...prev, ...patch }));
+  }, []);
 
   const goNext = () => setStep((s) => Math.min(s + 1, WIZARD_STEPS.length - 1) as WizardStepIndex);
   const goBack = () => setStep((s) => Math.max(s - 1, 0) as WizardStepIndex);
@@ -52,7 +49,7 @@ export default function CreateEventWizard() {
       case 0:
         return <LocationStep formData={formData} onChange={updateFormData} />;
       case 1:
-        return <VenueStep formData={formData} onChange={updateFormData} token={token} />;
+        return <VenueStep formData={formData} onChange={updateFormData} />;
       case 2:
         return <EventDetailsStep formData={formData} onChange={updateFormData} />;
       case 3:
@@ -74,7 +71,7 @@ export default function CreateEventWizard() {
   };
 
   const isFirstStep = step === 0;
-  const isLastStep = step === (WIZARD_STEPS.length - 1) as WizardStepIndex;
+  const isLastStep = step === ((WIZARD_STEPS.length - 1) as WizardStepIndex);
 
   const canProceed = (): boolean => {
     switch (step) {
@@ -107,22 +104,18 @@ export default function CreateEventWizard() {
         <div className={styles.navigationBar}>
           <div className={styles.navLeft}>
             {!isFirstStep && (
-              <Button variant="outlined" onClick={goBack} disabled={submitting}>
+              <ActionButton variant="secondary" onClick={goBack} disabled={submitting}>
                 Back
-              </Button>
+              </ActionButton>
             )}
           </div>
           <span className={styles.stepIndicator}>
             Step {step + 1} of {WIZARD_STEPS.length}
           </span>
           <div className={styles.navRight}>
-            <Button
-              variant="contained"
-              onClick={goNext}
-              disabled={!canProceed() || submitting}
-            >
+            <ActionButton variant="primary" onClick={goNext} disabled={!canProceed() || submitting}>
               {step === WIZARD_STEPS.length - 2 ? 'Review' : 'Next'}
-            </Button>
+            </ActionButton>
           </div>
         </div>
       )}
@@ -130,9 +123,9 @@ export default function CreateEventWizard() {
       {isLastStep && (
         <div className={styles.navigationBar}>
           <div className={styles.navLeft}>
-            <Button variant="outlined" onClick={goBack} disabled={submitting}>
+            <ActionButton variant="secondary" onClick={goBack} disabled={submitting}>
               Back
-            </Button>
+            </ActionButton>
           </div>
           <div className={styles.navRight} />
         </div>

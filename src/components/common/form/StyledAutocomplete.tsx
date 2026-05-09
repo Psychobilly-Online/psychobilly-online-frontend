@@ -75,6 +75,35 @@ export default function StyledAutocomplete<
         },
         ...(Array.isArray(props.sx) ? props.sx : props.sx ? [props.sx] : []),
       ]}
+      componentsProps={{
+        popper: {
+          sx: {
+            '& .MuiPaper-root': {
+              backgroundColor: 'var(--color-bg-elevated)',
+              border: '1px solid var(--color-border-default)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-md)',
+            },
+            '& .MuiAutocomplete-listbox': {
+              padding: 'var(--spacing-1)',
+            },
+            '& .MuiAutocomplete-option': {
+              borderRadius: 'var(--radius-sm)',
+              color: 'var(--color-text-primary)',
+              '&:hover, &.Mui-focused': {
+                backgroundColor: 'var(--color-bg-hover) !important',
+              },
+              '&[aria-selected="true"]': {
+                backgroundColor: 'var(--color-accent-overlay) !important',
+              },
+            },
+            '& .MuiAutocomplete-noOptions, & .MuiAutocomplete-loading': {
+              color: 'var(--color-text-muted)',
+              backgroundColor: 'var(--color-bg-elevated)',
+            },
+          },
+        },
+      }}
     />
   );
 }

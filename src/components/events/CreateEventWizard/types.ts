@@ -11,10 +11,16 @@ export interface NewVenueData {
   countryId: number | null;
 }
 
+export interface WizardBand {
+  name: string;
+  bandId?: number;   // set when selected from the existing database
+  genreId?: number;  // required for new (unrecognised) bands
+}
+
 export interface WizardDay {
-  date: string;   // YYYY-MM-DD
-  label: string;  // "Day 1", "Day 2", ...
-  bands: string[];
+  date: string; // YYYY-MM-DD
+  label: string; // "Day 1", "Day 2", ...
+  bands: WizardBand[];
 }
 
 export interface CreateEventFormData {
@@ -32,10 +38,13 @@ export interface CreateEventFormData {
 
   // Step 3 — Event Details
   categoryId: number | null;
-  dateStart: string;   // YYYY-MM-DD
-  dateEnd: string;     // YYYY-MM-DD (equals dateStart for single-day)
+  dateStart: string; // YYYY-MM-DD
+  dateEnd: string; // YYYY-MM-DD (equals dateStart for single-day)
   isMultiDay: boolean;
   headline: string;
+
+  // Step 3 — Event genres (manual selection, merged with band-derived genres on submit)
+  genreIds: number[];
 
   // Step 4 — Bands (per day)
   days: WizardDay[];
@@ -62,6 +71,7 @@ export const INITIAL_FORM_DATA: CreateEventFormData = {
   dateEnd: '',
   isMultiDay: false,
   headline: '',
+  genreIds: [],
   days: [],
   text: '',
   url: '',

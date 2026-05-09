@@ -51,13 +51,14 @@ export default function VenueListItem({
   const Container = mode === 'clickable' ? 'div' : 'label';
 
   // Accessibility props for clickable mode
-  const clickableProps = mode === 'clickable' 
-    ? {
-        role: 'button' as const,
-        tabIndex: 0,
-        onKeyDown: handleKeyDown,
-      }
-    : {};
+  const clickableProps =
+    mode === 'clickable'
+      ? {
+          role: 'button' as const,
+          tabIndex: 0,
+          onKeyDown: handleKeyDown,
+        }
+      : {};
 
   return (
     <Container

@@ -34,10 +34,7 @@ export default function CreateEventPage() {
           { label: 'Add Event', href: '/events/create' },
         ]}
       />
-      <PageHeader
-        title="Add Event"
-        description="Submit a new psychobilly event to the calendar"
-      />
+      <PageHeader title="Add Event" description="Submit a new psychobilly event to the calendar" />
       <CreateEventWizard />
     </div>
   );
