@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Typography, CircularProgress } from '@mui/material';
 import { StyledTextField, StyledAutocomplete } from '@/components/common/form';
 import ActionButton from '@/components/common/ActionButton';
@@ -36,27 +36,39 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
     },
   );
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
-  const fetchVenues = (search?: string) => {
+  const fetchVenues = useCallback((search?: string) => {
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+    const { signal } = abortRef.current;
+
     setLoading(true);
     const params = new URLSearchParams({ limit: '100' });
     if (search) params.set('search', search);
     if (formData.countryId) params.set('country_id', String(formData.countryId));
     if (formData.city) params.set('city', formData.city);
 
-    fetch(`/api/venues?${params}`)
+    fetch(`/api/venues?${params}`, { signal })
       .then((r) => r.json())
       .then((data) => setVenues(Array.isArray(data.data) ? data.data : []))
-      .catch(() => setVenues([]))
+      .catch((err) => { if (err.name !== 'AbortError') setVenues([]); })
       .finally(() => setLoading(false));
-  };
+  }, [formData.countryId, formData.city]);
+
+  // Cleanup debounce timer and in-flight request on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      abortRef.current?.abort();
+    };
+  }, []);
 
   // Load initial venues when country/city is set
   useEffect(() => {
     if (!formData.countryId) return;
     fetchVenues();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.countryId, formData.city]);
+  }, [formData.countryId, formData.city, fetchVenues]);
 
   const handleInputChange = (_: unknown, value: string) => {
     setInputValue(value);

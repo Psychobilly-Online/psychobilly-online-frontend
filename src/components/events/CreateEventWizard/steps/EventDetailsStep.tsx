@@ -49,7 +49,7 @@ function SameDayEvents({ date, city }: { date: string; city: string }) {
       <ul className={styles.sameDayList}>
         {events.map((e) => (
           <li key={e.id} className={styles.sameDayItem}>
-            <Link href={`/events/${e.id}`} target="_blank" className={styles.sameDayLink}>
+            <Link href={`/events/${e.id}`} target="_blank" rel="noopener noreferrer" className={styles.sameDayLink}>
               <span className={styles.sameDayHeadline}>{e.headline}</span>
               {e.category && <span className={styles.sameDayMeta}>{e.category}</span>}
             </Link>

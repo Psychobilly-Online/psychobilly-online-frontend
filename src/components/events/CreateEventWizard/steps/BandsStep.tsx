@@ -89,20 +89,20 @@ function DayBandInput({
   const handleSelect = (_: unknown, value: BandOption | string | null) => {
     if (!value) return;
     const opt: BandOption =
-      typeof value === 'string' ? { name: value.trim() } : value;
+      typeof value === 'string' ? { name: value.trim(), isNew: true } : value;
     const name = opt.name.trim();
     if (!name) return;
     if (day.bands.some((b) => b.name.toLowerCase() === name.toLowerCase())) return;
 
-    if (opt.isNew) {
-      // New band — require genre selection before adding
-      setPendingBand({ name });
-      setPendingGenreId(null);
+    if (opt.id !== undefined) {
+      // Existing band — add immediately
+      onAddBand(dayIndex, { name, bandId: opt.id });
       setInputValue('');
       setOptions([]);
     } else {
-      // Existing band — add immediately
-      onAddBand(dayIndex, { name, bandId: opt.id });
+      // New band — require genre selection before adding
+      setPendingBand({ name });
+      setPendingGenreId(null);
       setInputValue('');
       setOptions([]);
     }
@@ -139,7 +139,7 @@ function DayBandInput({
           <div className={styles.bandList}>
             {day.bands.map((band, bi) => (
               <div
-                key={bi}
+                key={band.bandId != null ? `id-${band.bandId}` : `name-${band.name}`}
                 className={[
                   styles.bandRow,
                   dragIndex === bi ? styles.bandRowDragging : '',

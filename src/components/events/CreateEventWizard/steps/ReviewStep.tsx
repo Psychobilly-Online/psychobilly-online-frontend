@@ -77,6 +77,15 @@ export default function ReviewStep({
   };
 
   const handleSubmit = async () => {
+    if (!token) {
+      setSubmitError('You must be logged in to submit an event.');
+      return;
+    }
+    const authHeaders = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+
     setSubmitError(null);
     setValidationErrors({});
     setSubmitting(true);
@@ -95,10 +104,7 @@ export default function ReviewStep({
         };
         const venueRes = await fetch('/api/venues', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
+          headers: authHeaders,
           body: JSON.stringify(venueBody),
         });
         const venueData = await venueRes.json();
@@ -144,10 +150,7 @@ export default function ReviewStep({
 
       const eventRes = await fetch('/api/events', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: authHeaders,
         body: JSON.stringify(eventBody),
       });
 
@@ -178,7 +181,9 @@ export default function ReviewStep({
   };
 
   const allBands = [...new Set(formData.days.flatMap((d) => d.bands.map((b) => b.name)))];
-  const effectiveHeadline = formData.headline.trim() || (allBands.length > 0 ? buildAutoHeadline() : null);
+  const effectiveHeadline =
+    formData.headline.trim() ||
+    (allBands.length > 0 ? buildAutoHeadline() : 'Required');
 
   return (
     <div className={styles.step}>
@@ -211,9 +216,9 @@ export default function ReviewStep({
         <div className={styles.reviewRow}>
           <span className={styles.reviewKey}>Title</span>
           <span className={styles.reviewValue}>
-            {effectiveHeadline ?? (
-              <em style={{ opacity: 0.6 }}>Auto-generated from bands</em>
-            )}
+            {effectiveHeadline === 'Required' ? (
+              <em style={{ color: 'var(--color-error, #d32f2f)' }}>Required — add a title or at least one band</em>
+            ) : effectiveHeadline}
           </span>
         </div>
         {formData.days.map((day) => (

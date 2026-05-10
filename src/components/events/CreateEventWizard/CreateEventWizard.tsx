@@ -78,7 +78,10 @@ export default function CreateEventWizard() {
       case 0:
         return Boolean(formData.countryId && formData.city.trim());
       case 1:
-        return Boolean(formData.venueId || formData.isNewVenue);
+        if (formData.isNewVenue) {
+          return Boolean(formData.newVenue?.name?.trim() && formData.newVenue?.city?.trim());
+        }
+        return Boolean(formData.venueId);
       case 2:
         return Boolean(formData.categoryId && formData.dateStart);
       case 3:
