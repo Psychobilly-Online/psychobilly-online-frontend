@@ -3,12 +3,14 @@ import { describe, expect, it, vi, beforeEach, afterEach, type Mock } from 'vite
 import { useInfiniteScroll } from '../useInfiniteScroll';
 
 describe('useInfiniteScroll', () => {
-  let mockIntersectionObserver: Mock;
+  let mockIntersectionObserver: Mock<
+    (callback: IntersectionObserverCallback, options?: IntersectionObserverInit) => IntersectionObserver
+  >;
   let observerCallback: IntersectionObserverCallback;
   let observeInstance: {
-    observe: Mock;
-    disconnect: Mock;
-    unobserve: Mock;
+    observe: Mock<(target: Element) => void>;
+    disconnect: Mock<() => void>;
+    unobserve: Mock<(target: Element) => void>;
   };
 
   beforeEach(() => {
@@ -21,8 +23,8 @@ describe('useInfiniteScroll', () => {
 
     mockIntersectionObserver = vi.fn(function (callback: IntersectionObserverCallback) {
       observerCallback = callback;
-      return observeInstance;
-    });
+      return observeInstance as unknown as IntersectionObserver;
+    }) as Mock<(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) => IntersectionObserver>;
 
     global.IntersectionObserver =
       mockIntersectionObserver as unknown as typeof IntersectionObserver;
