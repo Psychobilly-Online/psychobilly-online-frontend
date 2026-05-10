@@ -1,17 +1,14 @@
 import { renderHook } from '@testing-library/react';
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach, type Mock } from 'vitest';
 import { useInfiniteScroll } from '../useInfiniteScroll';
 
 describe('useInfiniteScroll', () => {
-  let mockIntersectionObserver: vi.Mock<
-    [callback: IntersectionObserverCallback, options?: IntersectionObserverInit],
-    IntersectionObserver
-  >;
+  let mockIntersectionObserver: Mock;
   let observerCallback: IntersectionObserverCallback;
   let observeInstance: {
-    observe: vi.Mock;
-    disconnect: vi.Mock;
-    unobserve: vi.Mock;
+    observe: Mock;
+    disconnect: Mock;
+    unobserve: Mock;
   };
 
   beforeEach(() => {
@@ -22,7 +19,7 @@ describe('useInfiniteScroll', () => {
       unobserve: vi.fn(),
     };
 
-    mockIntersectionObserver = vi.fn((callback: IntersectionObserverCallback) => {
+    mockIntersectionObserver = vi.fn(function (callback: IntersectionObserverCallback) {
       observerCallback = callback;
       return observeInstance;
     });
@@ -57,9 +54,9 @@ describe('useInfiniteScroll', () => {
         {
           isIntersecting: true,
           target: mockElement,
-        } as IntersectionObserverEntry,
+        } as unknown as IntersectionObserverEntry,
       ],
-      observeInstance,
+      observeInstance as unknown as IntersectionObserver,
     );
 
     expect(onLoadMore).toHaveBeenCalledTimes(1);
@@ -84,9 +81,9 @@ describe('useInfiniteScroll', () => {
         {
           isIntersecting: true,
           target: mockElement,
-        } as IntersectionObserverEntry,
+        } as unknown as IntersectionObserverEntry,
       ],
-      observeInstance,
+      observeInstance as unknown as IntersectionObserver,
     );
 
     expect(onLoadMore).not.toHaveBeenCalled();
@@ -129,9 +126,9 @@ describe('useInfiniteScroll', () => {
         {
           isIntersecting: false,
           target: mockElement,
-        } as IntersectionObserverEntry,
+        } as unknown as IntersectionObserverEntry,
       ],
-      observeInstance,
+      observeInstance as unknown as IntersectionObserver,
     );
 
     expect(onLoadMore).not.toHaveBeenCalled();
@@ -163,9 +160,9 @@ describe('useInfiniteScroll', () => {
         {
           isIntersecting: true,
           target: mockElement,
-        } as IntersectionObserverEntry,
+        } as unknown as IntersectionObserverEntry,
       ],
-      observeInstance,
+      observeInstance as unknown as IntersectionObserver,
     );
 
     expect(onLoadMore).not.toHaveBeenCalled();
