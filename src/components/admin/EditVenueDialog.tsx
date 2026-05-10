@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  MenuItem, 
+  MenuItem,
   FormControlLabel,
   Chip,
   Accordion,
@@ -148,7 +148,6 @@ export default function EditVenueDialog({ open, venue, onClose, onSave }: EditVe
       loadExtras();
     }
   }, [venue, open, token]);
-
 
   const handleChange = (field: string, value: string | number | boolean | null) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
