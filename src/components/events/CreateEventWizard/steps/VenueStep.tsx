@@ -40,8 +40,9 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
 
   const fetchVenues = useCallback((search?: string) => {
     abortRef.current?.abort();
-    abortRef.current = new AbortController();
-    const { signal } = abortRef.current;
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const { signal } = controller;
 
     setLoading(true);
     const params = new URLSearchParams({ limit: '100' });
@@ -51,9 +52,18 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
 
     fetch(`/api/venues?${params}`, { signal })
       .then((r) => r.json())
-      .then((data) => setVenues(Array.isArray(data.data) ? data.data : []))
-      .catch((err) => { if (err.name !== 'AbortError') setVenues([]); })
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (abortRef.current !== controller) return;
+        setVenues(Array.isArray(data.data) ? data.data : []);
+      })
+      .catch((err) => {
+        if (abortRef.current !== controller) return;
+        if (err.name !== 'AbortError') setVenues([]);
+      })
+      .finally(() => {
+        if (abortRef.current !== controller) return;
+        setLoading(false);
+      });
   }, [formData.countryId, formData.city]);
 
   // Cleanup debounce timer and in-flight request on unmount
