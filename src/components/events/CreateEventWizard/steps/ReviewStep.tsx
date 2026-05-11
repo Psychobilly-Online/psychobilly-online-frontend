@@ -182,8 +182,7 @@ export default function ReviewStep({
 
   const allBands = [...new Set(formData.days.flatMap((d) => d.bands.map((b) => b.name)))];
   const effectiveHeadline =
-    formData.headline.trim() ||
-    (allBands.length > 0 ? buildAutoHeadline() : 'Required');
+    formData.headline.trim() || (allBands.length > 0 ? buildAutoHeadline() : 'Required');
 
   return (
     <div className={styles.step}>
@@ -217,15 +216,23 @@ export default function ReviewStep({
           <span className={styles.reviewKey}>Title</span>
           <span className={styles.reviewValue}>
             {effectiveHeadline === 'Required' ? (
-              <em style={{ color: 'var(--color-error, #d32f2f)' }}>Required — add a title or at least one band</em>
-            ) : effectiveHeadline}
+              <em style={{ color: 'var(--color-error, #d32f2f)' }}>
+                Required — add a title or at least one band
+              </em>
+            ) : (
+              effectiveHeadline
+            )}
           </span>
         </div>
         {formData.days.map((day) => (
           <div key={day.date} className={styles.reviewRow}>
             <span className={styles.reviewKey}>{day.label}</span>
             <span className={styles.reviewValue}>
-              {day.bands.length > 0 ? day.bands.map((b) => b.name).join(', ') : <em style={{ opacity: 0.5 }}>No bands listed</em>}
+              {day.bands.length > 0 ? (
+                day.bands.map((b) => b.name).join(', ')
+              ) : (
+                <em style={{ opacity: 0.5 }}>No bands listed</em>
+              )}
             </span>
           </div>
         ))}

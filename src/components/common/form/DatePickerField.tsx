@@ -27,7 +27,7 @@ interface RangeDatePickerFieldProps {
   mode: 'range';
   id?: string;
   startValue: string; // YYYY-MM-DD
-  endValue: string;   // YYYY-MM-DD
+  endValue: string; // YYYY-MM-DD
   onRangeChange: (start: string, end: string) => void;
   placeholder?: string;
   minDate?: string;
@@ -73,14 +73,30 @@ const popoverPaperSx = {
 
 // Range day highlight styles (inline — avoids needing a CSS module here)
 const rangeDayStyle: Record<string, React.CSSProperties> = {
-  inRange:  { borderRadius: 0, backgroundColor: 'var(--color-bg-elevated-alt)', color: 'var(--color-text-primary)' },
-  preview:  { borderRadius: 0, backgroundColor: 'var(--color-accent-overlay)',   color: 'var(--color-text-primary)' },
+  inRange: {
+    borderRadius: 0,
+    backgroundColor: 'var(--color-bg-elevated-alt)',
+    color: 'var(--color-text-primary)',
+  },
+  preview: {
+    borderRadius: 0,
+    backgroundColor: 'var(--color-accent-overlay)',
+    color: 'var(--color-text-primary)',
+  },
   endpoint: { borderRadius: '50%', backgroundColor: 'var(--color-accent-primary)', color: '#fff' },
 };
 
 export default function DatePickerField(props: DatePickerFieldProps) {
   const isRange = props.mode === 'range';
-  const { id, placeholder = 'Select date', minDate, maxDate, size = 'small', disabled = false, sx } = props;
+  const {
+    id,
+    placeholder = 'Select date',
+    minDate,
+    maxDate,
+    size = 'small',
+    disabled = false,
+    sx,
+  } = props;
 
   const [open, setOpen] = useState(false);
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
@@ -107,7 +123,12 @@ export default function DatePickerField(props: DatePickerFieldProps) {
             size={size}
             disabled={disabled}
             onClick={() => !disabled && setOpen(true)}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(true); } }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setOpen(true);
+              }
+            }}
             inputProps={{ readOnly: true, style: { cursor: 'pointer' } }}
             sx={{ minWidth: 160, cursor: 'pointer', ...sx }}
           />
@@ -144,7 +165,7 @@ export default function DatePickerField(props: DatePickerFieldProps) {
   // ── Range mode ───────────────────────────────────────────────────────────────
   const { startValue, endValue, onRangeChange } = props as RangeDatePickerFieldProps;
   const startDate = startValue ? parseISO(startValue) : null;
-  const endDate   = endValue   ? parseISO(endValue)   : null;
+  const endDate = endValue ? parseISO(endValue) : null;
 
   const formatRange = () => {
     if (!startDate || !isValid(startDate)) return '';
@@ -169,17 +190,28 @@ export default function DatePickerField(props: DatePickerFieldProps) {
 
   const RangeDay = (dayProps: PickersDayProps) => {
     const { day, outsideCurrentMonth, ...other } = dayProps;
-    const isStart   = !!startDate && isSameDay(day, startDate);
-    const isEnd     = !!endDate && !isSameDay(startDate!, endDate) && isSameDay(day, endDate);
-    const isInRange = !!startDate && !!endDate && !isSameDay(startDate, endDate)
-      && isWithinInterval(day, { start: startDate, end: endDate });
-    const isPreview = rangePending && !!startDate && !!hoveredDate && hoveredDate >= startDate
-      && isWithinInterval(day, { start: startDate, end: hoveredDate });
+    const isStart = !!startDate && isSameDay(day, startDate);
+    const isEnd = !!endDate && !isSameDay(startDate!, endDate) && isSameDay(day, endDate);
+    const isInRange =
+      !!startDate &&
+      !!endDate &&
+      !isSameDay(startDate, endDate) &&
+      isWithinInterval(day, { start: startDate, end: endDate });
+    const isPreview =
+      rangePending &&
+      !!startDate &&
+      !!hoveredDate &&
+      hoveredDate >= startDate &&
+      isWithinInterval(day, { start: startDate, end: hoveredDate });
 
     const style: React.CSSProperties =
-      isStart || isEnd ? rangeDayStyle.endpoint :
-      isInRange        ? rangeDayStyle.inRange  :
-      isPreview        ? rangeDayStyle.preview  : {};
+      isStart || isEnd
+        ? rangeDayStyle.endpoint
+        : isInRange
+          ? rangeDayStyle.inRange
+          : isPreview
+            ? rangeDayStyle.preview
+            : {};
 
     return (
       <PickersDay
@@ -206,7 +238,12 @@ export default function DatePickerField(props: DatePickerFieldProps) {
           size={size}
           disabled={disabled}
           onClick={() => !disabled && setOpen(true)}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(true); } }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen(true);
+            }
+          }}
           inputProps={{ readOnly: true, style: { cursor: 'pointer' } }}
           sx={{ minWidth: 220, cursor: 'pointer', ...sx }}
         />
@@ -214,7 +251,10 @@ export default function DatePickerField(props: DatePickerFieldProps) {
       <Popover
         open={open}
         anchorEl={anchorRef.current}
-        onClose={() => { setOpen(false); setRangePending(false); }}
+        onClose={() => {
+          setOpen(false);
+          setRangePending(false);
+        }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         marginThreshold={16}

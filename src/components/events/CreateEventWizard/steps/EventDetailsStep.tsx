@@ -44,12 +44,18 @@ function SameDayEvents({ date, city }: { date: string; city: string }) {
   return (
     <div className={styles.sameDayEvents}>
       <p className={styles.sameDayWarning}>
-        {events.length} event{events.length !== 1 ? 's' : ''} already listed for this date{city ? ` in ${city}` : ''}. Make sure yours is not a duplicate.
+        {events.length} event{events.length !== 1 ? 's' : ''} already listed for this date
+        {city ? ` in ${city}` : ''}. Make sure yours is not a duplicate.
       </p>
       <ul className={styles.sameDayList}>
         {events.map((e) => (
           <li key={e.id} className={styles.sameDayItem}>
-            <Link href={`/events/${e.id}`} target="_blank" rel="noopener noreferrer" className={styles.sameDayLink}>
+            <Link
+              href={`/events/${e.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.sameDayLink}
+            >
               <span className={styles.sameDayHeadline}>{e.headline}</span>
               {e.category && <span className={styles.sameDayMeta}>{e.category}</span>}
             </Link>
@@ -143,7 +149,9 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
             );
           })}
         </div>
-        <p className={styles.hint}>Genres from bands added in the next step will be merged automatically.</p>
+        <p className={styles.hint}>
+          Genres from bands added in the next step will be merged automatically.
+        </p>
       </div>
 
       {/* Multi-day toggle */}
@@ -156,18 +164,20 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
             size="small"
             sx={{
               '& .MuiSwitch-switchBase.Mui-checked': { color: 'var(--color-accent-primary)' },
-              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: 'var(--color-accent-primary)' },
+              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                backgroundColor: 'var(--color-accent-primary)',
+              },
             }}
           />
-          <span style={{ color: 'var(--color-text-primary)', fontSize: '14px' }}>Multi-day event</span>
+          <span style={{ color: 'var(--color-text-primary)', fontSize: '14px' }}>
+            Multi-day event
+          </span>
         </div>
       </div>
 
       {/* Date(s) */}
       <div className={styles.field}>
-        <label className={styles.label}>
-          {formData.isMultiDay ? 'Date range *' : 'Date *'}
-        </label>
+        <label className={styles.label}>{formData.isMultiDay ? 'Date range *' : 'Date *'}</label>
         {formData.isMultiDay ? (
           <>
             <DatePickerField
@@ -195,13 +205,13 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
       </div>
 
       {/* Existing events on same date */}
-      {formData.dateStart && (
-        <SameDayEvents date={formData.dateStart} city={formData.city} />
-      )}
+      {formData.dateStart && <SameDayEvents date={formData.dateStart} city={formData.city} />}
 
       {/* Headline */}
       <div className={styles.field}>
-        <label htmlFor="event-title" className={styles.label}>Event title</label>
+        <label htmlFor="event-title" className={styles.label}>
+          Event title
+        </label>
         <StyledTextField
           id="event-title"
           value={formData.headline}
@@ -211,7 +221,9 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
           fullWidth
           inputProps={{ maxLength: 255 }}
         />
-        <p className={styles.hint}>{formData.headline.length}/255 — leave blank to auto-generate from bands</p>
+        <p className={styles.hint}>
+          {formData.headline.length}/255 — leave blank to auto-generate from bands
+        </p>
       </div>
     </div>
   );

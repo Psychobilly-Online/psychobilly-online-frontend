@@ -70,9 +70,7 @@ function DayBandInput({
           (b: { id: number; name: string }) => ({ id: b.id, name: b.name }),
         );
         // If the exact input isn't in results, offer "Add new band"
-        const exactMatch = found.some(
-          (b) => b.name.toLowerCase() === q.trim().toLowerCase(),
-        );
+        const exactMatch = found.some((b) => b.name.toLowerCase() === q.trim().toLowerCase());
         if (!exactMatch && q.trim()) {
           found.push({ name: q.trim(), isNew: true });
         }
@@ -88,8 +86,7 @@ function DayBandInput({
 
   const handleSelect = (_: unknown, value: BandOption | string | null) => {
     if (!value) return;
-    const opt: BandOption =
-      typeof value === 'string' ? { name: value.trim(), isNew: true } : value;
+    const opt: BandOption = typeof value === 'string' ? { name: value.trim(), isNew: true } : value;
     const name = opt.name.trim();
     if (!name) return;
     if (day.bands.some((b) => b.name.toLowerCase() === name.toLowerCase())) return;
@@ -123,10 +120,14 @@ function DayBandInput({
           onChange={(e) => onLabelChange(dayIndex, e.target.value)}
           size="small"
           variant="standard"
-          inputProps={{ style: { fontWeight: 600, fontSize: '1rem', color: 'var(--color-text-primary)' } }}
+          inputProps={{
+            style: { fontWeight: 600, fontSize: '1rem', color: 'var(--color-text-primary)' },
+          }}
           sx={{
             '& .MuiInput-underline:before': { borderBottomColor: 'var(--color-border-default)' },
-            '& .MuiInput-underline:hover:before': { borderBottomColor: 'var(--color-accent-primary)' },
+            '& .MuiInput-underline:hover:before': {
+              borderBottomColor: 'var(--color-accent-primary)',
+            },
             '& .MuiInput-underline:after': { borderBottomColor: 'var(--color-accent-primary)' },
           }}
         />
@@ -144,7 +145,9 @@ function DayBandInput({
                   styles.bandRow,
                   dragIndex === bi ? styles.bandRowDragging : '',
                   dragOverIndex === bi && dragIndex !== bi ? styles.bandRowDropTarget : '',
-                ].filter(Boolean).join(' ')}
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
                 draggable
                 onDragStart={(e) => {
                   setDragIndex(bi);
@@ -212,7 +215,10 @@ function DayBandInput({
               </button>
               <button
                 className={styles.pendingBandCancel}
-                onClick={() => { setPendingBand(null); setPendingGenreId(null); }}
+                onClick={() => {
+                  setPendingBand(null);
+                  setPendingGenreId(null);
+                }}
               >
                 Cancel
               </button>
@@ -222,36 +228,36 @@ function DayBandInput({
         {!pendingBand && (
           <StyledAutocomplete<BandOption, false, false, true>
             freeSolo
-          options={options}
-          getOptionLabel={(o) =>
-            typeof o === 'string' ? o : o.isNew ? `Add new: "${o.name}"` : o.name
-          }
-          inputValue={inputValue}
-          onInputChange={(_, v, reason) => {
-            if (reason === 'reset') return;
-            setInputValue(v);
-            searchBands(v);
-          }}
-          onChange={handleSelect}
-          filterOptions={(x) => x}
-          loading={loading}
-          renderInput={(params) => (
-            <StyledTextField
-              {...params}
-              placeholder="Search or add a band…"
-              size="small"
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    {loading && <CircularProgress color="inherit" size={14} />}
-                    {params.InputProps.endAdornment}
-                  </>
-                ),
-              }}
-            />
-          )}
-        />
+            options={options}
+            getOptionLabel={(o) =>
+              typeof o === 'string' ? o : o.isNew ? `Add new: "${o.name}"` : o.name
+            }
+            inputValue={inputValue}
+            onInputChange={(_, v, reason) => {
+              if (reason === 'reset') return;
+              setInputValue(v);
+              searchBands(v);
+            }}
+            onChange={handleSelect}
+            filterOptions={(x) => x}
+            loading={loading}
+            renderInput={(params) => (
+              <StyledTextField
+                {...params}
+                placeholder="Search or add a band…"
+                size="small"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loading && <CircularProgress color="inherit" size={14} />}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+          />
         )}
       </div>
     </div>

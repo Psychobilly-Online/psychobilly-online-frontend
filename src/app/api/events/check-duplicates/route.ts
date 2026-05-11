@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     console.error('Check duplicates API error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to check duplicates' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

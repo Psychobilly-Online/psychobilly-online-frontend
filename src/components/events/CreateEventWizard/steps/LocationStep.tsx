@@ -65,8 +65,7 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
   const popularCountries = countries.slice(0, COMMON_COUNTRY_LIMIT);
   const otherCountries = countries.slice(COMMON_COUNTRY_LIMIT);
   const showOtherAutocomplete =
-    formData.countryId !== null &&
-    !popularCountries.some((c) => c.id === formData.countryId);
+    formData.countryId !== null && !popularCountries.some((c) => c.id === formData.countryId);
 
   return (
     <div className={styles.step}>
@@ -85,17 +84,13 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
               label={country.print_name ?? country.name}
               onClick={() => handleCountrySelect(country)}
               variant={formData.countryId === country.id ? 'filled' : 'outlined'}
-              className={
-                formData.countryId === country.id ? styles.chipActive : styles.chip
-              }
+              className={formData.countryId === country.id ? styles.chipActive : styles.chip}
             />
           ))}
           {/* "Other" option — only shown if current selection isn't in the chip list */}
           <Chip
             label="Other…"
-            onClick={() =>
-              onChange({ countryId: -1, countryName: '', city: '', cityId: null })
-            }
+            onClick={() => onChange({ countryId: -1, countryName: '', city: '', cityId: null })}
             variant={showOtherAutocomplete ? 'filled' : 'outlined'}
             className={showOtherAutocomplete ? styles.chipActive : styles.chip}
           />

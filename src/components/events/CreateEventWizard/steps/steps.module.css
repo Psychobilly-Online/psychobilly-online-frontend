@@ -258,7 +258,9 @@
   background: var(--color-bg-secondary);
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
-  transition: border-color 0.15s, opacity 0.15s;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
 }
 
 .bandRowDragHandle {

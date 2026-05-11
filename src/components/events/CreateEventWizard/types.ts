@@ -13,8 +13,8 @@ export interface NewVenueData {
 
 export interface WizardBand {
   name: string;
-  bandId?: number;   // set when selected from the existing database
-  genreId?: number;  // required for new (unrecognised) bands
+  bandId?: number; // set when selected from the existing database
+  genreId?: number; // required for new (unrecognised) bands
 }
 
 export interface WizardDay {

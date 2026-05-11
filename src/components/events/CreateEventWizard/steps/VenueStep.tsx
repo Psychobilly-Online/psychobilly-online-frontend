@@ -9,7 +9,7 @@ import styles from './steps.module.css';
 
 interface VenueResult {
   id: number;
-  venue: string;   // API returns "venue", not "name"
+  venue: string; // API returns "venue", not "name"
   city?: string;
   address1?: string;
   zip?: string;
@@ -38,33 +38,36 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  const fetchVenues = useCallback((search?: string) => {
-    abortRef.current?.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
-    const { signal } = controller;
+  const fetchVenues = useCallback(
+    (search?: string) => {
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      const { signal } = controller;
 
-    setLoading(true);
-    const params = new URLSearchParams({ limit: '100' });
-    if (search) params.set('search', search);
-    if (formData.countryId) params.set('country_id', String(formData.countryId));
-    if (formData.city) params.set('city', formData.city);
+      setLoading(true);
+      const params = new URLSearchParams({ limit: '100' });
+      if (search) params.set('search', search);
+      if (formData.countryId) params.set('country_id', String(formData.countryId));
+      if (formData.city) params.set('city', formData.city);
 
-    fetch(`/api/venues?${params}`, { signal })
-      .then((r) => r.json())
-      .then((data) => {
-        if (abortRef.current !== controller) return;
-        setVenues(Array.isArray(data.data) ? data.data : []);
-      })
-      .catch((err) => {
-        if (abortRef.current !== controller) return;
-        if (err.name !== 'AbortError') setVenues([]);
-      })
-      .finally(() => {
-        if (abortRef.current !== controller) return;
-        setLoading(false);
-      });
-  }, [formData.countryId, formData.city]);
+      fetch(`/api/venues?${params}`, { signal })
+        .then((r) => r.json())
+        .then((data) => {
+          if (abortRef.current !== controller) return;
+          setVenues(Array.isArray(data.data) ? data.data : []);
+        })
+        .catch((err) => {
+          if (abortRef.current !== controller) return;
+          if (err.name !== 'AbortError') setVenues([]);
+        })
+        .finally(() => {
+          if (abortRef.current !== controller) return;
+          setLoading(false);
+        });
+    },
+    [formData.countryId, formData.city],
+  );
 
   // Cleanup debounce timer and in-flight request on unmount
   useEffect(() => {
@@ -123,9 +126,7 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
 
       {!showNewVenueForm && (
         <div className={styles.field}>
-          <label className={styles.label}>
-            Venue{formData.city ? ` in ${formData.city}` : ''}
-          </label>
+          <label className={styles.label}>Venue{formData.city ? ` in ${formData.city}` : ''}</label>
           <StyledAutocomplete<VenueResult>
             options={venues}
             getOptionLabel={(o) => (o.isCreate ? '' : o.venue)}
@@ -143,7 +144,12 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
               } else if (option.isCreate) {
                 startNewVenue(inputValue);
               } else {
-                onChange({ venueId: option.id, venueName: option.venue, isNewVenue: false, newVenue: null });
+                onChange({
+                  venueId: option.id,
+                  venueName: option.venue,
+                  isNewVenue: false,
+                  newVenue: null,
+                });
                 setInputValue(option.venue);
               }
             }}
@@ -151,7 +157,13 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
               if (option.isCreate) {
                 return (
                   <li {...props} key="__create__">
-                    <span style={{ color: 'var(--color-accent-primary)', fontWeight: 600, fontSize: '0.875rem' }}>
+                    <span
+                      style={{
+                        color: 'var(--color-accent-primary)',
+                        fontWeight: 600,
+                        fontSize: '0.875rem',
+                      }}
+                    >
                       + Add {inputValue ? `"${inputValue}"` : 'a new venue'}
                     </span>
                   </li>
@@ -200,7 +212,9 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
           </ActionButton>
           <div className={styles.newVenueForm}>
             <div className={styles.field}>
-              <label htmlFor="nv-name" className={styles.label}>Venue name *</label>
+              <label htmlFor="nv-name" className={styles.label}>
+                Venue name *
+              </label>
               <StyledTextField
                 id="nv-name"
                 value={newVenue.name}
@@ -211,7 +225,9 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor="nv-address" className={styles.label}>Street address</label>
+              <label htmlFor="nv-address" className={styles.label}>
+                Street address
+              </label>
               <StyledTextField
                 id="nv-address"
                 value={newVenue.address1}
@@ -222,7 +238,9 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor="nv-zip" className={styles.label}>ZIP / Postal code</label>
+              <label htmlFor="nv-zip" className={styles.label}>
+                ZIP / Postal code
+              </label>
               <StyledTextField
                 id="nv-zip"
                 value={newVenue.zip}
@@ -233,7 +251,9 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor="nv-city" className={styles.label}>City *</label>
+              <label htmlFor="nv-city" className={styles.label}>
+                City *
+              </label>
               <StyledTextField
                 id="nv-city"
                 value={newVenue.city}
@@ -244,7 +264,8 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
               />
             </div>
             <p className={styles.hint}>
-              Country will be set to <strong>{formData.countryName}</strong>. You can add more details later in the venue admin.
+              Country will be set to <strong>{formData.countryName}</strong>. You can add more
+              details later in the venue admin.
             </p>
           </div>
         </>
