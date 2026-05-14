@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Typography, Alert } from '@mui/material';
 import ActionButton from '@/components/common/ActionButton';
 import { type CreateEventFormData } from '../types';
@@ -43,11 +43,16 @@ export default function ReviewStep({
   const [checkingDuplicates, setCheckingDuplicates] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const abortRef = useRef<AbortController | null>(null);
 
   // Run duplicate check when component mounts (or venue/date changes)
   useEffect(() => {
     const venueId = formData.venueId;
     if (!venueId || !formData.dateStart) return;
+
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     setCheckingDuplicates(true);
     const allBands = formData.days.flatMap((d) => d.bands.map((b) => b.name)).join(', ');
@@ -60,13 +65,22 @@ export default function ReviewStep({
         headline: formData.headline || undefined,
         bands: allBands || undefined,
       }),
+      signal: controller.signal,
     })
       .then((r) => r.json())
       .then((data) => {
+        if (abortRef.current !== controller) return;
         setDuplicates(Array.isArray(data.data) ? data.data : []);
       })
-      .catch(() => setDuplicates([]))
-      .finally(() => setCheckingDuplicates(false));
+      .catch((err) => {
+        if (err.name === 'AbortError') return;
+        setDuplicates([]);
+      })
+      .finally(() => {
+        if (abortRef.current === controller) setCheckingDuplicates(false);
+      });
+
+    return () => { controller.abort(); };
   }, [formData.venueId, formData.dateStart, formData.headline, formData.days]);
 
   const buildAutoHeadline = (): string => {
