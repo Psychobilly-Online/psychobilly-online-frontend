@@ -132,7 +132,6 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
 
       {!showNewVenueForm && (
         <div className={styles.field}>
-          <label className={styles.label}>Venue{formData.city ? ` in ${formData.city}` : ''}</label>
           <StyledAutocomplete<VenueResult>
             options={venues}
             getOptionLabel={(o) => (o.isCreate ? '' : o.venue)}
@@ -191,6 +190,7 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
             renderInput={(params) => (
               <StyledTextField
                 {...params}
+                label={`Venue${formData.city ? ` in ${formData.city}` : ''}`}
                 placeholder="Search venues…"
                 size="small"
                 InputProps={{
