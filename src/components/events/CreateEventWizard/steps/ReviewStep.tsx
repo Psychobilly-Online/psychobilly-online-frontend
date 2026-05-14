@@ -80,7 +80,9 @@ export default function ReviewStep({
         if (abortRef.current === controller) setCheckingDuplicates(false);
       });
 
-    return () => { controller.abort(); };
+    return () => {
+      controller.abort();
+    };
   }, [formData.venueId, formData.dateStart, formData.headline, formData.days]);
 
   const buildAutoHeadline = (): string => {
@@ -110,11 +112,11 @@ export default function ReviewStep({
       // Step 1: Create venue if needed
       if (formData.isNewVenue && formData.newVenue) {
         const venueBody = {
-          name: formData.newVenue.name,
+          venue: formData.newVenue.name,
           address1: formData.newVenue.address1 || undefined,
           zip: formData.newVenue.zip || undefined,
           city: formData.newVenue.city,
-          country_id: formData.newVenue.countryId,
+          country_id: String(formData.newVenue.countryId),
         };
         const venueRes = await fetch('/api/venues', {
           method: 'POST',

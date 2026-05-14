@@ -22,6 +22,13 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      return NextResponse.json(
+        { error: 'Unexpected response from upstream' },
+        { status: 502 },
+      );
+    }
     const data = await response.json();
     if (!response.ok) {
       return NextResponse.json(data, { status: response.status });
@@ -52,6 +59,20 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      const responseText = await response.text();
+      console.error(
+        `Create venue: upstream returned non-JSON (${response.status} ${response.statusText})`,
+        '\nContent-Type:', contentType,
+        '\nURL:', `${API_BASE_URL}/venues`,
+        '\nBody preview:', responseText.slice(0, 2000),
+      );
+      return NextResponse.json(
+        { error: 'Unexpected response from upstream', status: response.status },
+        { status: 502 },
+      );
+    }
     const data = await response.json();
 
     if (!response.ok) {

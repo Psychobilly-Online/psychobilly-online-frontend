@@ -71,6 +71,13 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      return NextResponse.json(
+        { error: 'Unexpected response from upstream', status: response.status },
+        { status: 502 },
+      );
+    }
     const data = await response.json();
 
     if (!response.ok) {

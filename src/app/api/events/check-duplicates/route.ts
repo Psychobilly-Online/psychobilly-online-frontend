@@ -18,6 +18,10 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      return NextResponse.json({ data: [] }, { status: 200 });
+    }
     const data = await response.json();
 
     return NextResponse.json(data, { status: response.status });
