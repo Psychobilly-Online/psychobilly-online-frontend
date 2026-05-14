@@ -112,6 +112,7 @@ export default function DatePickerField(props: DatePickerFieldProps) {
     const { value, onChange } = props as SingleDatePickerFieldProps;
     const dateValue = value ? parseISO(value) : null;
     const displayValue = dateValue && isValid(dateValue) ? format(dateValue, 'dd MMM yyyy') : '';
+    const popoverId = id ? `${id}-popover` : undefined;
 
     return (
       <>
@@ -129,11 +130,18 @@ export default function DatePickerField(props: DatePickerFieldProps) {
                 setOpen(true);
               }
             }}
-            inputProps={{ readOnly: true, style: { cursor: 'pointer' } }}
+            inputProps={{
+              readOnly: true,
+              style: { cursor: 'pointer' },
+              'aria-haspopup': 'dialog',
+              'aria-expanded': open,
+              'aria-controls': open ? popoverId : undefined,
+            }}
             sx={{ minWidth: 160, cursor: 'pointer', ...sx }}
           />
         </div>
         <Popover
+          id={popoverId}
           open={open}
           anchorEl={anchorRef.current}
           onClose={() => setOpen(false)}
@@ -227,6 +235,7 @@ export default function DatePickerField(props: DatePickerFieldProps) {
 
   // Calendar value: show end if complete, else start (for nav position)
   const calendarValue = (rangePending ? startDate : endDate) ?? startDate;
+  const popoverId = id ? `${id}-popover` : undefined;
 
   return (
     <>
@@ -244,11 +253,18 @@ export default function DatePickerField(props: DatePickerFieldProps) {
               setOpen(true);
             }
           }}
-          inputProps={{ readOnly: true, style: { cursor: 'pointer' } }}
+          inputProps={{
+            readOnly: true,
+            style: { cursor: 'pointer' },
+            'aria-haspopup': 'dialog',
+            'aria-expanded': open,
+            'aria-controls': open ? popoverId : undefined,
+          }}
           sx={{ minWidth: 220, cursor: 'pointer', ...sx }}
         />
       </div>
       <Popover
+        id={popoverId}
         open={open}
         anchorEl={anchorRef.current}
         onClose={() => {
