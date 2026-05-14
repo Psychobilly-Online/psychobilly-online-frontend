@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Typography, Chip, CircularProgress, Box } from '@mui/material';
 import { useMetadata } from '@/contexts/MetadataContext';
 import { StyledTextField, StyledAutocomplete } from '@/components/common/form';
@@ -34,6 +34,7 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
   const [cities, setCities] = useState<City[]>([]);
   const [loadingCities, setLoadingCities] = useState(false);
   const [cityInputValue, setCityInputValue] = useState(formData.city);
+  const abortRef = useRef<AbortController | null>(null);
 
   // Fetch cities when country changes
   useEffect(() => {
@@ -41,14 +42,27 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
       setCities([]);
       return;
     }
+
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setLoadingCities(true);
-    fetch(`/api/cities?country_id=${formData.countryId}`)
+    fetch(`/api/cities?country_id=${formData.countryId}`, { signal: controller.signal })
       .then((r) => r.json())
       .then((data) => {
+        if (abortRef.current !== controller) return;
         setCities(Array.isArray(data.data) ? data.data : []);
       })
-      .catch(() => setCities([]))
-      .finally(() => setLoadingCities(false));
+      .catch((err) => {
+        if (err.name === 'AbortError') return;
+        setCities([]);
+      })
+      .finally(() => {
+        if (abortRef.current === controller) setLoadingCities(false);
+      });
+
+    return () => { controller.abort(); };
   }, [formData.countryId]);
 
   const handleCountrySelect = (country: Country) => {
