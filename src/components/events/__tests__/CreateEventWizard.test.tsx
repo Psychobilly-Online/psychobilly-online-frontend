@@ -63,9 +63,7 @@ vi.mock('@/components/events/CreateEventWizard/steps/VenueStep', () => ({
         Fill New Venue
       </button>
       <button
-        onClick={() =>
-          onChange({ venueId: null, isNewVenue: true, newVenue: null, venueName: '' })
-        }
+        onClick={() => onChange({ venueId: null, isNewVenue: true, newVenue: null, venueName: '' })}
       >
         Start New Venue Empty
       </button>
@@ -76,7 +74,16 @@ vi.mock('@/components/events/CreateEventWizard/steps/VenueStep', () => ({
 vi.mock('@/components/events/CreateEventWizard/steps/EventDetailsStep', () => ({
   default: ({ onChange }: { onChange: (p: Partial<CreateEventFormData>) => void }) => (
     <div data-testid="event-details-step">
-      <button onClick={() => onChange({ categoryId: 2, dateStart: '2026-08-01', dateEnd: '2026-08-01', days: [{ date: '2026-08-01', label: 'Day 1', bands: [] }] })}>
+      <button
+        onClick={() =>
+          onChange({
+            categoryId: 2,
+            dateStart: '2026-08-01',
+            dateEnd: '2026-08-01',
+            days: [{ date: '2026-08-01', label: 'Day 1', bands: [] }],
+          })
+        }
+      >
         Fill Single Day
       </button>
       <button
