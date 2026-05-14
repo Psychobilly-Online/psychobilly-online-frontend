@@ -53,7 +53,9 @@ function DayBandInput({
 
   // Abort any in-flight band search on unmount
   useEffect(() => {
-    return () => { abortRef.current?.abort(); };
+    return () => {
+      abortRef.current?.abort();
+    };
   }, []);
 
   const searchBands = useCallback(

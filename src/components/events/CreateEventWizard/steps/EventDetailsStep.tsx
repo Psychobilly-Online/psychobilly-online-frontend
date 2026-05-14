@@ -51,7 +51,9 @@ function SameDayEvents({ date, city }: { date: string; city: string }) {
         if (abortRef.current === controller) setLoading(false);
       });
 
-    return () => { controller.abort(); };
+    return () => {
+      controller.abort();
+    };
   }, [date, city]);
 
   if (loading) return <p className={styles.hint}>Checking for existing events…</p>;

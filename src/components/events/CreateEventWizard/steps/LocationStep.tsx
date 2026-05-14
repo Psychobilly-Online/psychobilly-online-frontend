@@ -62,7 +62,9 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
         if (abortRef.current === controller) setLoadingCities(false);
       });
 
-    return () => { controller.abort(); };
+    return () => {
+      controller.abort();
+    };
   }, [formData.countryId]);
 
   const handleCountrySelect = (country: Country) => {
