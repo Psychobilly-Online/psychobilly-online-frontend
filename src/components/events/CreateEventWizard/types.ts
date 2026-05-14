@@ -43,7 +43,7 @@ export interface CreateEventFormData {
   isMultiDay: boolean;
   headline: string;
 
-  // Step 3 — Event genres (manual selection, merged with band-derived genres on submit)
+  // Step 3 — Event genres (manual selection, merged on submit with explicit genreId values chosen for new bands)
   genreIds: number[];
 
   // Step 4 — Bands (per day)

@@ -90,11 +90,6 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
     onChange({ dateStart: value, dateEnd, days });
   };
 
-  const handleDateEndChange = (value: string) => {
-    const days = generateDays(formData.dateStart, value);
-    onChange({ dateEnd: value, days });
-  };
-
   const handleMultiDayToggle = (checked: boolean) => {
     if (!checked) {
       // Revert to single day

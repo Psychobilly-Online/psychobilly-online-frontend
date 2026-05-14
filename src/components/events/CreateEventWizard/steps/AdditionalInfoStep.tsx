@@ -18,10 +18,8 @@ export default function AdditionalInfoStep({ formData, onChange }: AdditionalInf
       </Typography>
 
       <div className={styles.field}>
-        <Typography variant="body2" className={styles.label}>
-          Description
-        </Typography>
         <StyledTextField
+          label="Description"
           value={formData.text}
           onChange={(e) => onChange({ text: e.target.value })}
           placeholder="Tell people about the event…"
@@ -33,10 +31,8 @@ export default function AdditionalInfoStep({ formData, onChange }: AdditionalInf
       </div>
 
       <div className={styles.field}>
-        <Typography variant="body2" className={styles.label}>
-          Event website / link
-        </Typography>
         <StyledTextField
+          label="Event website / link"
           value={formData.url}
           onChange={(e) => onChange({ url: e.target.value })}
           placeholder="https://…"
@@ -48,10 +44,8 @@ export default function AdditionalInfoStep({ formData, onChange }: AdditionalInf
       </div>
 
       <div className={styles.field}>
-        <Typography variant="body2" className={styles.label}>
-          Ticket price
-        </Typography>
         <StyledTextField
+          label="Ticket price"
           value={formData.ticketPrice}
           onChange={(e) => onChange({ ticketPrice: e.target.value })}
           placeholder="e.g. €15 advance, €18 on the door"
@@ -62,10 +56,8 @@ export default function AdditionalInfoStep({ formData, onChange }: AdditionalInf
       </div>
 
       <div className={styles.field}>
-        <Typography variant="body2" className={styles.label}>
-          Ticket / booking link
-        </Typography>
         <StyledTextField
+          label="Ticket / booking link"
           value={formData.ticketUrl}
           onChange={(e) => onChange({ ticketUrl: e.target.value })}
           placeholder="https://…"
@@ -77,10 +69,8 @@ export default function AdditionalInfoStep({ formData, onChange }: AdditionalInf
       </div>
 
       <div className={styles.field}>
-        <Typography variant="body2" className={styles.label}>
-          Flyer image URL
-        </Typography>
         <StyledTextField
+          label="Flyer image URL"
           value={formData.image}
           onChange={(e) => onChange({ image: e.target.value })}
           placeholder="https://… (direct image URL)"

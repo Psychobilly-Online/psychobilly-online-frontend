@@ -37,7 +37,7 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
 
   // Fetch cities when country changes
   useEffect(() => {
-    if (!formData.countryId) {
+    if (!formData.countryId || formData.countryId === -1) {
       setCities([]);
       return;
     }
@@ -52,12 +52,16 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
   }, [formData.countryId]);
 
   const handleCountrySelect = (country: Country) => {
-    // Reset city when country changes
+    // Reset city and all venue-dependent fields when country changes
     onChange({
       countryId: country.id,
       countryName: country.print_name ?? country.name,
       city: '',
       cityId: null,
+      venueId: null,
+      venueName: '',
+      isNewVenue: false,
+      newVenue: null,
     });
     setCityInputValue('');
   };
