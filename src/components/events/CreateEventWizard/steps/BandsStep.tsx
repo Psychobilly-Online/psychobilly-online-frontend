@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Typography, CircularProgress, Chip } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -48,7 +48,13 @@ function DayBandInput({
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [pendingBand, setPendingBand] = useState<{ name: string } | null>(null);
   const [pendingGenreId, setPendingGenreId] = useState<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
   const { genres } = useMetadata();
+
+  // Abort any in-flight band search on unmount
+  useEffect(() => {
+    return () => { abortRef.current?.abort(); };
+  }, []);
 
   const searchBands = useCallback(
     async (q: string) => {
@@ -56,10 +62,15 @@ function DayBandInput({
         setOptions([]);
         return;
       }
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       setLoading(true);
       try {
         const res = await fetch(`/api/bands/search?q=${encodeURIComponent(q)}&limit=20`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
+          signal: controller.signal,
         });
         if (!res.ok) {
           setOptions([]);
@@ -75,10 +86,12 @@ function DayBandInput({
           found.push({ name: q.trim(), isNew: true });
         }
         setOptions(found);
-      } catch {
+      } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') return;
         setOptions([]);
       } finally {
-        setLoading(false);
+        // Only clear loading state if this request is still the latest
+        if (abortRef.current === controller) setLoading(false);
       }
     },
     [token],
