@@ -340,6 +340,12 @@
   gap: 4px;
 }
 
+.bandRowMoveButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 /* Review step */
 .reviewSection {
   border: 1px solid var(--color-border-default);

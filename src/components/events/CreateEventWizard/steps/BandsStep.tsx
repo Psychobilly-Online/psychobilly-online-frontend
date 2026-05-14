@@ -3,6 +3,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Typography, CircularProgress, Chip } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@/components/common/IconButton';
 import { StyledTextField, StyledAutocomplete } from '@/components/common/form';
@@ -164,6 +166,7 @@ function DayBandInput({
                   .filter(Boolean)
                   .join(' ')}
                 draggable
+                aria-label={`${band.name}, position ${bi + 1} of ${day.bands.length}`}
                 onDragStart={(e) => {
                   setDragIndex(bi);
                   e.dataTransfer.effectAllowed = 'move';
@@ -187,11 +190,27 @@ function DayBandInput({
                   setDragOverIndex(null);
                 }}
               >
-                <span className={styles.bandRowDragHandle}>
+                <span className={styles.bandRowDragHandle} aria-hidden>
                   <DragIndicatorIcon fontSize="inherit" />
                 </span>
                 <span className={styles.bandRowName}>{band.name}</span>
                 <div className={styles.bandRowActions}>
+                  <div className={styles.bandRowMoveButtons}>
+                    <IconButton
+                      icon={<ArrowUpwardIcon fontSize="inherit" />}
+                      ariaLabel={`Move ${band.name} up`}
+                      size="small"
+                      onClick={() => bi > 0 && onReorderBand(dayIndex, bi, bi - 1)}
+                      disabled={bi === 0}
+                    />
+                    <IconButton
+                      icon={<ArrowDownwardIcon fontSize="inherit" />}
+                      ariaLabel={`Move ${band.name} down`}
+                      size="small"
+                      onClick={() => bi < day.bands.length - 1 && onReorderBand(dayIndex, bi, bi + 1)}
+                      disabled={bi === day.bands.length - 1}
+                    />
+                  </div>
                   <IconButton
                     icon={<DeleteIcon fontSize="inherit" />}
                     ariaLabel="Remove band"
