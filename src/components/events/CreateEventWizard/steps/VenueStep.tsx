@@ -83,8 +83,14 @@ export default function VenueStep({ formData, onChange }: VenueStepProps) {
     fetchVenues();
   }, [formData.countryId, formData.city, fetchVenues]);
 
-  const handleInputChange = (_: unknown, value: string) => {
+  const handleInputChange = (_: unknown, value: string, reason: string) => {
     setInputValue(value);
+    // Clear any previously-selected venue when the user edits the text manually.
+    // Reason 'reset' fires when MUI sets the input after an option is selected —
+    // we must not clear the venueId in that case.
+    if (reason === 'input' && formData.venueId !== null) {
+      onChange({ venueId: null, venueName: '', isNewVenue: false, newVenue: null });
+    }
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => fetchVenues(value || undefined), 350);
   };
