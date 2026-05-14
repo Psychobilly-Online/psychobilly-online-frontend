@@ -84,13 +84,15 @@ function SameDayEvents({ date, city }: { date: string; city: string }) {
   );
 }
 
+const MAX_EVENT_DAYS = 14;
+
 function generateDays(dateStart: string, dateEnd: string): WizardDay[] {
   const days: WizardDay[] = [];
   const start = new Date(dateStart);
   const end = new Date(dateEnd);
   let current = new Date(start);
   let i = 1;
-  while (current <= end && i <= 14) {
+  while (current <= end && i <= MAX_EVENT_DAYS) {
     const dateStr = current.toISOString().split('T')[0];
     days.push({ date: dateStr, label: `Day ${i}`, bands: [] });
     current.setDate(current.getDate() + 1);
@@ -99,11 +101,24 @@ function generateDays(dateStart: string, dateEnd: string): WizardDay[] {
   return days;
 }
 
+/** Returns an end date capped at MAX_EVENT_DAYS - 1 days after start. */
+function clampDateEnd(start: string, end: string): string {
+  const s = new Date(start);
+  const e = new Date(end);
+  const diffDays = Math.round((e.getTime() - s.getTime()) / 86400000);
+  if (diffDays >= MAX_EVENT_DAYS) {
+    const capped = new Date(s);
+    capped.setDate(capped.getDate() + MAX_EVENT_DAYS - 1);
+    return capped.toISOString().split('T')[0];
+  }
+  return end;
+}
+
 export default function EventDetailsStep({ formData, onChange }: EventDetailsStepProps) {
   const { categories, genres } = useMetadata();
 
   const handleDateStartChange = (value: string) => {
-    const dateEnd = formData.isMultiDay && formData.dateEnd >= value ? formData.dateEnd : value;
+    const dateEnd = clampDateEnd(value, formData.isMultiDay && formData.dateEnd >= value ? formData.dateEnd : value);
     const days = generateDays(value, dateEnd);
     onChange({ dateStart: value, dateEnd, days });
   };
@@ -198,13 +213,19 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
               startValue={formData.dateStart}
               endValue={formData.dateEnd}
               onRangeChange={(start, end) => {
-                const days = generateDays(start, end);
-                onChange({ dateStart: start, dateEnd: end, days });
+                const clampedEnd = clampDateEnd(start, end);
+                const days = generateDays(start, clampedEnd);
+                onChange({ dateStart: start, dateEnd: clampedEnd, days });
               }}
             />
             {formData.days.length > 1 && (
               <p className={styles.hint}>
                 {formData.days.length} days — you can assign bands per day in the next step.
+              </p>
+            )}
+            {formData.dateStart && formData.dateEnd && formData.days.length === MAX_EVENT_DAYS && (
+              <p className={styles.hint} style={{ color: 'var(--color-warning, #f59e0b)' }}>
+                Events are limited to {MAX_EVENT_DAYS} days. End date has been adjusted.
               </p>
             )}
           </>
