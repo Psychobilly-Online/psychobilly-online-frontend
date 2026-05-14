@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Typography, Chip, Switch } from '@mui/material';
 import Link from 'next/link';
 import { useMetadata } from '@/contexts/MetadataContext';
@@ -25,17 +25,33 @@ interface ExistingEvent {
 function SameDayEvents({ date, city }: { date: string; city: string }) {
   const [events, setEvents] = useState<ExistingEvent[]>([]);
   const [loading, setLoading] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (!date) return;
+
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     setLoading(true);
     const params = new URLSearchParams({ from_date: date, to_date: date, limit: '20' });
     if (city) params.set('city', city);
-    fetch(`/api/events?${params}`)
+    fetch(`/api/events?${params}`, { signal: controller.signal })
       .then((r) => r.json())
-      .then((data) => setEvents(Array.isArray(data.data) ? data.data : []))
-      .catch(() => setEvents([]))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (abortRef.current !== controller) return;
+        setEvents(Array.isArray(data.data) ? data.data : []);
+      })
+      .catch((err) => {
+        if (err.name === 'AbortError') return;
+        setEvents([]);
+      })
+      .finally(() => {
+        if (abortRef.current === controller) setLoading(false);
+      });
+
+    return () => { controller.abort(); };
   }, [date, city]);
 
   if (loading) return <p className={styles.hint}>Checking for existing events…</p>;
