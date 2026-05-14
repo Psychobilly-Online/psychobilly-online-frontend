@@ -140,9 +140,6 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
 
       {formData.countryId && formData.countryId !== -1 && (
         <div className={styles.field}>
-          <Typography variant="body2" className={styles.label}>
-            City
-          </Typography>
           <StyledAutocomplete<City, false, false, true>
             freeSolo
             openOnFocus
@@ -169,6 +166,7 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
             renderInput={(params) => (
               <StyledTextField
                 {...params}
+                label="City"
                 placeholder="Search or type city name…"
                 size="small"
                 InputProps={{

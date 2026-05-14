@@ -118,7 +118,10 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
   const { categories, genres } = useMetadata();
 
   const handleDateStartChange = (value: string) => {
-    const dateEnd = clampDateEnd(value, formData.isMultiDay && formData.dateEnd >= value ? formData.dateEnd : value);
+    const dateEnd = clampDateEnd(
+      value,
+      formData.isMultiDay && formData.dateEnd >= value ? formData.dateEnd : value,
+    );
     const days = generateDays(value, dateEnd);
     onChange({ dateStart: value, dateEnd, days });
   };
@@ -205,11 +208,17 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
 
       {/* Date(s) */}
       <div className={styles.field}>
-        <label className={styles.label}>{formData.isMultiDay ? 'Date range *' : 'Date *'}</label>
+        <label
+          htmlFor={formData.isMultiDay ? 'date-range' : 'date-start'}
+          className={styles.label}
+        >
+          {formData.isMultiDay ? 'Date range *' : 'Date *'}
+        </label>
         {formData.isMultiDay ? (
           <>
             <DatePickerField
               mode="range"
+              id="date-range"
               startValue={formData.dateStart}
               endValue={formData.dateEnd}
               onRangeChange={(start, end) => {
