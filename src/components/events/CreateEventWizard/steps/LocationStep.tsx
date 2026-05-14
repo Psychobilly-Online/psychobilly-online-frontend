@@ -151,9 +151,14 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
             isOptionEqualToValue={(a, b) => a.name === b.name}
             loading={loadingCities}
             inputValue={cityInputValue}
-            onInputChange={(_, value) => {
+            onInputChange={(_, value, reason) => {
               setCityInputValue(value);
-              onChange({ city: value, cityId: null });
+              // Only update form state on direct user input; 'reset' fires when MUI
+              // repopulates the input after an option is selected — the canonical
+              // city name is already written by onChange in that case.
+              if (reason === 'input') {
+                onChange({ city: value, cityId: null });
+              }
             }}
             onChange={(_, value) => {
               if (value && typeof value !== 'string') {
