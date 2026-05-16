@@ -157,11 +157,13 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
             inputValue={cityInputValue}
             onInputChange={(_, value, reason) => {
               setCityInputValue(value);
-              // Only update form state on direct user input; 'reset' fires when MUI
-              // repopulates the input after an option is selected — the canonical
-              // city name is already written by onChange in that case.
+              // 'input': user typed — update city in form state.
+              // 'clear': user clicked the × button — clear city.
+              // 'reset': MUI repopulates after option selected — onChange already wrote the canonical value.
               if (reason === 'input') {
                 onChange({ city: value, cityId: null });
+              } else if (reason === 'clear') {
+                onChange({ city: '', cityId: null });
               }
             }}
             onChange={(_, value) => {
