@@ -197,6 +197,11 @@ export default function ReviewStep({
       const approved = createdEvent.approved;
       const newId = createdEvent.id;
 
+      if (!newId) {
+        setSubmitError('Event was created but no event ID was returned.');
+        return;
+      }
+
       if (approved) {
         onSuccess(newId);
       } else {
