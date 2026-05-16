@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Typography, Chip, CircularProgress, Box } from '@mui/material';
-import { useMetadata } from '@/contexts/MetadataContext';
 import { StyledTextField, StyledAutocomplete } from '@/components/common/form';
 import { type CreateEventFormData } from '../types';
 import styles from './steps.module.css';
@@ -30,11 +29,19 @@ interface LocationStepProps {
 }
 
 export default function LocationStep({ formData, onChange }: LocationStepProps) {
-  const { countries } = useMetadata();
+  const [countries, setCountries] = useState<Country[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const [loadingCities, setLoadingCities] = useState(false);
   const [cityInputValue, setCityInputValue] = useState(formData.city);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Fetch all countries (not just active ones) so users can create events anywhere
+  useEffect(() => {
+    fetch('/api/countries/all')
+      .then((r) => r.json())
+      .then((data) => setCountries(Array.isArray(data.data) ? data.data : []))
+      .catch(() => setCountries([]));
+  }, []);
 
   // Fetch cities when country changes
   useEffect(() => {
