@@ -114,7 +114,7 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
               className={formData.countryId === country.id ? styles.chipActive : styles.chip}
             />
           ))}
-          {/* "Other" option — only shown if current selection isn't in the chip list */}
+          {/* "Other" chip — always visible; filled when the current selection is not in the chip list */}
           <Chip
             label="Other…"
             onClick={() => onChange({ countryId: -1, countryName: '', city: '', cityId: null })}
