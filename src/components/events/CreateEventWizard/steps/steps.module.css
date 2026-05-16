@@ -53,32 +53,6 @@
   border-color: var(--color-accent-primary) !important;
 }
 
-/* Venue search results list */
-.venueList {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-height: 320px;
-  overflow-y: auto;
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-md);
-  padding: 4px;
-}
-
-.venueOption {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.venueOption:hover,
-.venueOptionSelected {
-  background: rgba(177, 50, 42, 0.12);
-}
-
 .venueOptionSelected {
   outline: 1px solid var(--color-accent-primary);
 }
