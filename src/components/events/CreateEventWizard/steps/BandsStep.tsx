@@ -220,7 +220,7 @@ function DayBandInput({
                   </div>
                   <IconButton
                     icon={<DeleteIcon fontSize="inherit" />}
-                    ariaLabel="Remove band"
+                    ariaLabel={`Remove ${band.name}`}
                     size="small"
                     onClick={() => onRemoveBand(dayIndex, bi)}
                   />
