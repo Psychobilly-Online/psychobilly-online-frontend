@@ -67,22 +67,6 @@ export default function AdditionalInfoStep({ formData, onChange }: AdditionalInf
           inputProps={{ maxLength: 255 }}
         />
       </div>
-
-      <div className={styles.field}>
-        <StyledTextField
-          label="Flyer image URL"
-          value={formData.image}
-          onChange={(e) => onChange({ image: e.target.value })}
-          placeholder="https://… (direct image URL)"
-          size="small"
-          fullWidth
-          type="url"
-          inputProps={{ maxLength: 255 }}
-        />
-        <Typography variant="caption" className={styles.hint}>
-          Image upload will be available in a future update.
-        </Typography>
-      </div>
     </div>
   );
 }

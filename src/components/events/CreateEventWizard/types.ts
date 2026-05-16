@@ -54,7 +54,6 @@ export interface CreateEventFormData {
   url: string;
   ticketPrice: string;
   ticketUrl: string;
-  image: string;
 }
 
 export const INITIAL_FORM_DATA: CreateEventFormData = {
@@ -77,7 +76,6 @@ export const INITIAL_FORM_DATA: CreateEventFormData = {
   url: '',
   ticketPrice: '',
   ticketUrl: '',
-  image: '',
 };
 
 export const WIZARD_STEPS = [

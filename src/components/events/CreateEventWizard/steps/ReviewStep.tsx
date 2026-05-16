@@ -160,7 +160,6 @@ export default function ReviewStep({
         url: formData.url || undefined,
         ticket_price: formData.ticketPrice || undefined,
         ticket_url: formData.ticketUrl || undefined,
-        image: formData.image || undefined,
         genre_ids: allGenreIds.length > 0 ? allGenreIds : undefined,
         days: formData.days.map((day) => ({
           ...day,
