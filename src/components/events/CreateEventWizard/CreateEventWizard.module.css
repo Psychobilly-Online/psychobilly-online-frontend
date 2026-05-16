@@ -1,0 +1,38 @@
+.wizard {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+.stepperWrapper {
+  margin-bottom: 40px;
+}
+
+.stepContent {
+  min-height: 300px;
+}
+
+.navigationBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navLeft {
+  display: flex;
+  gap: 12px;
+}
+
+.navRight {
+  display: flex;
+  gap: 12px;
+}
+
+.stepIndicator {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  align-self: center;
+}

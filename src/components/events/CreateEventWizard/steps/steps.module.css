@@ -1,0 +1,319 @@
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.stepTitle {
+  color: var(--color-text-primary) !important;
+  font-weight: 600 !important;
+  margin-bottom: 0 !important;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border-color: var(--color-border-default) !important;
+  color: var(--color-text-secondary) !important;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--color-accent-primary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.chipActive {
+  background-color: var(--color-accent-primary) !important;
+  color: #fff !important;
+  border-color: var(--color-accent-primary) !important;
+}
+
+.venueOptionSelected {
+  outline: 1px solid var(--color-accent-primary);
+}
+
+.venueName {
+  color: var(--color-text-primary);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.venueAddress {
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.newVenueForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+}
+
+/* Same-day events warning */
+.sameDayEvents {
+  border: 1px solid var(--color-warning-border, var(--color-accent-secondary));
+  border-radius: var(--radius-md);
+  background: var(--color-warning-bg, rgba(180, 120, 30, 0.08));
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.sameDayWarning {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-warning-text, var(--color-text-primary));
+  margin: 0;
+}
+
+.sameDayList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.sameDayItem {
+  font-size: 13px;
+}
+
+.sameDayLink {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-2);
+  color: var(--color-text-primary);
+  text-decoration: none;
+}
+
+.sameDayLink:hover .sameDayHeadline {
+  text-decoration: underline;
+  color: var(--color-accent-primary);
+}
+
+.sameDayHeadline {
+  font-weight: 500;
+}
+
+.sameDayMeta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Multi-day switch row */
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  width: fit-content;
+}
+
+/* Date row */
+.dateRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.dateRow > * {
+  flex: 1;
+  min-width: 160px;
+}
+
+/* Bands per day */
+.daySection {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.dayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.dayBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bandList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bandRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
+}
+
+.bandRowDragHandle {
+  cursor: grab;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.bandRowDragging {
+  opacity: 0.35;
+}
+
+.bandRowDropTarget {
+  border-color: var(--color-accent-primary);
+  background: var(--color-bg-hover);
+}
+
+/* Pending new band: genre picker */
+.pendingBand {
+  border: 1px solid var(--color-accent-primary);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-bg-secondary);
+}
+
+.pendingBandLabel {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.pendingBandActions {
+  display: flex;
+  gap: 8px;
+}
+
+.pendingBandConfirm {
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--color-accent-primary);
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.pendingBandConfirm:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pendingBandCancel {
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-default);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.bandRowName {
+  flex: 1;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+.bandRowActions {
+  display: flex;
+  gap: 4px;
+}
+
+.bandRowMoveButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Review step */
+.reviewSection {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reviewRow {
+  display: flex;
+  gap: 12px;
+}
+
+.reviewKey {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  min-width: 130px;
+  flex-shrink: 0;
+}
+
+.reviewValue {
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+}
+
+.duplicateWarning {
+  padding: 12px 16px;
+  border: 1px solid #f59e0b;
+  border-radius: var(--radius-md);
+  background: rgba(245, 158, 11, 0.08);
+  color: #f59e0b;
+  font-size: 0.875rem;
+}

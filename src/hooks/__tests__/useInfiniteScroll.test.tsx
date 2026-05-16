@@ -4,7 +4,10 @@ import { useInfiniteScroll } from '../useInfiniteScroll';
 
 describe('useInfiniteScroll', () => {
   let mockIntersectionObserver: Mock<
-    (callback: IntersectionObserverCallback, options?: IntersectionObserverInit) => IntersectionObserver
+    (
+      callback: IntersectionObserverCallback,
+      options?: IntersectionObserverInit,
+    ) => IntersectionObserver
   >;
   let observerCallback: IntersectionObserverCallback;
   let observeInstance: {
@@ -24,7 +27,12 @@ describe('useInfiniteScroll', () => {
     mockIntersectionObserver = vi.fn(function (callback: IntersectionObserverCallback) {
       observerCallback = callback;
       return observeInstance as unknown as IntersectionObserver;
-    }) as Mock<(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) => IntersectionObserver>;
+    }) as Mock<
+      (
+        callback: IntersectionObserverCallback,
+        options?: IntersectionObserverInit,
+      ) => IntersectionObserver
+    >;
 
     global.IntersectionObserver =
       mockIntersectionObserver as unknown as typeof IntersectionObserver;

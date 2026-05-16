@@ -34,6 +34,7 @@ export default function StyledTextField(props: TextFieldProps) {
             '& input': {
               padding: 'var(--spacing-2) var(--spacing-3)',
               color: 'var(--color-text-primary)',
+              colorScheme: 'dark',
             },
             '& textarea': {
               padding: 'var(--spacing-2) var(--spacing-3)',

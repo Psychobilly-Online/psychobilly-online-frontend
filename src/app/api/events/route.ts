@@ -7,6 +7,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://psychobilly-onl
  * BFF API Route - Events List
  * GET /api/events - List events with filters
  * GET /api/events?dates=true - Get all event dates for calendar highlighting
+ * POST /api/events - Create a new event (requires authentication)
  */
 export async function GET(request: NextRequest) {
   try {
@@ -49,5 +50,43 @@ export async function GET(request: NextRequest) {
       { error: error.message || 'Failed to fetch events' },
       { status: error.status || 500 },
     );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !/^Bearer\s+\S+$/.test(authHeader)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await request.json();
+
+    const response = await fetch(`${API_BASE_URL}/events`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authHeader,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.includes('application/json')) {
+      return NextResponse.json(
+        { error: 'Unexpected response from upstream', status: response.status },
+        { status: 502 },
+      );
+    }
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status });
+    }
+
+    return NextResponse.json(data, { status: 201 });
+  } catch (error: any) {
+    console.error('Create event API error:', error);
+    return NextResponse.json({ error: error.message || 'Failed to create event' }, { status: 500 });
   }
 }
