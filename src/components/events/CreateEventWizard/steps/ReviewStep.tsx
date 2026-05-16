@@ -15,6 +15,7 @@ interface DuplicateEvent {
 
 interface ReviewStepProps {
   formData: CreateEventFormData;
+  onChange: (patch: Partial<CreateEventFormData>) => void;
   token: string | null;
   submitting: boolean;
   setSubmitting: (v: boolean) => void;
@@ -33,6 +34,7 @@ function formatDate(dateStr: string): string {
 
 export default function ReviewStep({
   formData,
+  onChange,
   token,
   submitting,
   setSubmitting,
@@ -139,6 +141,8 @@ export default function ReviewStep({
           setSubmitError('Venue was created but no ID was returned. Please try again.');
           return;
         }
+        // Persist the created venue id so a retry does not create a duplicate.
+        onChange({ venueId, isNewVenue: false });
       }
 
       // Step 2: Build headline (auto-generate if empty)

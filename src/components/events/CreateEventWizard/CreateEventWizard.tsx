@@ -60,6 +60,7 @@ export default function CreateEventWizard() {
         return (
           <ReviewStep
             formData={formData}
+            onChange={updateFormData}
             token={token}
             submitting={submitting}
             setSubmitting={setSubmitting}
