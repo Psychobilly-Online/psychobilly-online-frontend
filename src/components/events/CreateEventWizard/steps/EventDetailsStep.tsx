@@ -193,6 +193,7 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
             checked={formData.isMultiDay}
             onChange={(e) => handleMultiDayToggle(e.target.checked)}
             size="small"
+            inputProps={{ 'aria-label': 'Multi-day event' }}
             sx={{
               '& .MuiSwitch-switchBase.Mui-checked': { color: 'var(--color-accent-primary)' },
               '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
@@ -208,10 +209,7 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
 
       {/* Date(s) */}
       <div className={styles.field}>
-        <label
-          htmlFor={formData.isMultiDay ? 'date-range' : 'date-start'}
-          className={styles.label}
-        >
+        <label htmlFor={formData.isMultiDay ? 'date-range' : 'date-start'} className={styles.label}>
           {formData.isMultiDay ? 'Date range *' : 'Date *'}
         </label>
         {formData.isMultiDay ? (
