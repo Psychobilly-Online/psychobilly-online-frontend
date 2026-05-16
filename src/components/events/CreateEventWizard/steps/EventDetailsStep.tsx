@@ -118,12 +118,10 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
   const { categories, genres } = useMetadata();
 
   const handleDateStartChange = (value: string) => {
-    const dateEnd = clampDateEnd(
-      value,
-      formData.isMultiDay && formData.dateEnd >= value ? formData.dateEnd : value,
-    );
+    const rawEnd = formData.isMultiDay && formData.dateEnd >= value ? formData.dateEnd : value;
+    const dateEnd = clampDateEnd(value, rawEnd);
     const days = generateDays(value, dateEnd);
-    onChange({ dateStart: value, dateEnd, days });
+    onChange({ dateStart: value, dateEnd, days, wasClamped: dateEnd !== rawEnd });
   };
 
   const handleMultiDayToggle = (checked: boolean) => {
@@ -222,7 +220,7 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
               onRangeChange={(start, end) => {
                 const clampedEnd = clampDateEnd(start, end);
                 const days = generateDays(start, clampedEnd);
-                onChange({ dateStart: start, dateEnd: clampedEnd, days });
+                onChange({ dateStart: start, dateEnd: clampedEnd, days, wasClamped: clampedEnd !== end });
               }}
             />
             {formData.days.length > 1 && (
@@ -230,7 +228,7 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
                 {formData.days.length} days — you can assign bands per day in the next step.
               </p>
             )}
-            {formData.dateStart && formData.dateEnd && formData.days.length === MAX_EVENT_DAYS && (
+            {formData.dateStart && formData.dateEnd && formData.wasClamped && (
               <p className={styles.hint} style={{ color: 'var(--color-warning, #f59e0b)' }}>
                 Events are limited to {MAX_EVENT_DAYS} days. End date has been adjusted.
               </p>

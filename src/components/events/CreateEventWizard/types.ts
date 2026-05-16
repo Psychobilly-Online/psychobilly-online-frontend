@@ -41,6 +41,7 @@ export interface CreateEventFormData {
   dateStart: string; // YYYY-MM-DD
   dateEnd: string; // YYYY-MM-DD (equals dateStart for single-day)
   isMultiDay: boolean;
+  wasClamped: boolean; // true when dateEnd was capped at MAX_EVENT_DAYS
   headline: string;
 
   // Step 3 — Event genres (manual selection, merged on submit with explicit genreId values chosen for new bands)
@@ -69,6 +70,7 @@ export const INITIAL_FORM_DATA: CreateEventFormData = {
   dateStart: '',
   dateEnd: '',
   isMultiDay: false,
+  wasClamped: false,
   headline: '',
   genreIds: [],
   days: [],
