@@ -51,11 +51,13 @@ function DayBandInput({
   const [pendingBand, setPendingBand] = useState<{ name: string } | null>(null);
   const [pendingGenreId, setPendingGenreId] = useState<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { genres } = useMetadata();
 
-  // Abort any in-flight band search on unmount
+  // Abort any in-flight band search and clear debounce timer on unmount
   useEffect(() => {
     return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
       abortRef.current?.abort();
     };
   }, []);
@@ -207,7 +209,9 @@ function DayBandInput({
                       icon={<ArrowDownwardIcon fontSize="inherit" />}
                       ariaLabel={`Move ${band.name} down`}
                       size="small"
-                      onClick={() => bi < day.bands.length - 1 && onReorderBand(dayIndex, bi, bi + 1)}
+                      onClick={() =>
+                        bi < day.bands.length - 1 && onReorderBand(dayIndex, bi, bi + 1)
+                      }
                       disabled={bi === day.bands.length - 1}
                     />
                   </div>
@@ -270,7 +274,8 @@ function DayBandInput({
             onInputChange={(_, v, reason) => {
               if (reason === 'reset') return;
               setInputValue(v);
-              searchBands(v);
+              if (debounceRef.current) clearTimeout(debounceRef.current);
+              debounceRef.current = setTimeout(() => searchBands(v), 350);
             }}
             onChange={handleSelect}
             filterOptions={(x) => x}
