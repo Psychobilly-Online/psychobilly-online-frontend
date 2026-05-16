@@ -97,7 +97,7 @@ function DayBandInput({
         if (abortRef.current === controller) setOptions(found);
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
-        setOptions([]);
+        if (abortRef.current === controller) setOptions([]);
       } finally {
         // Only clear loading state if this request is still the latest
         if (abortRef.current === controller) setLoading(false);
