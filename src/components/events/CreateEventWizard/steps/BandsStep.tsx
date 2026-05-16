@@ -65,6 +65,9 @@ function DayBandInput({
   const searchBands = useCallback(
     async (q: string) => {
       if (q.length < 2) {
+        abortRef.current?.abort();
+        abortRef.current = null;
+        setLoading(false);
         setOptions([]);
         return;
       }
