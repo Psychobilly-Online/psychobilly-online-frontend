@@ -132,7 +132,13 @@ export default function ReviewStep({
           setSubmitError(venueData.message || 'Failed to create venue');
           return;
         }
-        venueId = venueData.data?.id ?? venueData.id;
+        // Backend returns the created venue flat: { id, venue, city, … }
+        // (no data wrapper). Guard against unexpected shapes and fail early.
+        venueId = venueData.id ?? venueData.data?.id ?? venueData.venue?.id;
+        if (!venueId) {
+          setSubmitError('Venue was created but no ID was returned. Please try again.');
+          return;
+        }
       }
 
       // Step 2: Build headline (auto-generate if empty)
