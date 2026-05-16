@@ -82,7 +82,7 @@ function DayBandInput({
           signal: controller.signal,
         });
         if (!res.ok) {
-          setOptions([]);
+          if (abortRef.current === controller) setOptions([]);
           return;
         }
         const data = await res.json();
@@ -94,7 +94,7 @@ function DayBandInput({
         if (!exactMatch && q.trim()) {
           found.push({ name: q.trim(), isNew: true });
         }
-        setOptions(found);
+        if (abortRef.current === controller) setOptions(found);
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
         setOptions([]);
