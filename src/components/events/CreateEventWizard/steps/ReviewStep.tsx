@@ -129,7 +129,7 @@ export default function ReviewStep({
         });
         const venueData = await venueRes.json();
         if (!venueRes.ok) {
-          setSubmitError(venueData.message || 'Failed to create venue');
+          setSubmitError(venueData.message || venueData.error || 'Failed to create venue');
           return;
         }
         // Backend returns the created venue flat: { id, venue, city, … }
@@ -185,7 +185,7 @@ export default function ReviewStep({
         if (eventData.validation_errors) {
           setValidationErrors(eventData.validation_errors);
         }
-        setSubmitError(eventData.message || 'Failed to create event');
+        setSubmitError(eventData.message || eventData.error || 'Failed to create event');
         return;
       }
 
