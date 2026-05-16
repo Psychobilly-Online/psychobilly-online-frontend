@@ -128,9 +128,9 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
     if (!checked) {
       // Revert to single day
       const days = formData.dateStart ? generateDays(formData.dateStart, formData.dateStart) : [];
-      onChange({ isMultiDay: false, dateEnd: formData.dateStart, days });
+      onChange({ isMultiDay: false, dateEnd: formData.dateStart, days, wasClamped: false });
     } else {
-      onChange({ isMultiDay: true });
+      onChange({ isMultiDay: true, wasClamped: false });
     }
   };
 
@@ -220,7 +220,12 @@ export default function EventDetailsStep({ formData, onChange }: EventDetailsSte
               onRangeChange={(start, end) => {
                 const clampedEnd = clampDateEnd(start, end);
                 const days = generateDays(start, clampedEnd);
-                onChange({ dateStart: start, dateEnd: clampedEnd, days, wasClamped: clampedEnd !== end });
+                onChange({
+                  dateStart: start,
+                  dateEnd: clampedEnd,
+                  days,
+                  wasClamped: clampedEnd !== end,
+                });
               }}
             />
             {formData.days.length > 1 && (
