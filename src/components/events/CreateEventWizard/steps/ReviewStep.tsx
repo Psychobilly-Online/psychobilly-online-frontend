@@ -109,7 +109,11 @@ export default function ReviewStep({
     try {
       let venueId = formData.venueId;
 
-      // Step 1: Create venue if needed
+      // Step 1: Create venue if needed.
+      // If the subsequent event POST fails, the venue remains in the database.
+      // This is intentional — orphaned venues are harmless and can be cleaned up
+      // via the admin area's venue management tools. A two-phase rollback or
+      // atomic endpoint is not warranted here.
       if (formData.isNewVenue && formData.newVenue) {
         const venueBody = {
           venue: formData.newVenue.name,
