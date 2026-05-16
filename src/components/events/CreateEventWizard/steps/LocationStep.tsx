@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Typography, Chip, CircularProgress, Box } from '@mui/material';
 import { StyledTextField, StyledAutocomplete } from '@/components/common/form';
+import { useMetadata } from '@/contexts/MetadataContext';
 import { type CreateEventFormData } from '../types';
 import styles from './steps.module.css';
 
@@ -20,8 +21,7 @@ interface Country {
   iso?: string;
 }
 
-// How many countries to show as quick-select chips
-const COMMON_COUNTRY_LIMIT = 10;
+
 
 interface LocationStepProps {
   formData: CreateEventFormData;
@@ -29,6 +29,9 @@ interface LocationStepProps {
 }
 
 export default function LocationStep({ formData, onChange }: LocationStepProps) {
+  // Countries that already have events — used for the quick-select chips
+  const { countries: eventCountries } = useMetadata();
+  // All countries — fetched separately so users can create events anywhere
   const [countries, setCountries] = useState<Country[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const [loadingCities, setLoadingCities] = useState(false);
@@ -89,10 +92,10 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
     setCityInputValue('');
   };
 
-  const popularCountries = countries.slice(0, COMMON_COUNTRY_LIMIT);
-  const otherCountries = countries.slice(COMMON_COUNTRY_LIMIT);
+  // Autocomplete searches all countries (chips are a convenience shortcut, not a filter)
+  const otherCountries = countries;
   const showOtherAutocomplete =
-    formData.countryId !== null && !popularCountries.some((c) => c.id === formData.countryId);
+    formData.countryId !== null && !eventCountries.some((c) => c.id === formData.countryId);
 
   return (
     <div className={styles.step}>
@@ -105,7 +108,7 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
           Country
         </Typography>
         <div className={styles.chipGroup}>
-          {popularCountries.map((country) => (
+          {eventCountries.map((country) => (
             <Chip
               key={country.id}
               label={country.print_name ?? country.name}
@@ -161,14 +164,32 @@ export default function LocationStep({ formData, onChange }: LocationStepProps) 
               // 'clear': user clicked the × button — clear city and venue.
               // 'reset': MUI repopulates after option selected — onChange already wrote the canonical value.
               if (reason === 'input') {
-                onChange({ city: value, cityId: null, venueId: null, venueName: '', isNewVenue: false });
+                onChange({
+                  city: value,
+                  cityId: null,
+                  venueId: null,
+                  venueName: '',
+                  isNewVenue: false,
+                });
               } else if (reason === 'clear') {
-                onChange({ city: '', cityId: null, venueId: null, venueName: '', isNewVenue: false });
+                onChange({
+                  city: '',
+                  cityId: null,
+                  venueId: null,
+                  venueName: '',
+                  isNewVenue: false,
+                });
               }
             }}
             onChange={(_, value) => {
               if (value && typeof value !== 'string') {
-                onChange({ city: value.name, cityId: null, venueId: null, venueName: '', isNewVenue: false });
+                onChange({
+                  city: value.name,
+                  cityId: null,
+                  venueId: null,
+                  venueName: '',
+                  isNewVenue: false,
+                });
                 setCityInputValue(value.label || value.name);
               }
             }}
