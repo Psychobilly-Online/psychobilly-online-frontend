@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://psychobilly-online.de/api/v1';
 
 /**
- * BFF API Route - Search Bands (Admin only)
+ * BFF API Route - Search Bands (requires authentication)
  * GET /api/bands/search?q=query
  */
 export async function GET(request: NextRequest) {
